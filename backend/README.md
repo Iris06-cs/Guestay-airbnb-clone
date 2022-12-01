@@ -99,7 +99,7 @@ information.
 - Request
 
   - Method: Get
-  - URL: /users/login
+  - URL: /login
   - Headers:
     - Content-Type: application/json
   - Body:
@@ -169,7 +169,7 @@ user's information.
 - Request
 
   - Method: Post
-  - URL: /users/signup
+  - URL: /signup
   - Headers:
     - Content-Type: application/json
   - Body:
