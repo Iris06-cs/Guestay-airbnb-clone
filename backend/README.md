@@ -2,7 +2,7 @@
 
 ## Database Schema Design
 
-`<insert database schema design here>`
+![database-schema](database-schema.png)
 
 ## API Documentation
 
@@ -1550,19 +1550,19 @@ Return spots filtered by query parameters.
     - Content-Type: application/json
   - Body:
 
-    ```json
-    {
-      "message": "Validation Error",
-      "statusCode": 400,
-      "errors": [
-        "Page must be greater than or equal to 0",
-        "Size must be greater than or equal to 0",
-        "Maximum latitude is invalid",
-        "Minimum latitude is invalid",
-        "Maximum longitude is invalid",
-        "Minimum longitude is invalid",
-        "Maximum price must be greater than or equal to 0",
-        "Minimum price must be greater than or equal to 0"
-      ]
-    }
-    ```
+            ```json
+            {
+              "message": "Validation Error",
+              "statusCode": 400,
+              "errors": [
+                "Page must be greater than or equal to 0",
+                "Size must be greater than or equal to 0",
+                "Maximum latitude is invalid",
+                "Minimum latitude is invalid",
+                "Maximum longitude is invalid",
+                "Minimum longitude is invalid",
+                "Maximum price must be greater than or equal to 0",
+                "Minimum price must be greater than or equal to 0"
+              ]
+            }
+            ```
