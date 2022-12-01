@@ -98,7 +98,7 @@ information.
 - Require Authentication: false
 - Request
 
-  - Method: Get
+  - Method: Post
   - URL: /login
   - Headers:
     - Content-Type: application/json
