@@ -25,5 +25,9 @@ router.post("/", async (req, res, next) => {
     // token:""???
   });
 });
-
+// Log out,delete the token
+router.delete("/", (_req, res) => {
+  res.clearCookie("token");
+  return res.json({ message: "success" });
+});
 module.exports = router;
