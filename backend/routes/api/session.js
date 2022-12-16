@@ -19,22 +19,22 @@ const validateLogin = [
 // Log in
 router.post("/", validateLogin, async (req, res, next) => {
   const { credential, password } = req.body;
-
+  const { token } = req.cookies;
   const user = await User.login({ credential, password });
   //Error Response Invalid credentials
   if (!user) {
     const err = new Error("Invalid credentials");
     err.status = 401;
-    // err.title = "Login failed";
+    err.title = "Login failed";
     err.errors = ["The provided credentials were invalid."];
     return next(err);
   }
 
   await setTokenCookie(res, user);
   //Successful Response
+  const resObj = { ...user.toSafeObject(), token };
   return res.json({
-    user: user,
-    // token:""???
+    user: resObj,
   });
 });
 // Log out,delete the token
@@ -42,7 +42,8 @@ router.delete("/", (_req, res) => {
   res.clearCookie("token");
   return res.json({ message: "success" });
 });
-// Restore session user,get current user session
+
+// get current user session
 router.get("/", restoreUser, (req, res) => {
   const { user } = req;
   if (user) {
@@ -51,4 +52,5 @@ router.get("/", restoreUser, (req, res) => {
     });
   } else return res.json({ user: null });
 });
+
 module.exports = router;
