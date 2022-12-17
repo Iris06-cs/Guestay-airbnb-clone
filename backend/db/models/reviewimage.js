@@ -9,13 +9,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       //1-many reviews-reviewImages
-      ReviewImage.belongsTo(models.Review, { foreignKey: "reviewId" });
+      ReviewImage.belongsTo(models.Review, {
+        foreignKey: "reviewId",
+        onDelete: "CASCADE",
+      });
     }
   }
   ReviewImage.init(
     {
-      url: DataTypes.STRING,
-      reviewId: DataTypes.INTEGER,
+      url: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          isUrl: true,
+        },
+      },
+      reviewId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       sequelize,

@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === "production") {
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable(
-      "ReviewImages",
+      "Reviews",
       {
         id: {
           allowNull: false,
@@ -15,18 +15,31 @@ module.exports = {
           primaryKey: true,
           type: Sequelize.INTEGER,
         },
-        url: {
-          type: Sequelize.STRING,
-          allowNull: false,
-          unique: true,
+        userId: {
+          type: Sequelize.INTEGER,
+          //keep user review even after the user account deleted to make the review truthful
+          allowNull: true,
+          references: {
+            model: "Users",
+            key: "id",
+          },
         },
-        reviewId: {
+        spotId: {
           type: Sequelize.INTEGER,
           allowNull: false,
           references: {
-            model: "Reviews",
+            model: "Spots",
             key: "id",
           },
+          onDelete: "CASCADE",
+        },
+        review: {
+          type: Sequelize.STRING(255),
+          allowNull: false,
+        },
+        stars: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
         },
         createdAt: {
           allowNull: false,
@@ -41,9 +54,13 @@ module.exports = {
       },
       options
     );
+    await queryInterface.addIndex("Reviews", ["userId", "spotId"], {
+      unique: true,
+    });
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = "ReviewImages";
+    options.tableName = "Reviews";
+    await queryInterface.removeIndex(options, ["userId", "spotId"]);
     return await queryInterface.dropTable(options);
   },
 };

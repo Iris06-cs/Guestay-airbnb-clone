@@ -8,6 +8,12 @@ const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
 
 const validateSignup = [
+  check("firstName")
+    .exists({ checkFalsy: true })
+    .withMessage("First Name is required"),
+  check("lastName")
+    .exists({ checkFalsy: true })
+    .withMessage("Last Name is required"),
   check("email")
     .exists({ checkFalsy: true })
     .isEmail()
@@ -60,7 +66,9 @@ router.post("/", validateSignup, async (req, res, next) => {
 
   await setTokenCookie(res, user);
   const { token } = req.cookies;
-  const resObj = { ...user.toSafeObject(), token };
+  let resObj = user.toSafeObject();
+  resObj.token = token;
+  user.token = token;
   return res.json({
     user: resObj,
   });

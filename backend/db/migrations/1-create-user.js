@@ -1,4 +1,5 @@
 "use strict";
+
 let options = {};
 if (process.env.NODE_ENV === "production") {
   options.schema = process.env.SCHEMA; // define your schema in options object
@@ -7,7 +8,7 @@ if (process.env.NODE_ENV === "production") {
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable(
-      "Spots",
+      "Users",
       {
         id: {
           allowNull: false,
@@ -15,49 +16,26 @@ module.exports = {
           primaryKey: true,
           type: Sequelize.INTEGER,
         },
-        ownerId: {
-          type: Sequelize.INTEGER,
+        firstName: {
+          type: Sequelize.STRING,
           allowNull: false,
-          references: {
-            model: "Users",
-            key: "id",
-          },
         },
-        address: {
-          type: Sequelize.STRING(130),
+        lastName: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        email: {
+          type: Sequelize.STRING(256),
           allowNull: false,
           unique: true,
         },
-        city: {
-          type: Sequelize.STRING,
+        username: {
+          type: Sequelize.STRING(30),
           allowNull: false,
+          unique: true,
         },
-        state: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        country: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        lat: {
-          type: Sequelize.DECIMAL,
-          allowNull: false,
-        },
-        lng: {
-          type: Sequelize.DECIMAL,
-          allowNull: false,
-        },
-        name: {
-          type: Sequelize.STRING(50),
-          allowNull: false,
-        },
-        description: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        price: {
-          type: Sequelize.DECIMAL,
+        hashedPassword: {
+          type: Sequelize.STRING.BINARY,
           allowNull: false,
         },
         createdAt: {
@@ -75,7 +53,7 @@ module.exports = {
     );
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = "Spots";
+    options.tableName = "Users";
     return await queryInterface.dropTable(options);
   },
 };
