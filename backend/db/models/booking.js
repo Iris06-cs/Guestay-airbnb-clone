@@ -1,5 +1,14 @@
 "use strict";
 const { Model } = require("sequelize");
+const getYesterday = () => {
+  const today = new Date();
+  const yesterday = new Date(today.setDate(today.getDate() - 1));
+  const year = yesterday.getFullYear();
+  const month = yesterday.getMonth() + 1;
+  const day = yesterday.getDate();
+  return `${year}-${month}-${day}`;
+};
+
 module.exports = (sequelize, DataTypes) => {
   class Booking extends Model {
     /**
@@ -29,6 +38,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           isDate: true,
+          //on or after today
+          isAfter: getYesterday(),
         },
         unique: true,
       },
