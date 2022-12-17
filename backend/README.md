@@ -306,7 +306,7 @@ Returns all the spots owned (created) by the current user.
 - Request
 
   - Method: Get
-  - URL: /api/session/spots
+  - URL: /api/spots/current
   - Body: none
 
 - Successful Response
@@ -417,7 +417,7 @@ Creates and returns a new spot.
 - Request
 
   - Method: Post
-  - URL: /api/session/spots
+  - URL: /api/spots
   - Headers:
     - Content-Type: application/json
   - Body:

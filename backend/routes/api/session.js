@@ -38,10 +38,10 @@ router.post("/", validateLogin, async (req, res, next) => {
   });
 });
 // Log out,delete the token
-router.delete("/", (_req, res) => {
-  res.clearCookie("token");
-  return res.json({ message: "success" });
-});
+// router.delete("/", (_req, res) => {
+//   res.clearCookie("token");
+//   return res.json({ message: "success" });
+// });
 
 // get current user session
 router.get("/", restoreUser, (req, res) => {

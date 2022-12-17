@@ -39,7 +39,12 @@ module.exports = (sequelize, DataTypes) => {
       return await User.scope("currentUser").findByPk(user.id);
     }
     static associate(models) {
-      // define association here
+      // 1-many users-spots
+      User.hasMany(models.Spot, { foreignKey: "ownerId" });
+      //1-many users-reviews
+      User.hasMany(models.Review, { foreignKey: "userId" });
+      //1-many users-bookings
+      User.hasMany(models.Booking, { foreignKey: "userId" });
     }
   }
   User.init(
