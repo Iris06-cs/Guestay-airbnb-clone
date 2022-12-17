@@ -8,6 +8,12 @@ const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
 
 const validateSignup = [
+  check("firstName")
+    .exists({ checkFalsy: true })
+    .withMessage("First Name is required"),
+  check("lastName")
+    .exists({ checkFalsy: true })
+    .withMessage("Last Name is required"),
   check("email")
     .exists({ checkFalsy: true })
     .isEmail()

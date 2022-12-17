@@ -70,7 +70,14 @@ app.use((err, _req, _res, next) => {
 app.use((err, _req, res, _next) => {
   res.status(err.status || 500);
   console.error(err);
-  if (err.status === 400 || err.status === 403) {
+  if (err.status === 403) {
+    return res.json({
+      message: err.message,
+      statusCode: err.status,
+      errors: err.errors,
+    });
+  }
+  if (err.status === 400) {
     return res.json({
       message: err.message,
       statusCode: err.status,
