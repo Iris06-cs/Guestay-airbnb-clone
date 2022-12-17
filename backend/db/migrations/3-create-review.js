@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === "production") {
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable(
-      "Spots",
+      "Reviews",
       {
         id: {
           allowNull: false,
@@ -15,49 +15,30 @@ module.exports = {
           primaryKey: true,
           type: Sequelize.INTEGER,
         },
-        ownerId: {
+        userId: {
           type: Sequelize.INTEGER,
-          allowNull: false,
+          //keep user review even after the user account deleted to make the review truthful
+          allowNull: true,
           references: {
             model: "Users",
             key: "id",
           },
         },
-        address: {
-          type: Sequelize.STRING(130),
+        spotId: {
+          type: Sequelize.INTEGER,
           allowNull: false,
-          unique: true,
+          references: {
+            model: "Spots",
+            key: "id",
+          },
+          onDelete: "CASCADE",
         },
-        city: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        state: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        country: {
-          type: Sequelize.STRING,
+        review: {
+          type: Sequelize.STRING(255),
           allowNull: false,
         },
-        lat: {
-          type: Sequelize.DECIMAL,
-          allowNull: false,
-        },
-        lng: {
-          type: Sequelize.DECIMAL,
-          allowNull: false,
-        },
-        name: {
-          type: Sequelize.STRING(50),
-          allowNull: false,
-        },
-        description: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        price: {
-          type: Sequelize.DECIMAL,
+        stars: {
+          type: Sequelize.INTEGER,
           allowNull: false,
         },
         createdAt: {
@@ -73,9 +54,13 @@ module.exports = {
       },
       options
     );
+    await queryInterface.addIndex("Reviews", ["userId", "spotId"], {
+      unique: true,
+    });
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = "Spots";
+    options.tableName = "Reviews";
+    await queryInterface.removeIndex(options, ["userId", "spotId"]);
     return await queryInterface.dropTable(options);
   },
 };

@@ -22,9 +22,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   Review.init(
     {
-      // userId: DataTypes.INTEGER,
-      // spotId: DataTypes.INTEGER,
-      // review: DataTypes.STRING,
       userId: {
         type: DataTypes.INTEGER,
         //keep user review even after the user account deleted to make the review truthful

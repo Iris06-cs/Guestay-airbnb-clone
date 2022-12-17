@@ -9,14 +9,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       //1-many spots-spotImages
-      SpotImage.belongsTo(models.Spot, { foreignKey: "spotId" });
+      SpotImage.belongsTo(models.Spot, {
+        foreignKey: "spotId",
+        onDelete: "CASCADE",
+      });
     }
   }
   SpotImage.init(
     {
-      url: DataTypes.STRING,
-      preview: DataTypes.BOOLEAN,
-      spotId: DataTypes.INTEGER,
+      url: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          isUrl: true,
+        },
+      },
+      preview: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+      spotId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       sequelize,
