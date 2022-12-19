@@ -11,27 +11,48 @@ const { Op } = require("sequelize");
 //Get all spots
 router.get("/", async (req, res, next) => {
   const spots = [];
-  const spotsData = await Spot.findAll();
-  for (let spot of spotsData) {
-    const reviewData = await spot.getReviews({
-      attributes: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
-      group: ["Review.id"],
+  const spotsData = await Spot.findAll({
+    include: [{ model: Review }, { model: SpotImage }],
+    attributes: {
+      include: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
+    },
+    group: ["Spot.id"],
+  });
+  spotsData.forEach((spotData) => {
+    spots.push(spotData.toJSON());
+  });
+  spots.forEach((spot) => {
+    spot.SpotImages.forEach((spotImage) => {
+      if (spotImage.preview === true) spot.previewImage = spotImage.url;
     });
-    const previewImage = await SpotImage.findOne({
-      attributes: ["url"],
-      where: {
-        spotId: spot.id,
-        preview: true,
-      },
-    });
-    const spotData = spot.toJSON();
-    spotData.avgRating = reviewData[0].toJSON().avgRating;
-    spotData.previewImage = previewImage.toJSON().url;
-    spots.push(spotData);
-  }
+    if (!spot.previewImage) spot.previewImage = "no image";
+    delete spot.SpotImages;
+    delete spot.Reviews;
+  });
+  // for (let spot of spotsData) {
+  //   const reviewData = await spot.getReviews({
+  //     attributes: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
+  //     group: ["Review.id"],
+  //   });
+  //   const previewImage = await SpotImage.findOne({
+  //     attributes: ["url"],
+  //     where: {
+  //       spotId: spot.id,
+  //       preview: true,
+  //     },
+  //   });
+  // const spotData = spot.toJSON();
+  // spotData.avgRating = reviewData[0].toJSON().avgRating;
+  //   spotData.previewImage = previewImage.toJSON().url;
+  //   spots.push(spotData);
+  // }
   res.json({ spots });
 });
 
 module.exports = router;
 
-// SELECT `Spot`.`id`, `Spot`.`ownerId`, `Spot`.`address`, `Spot`.`city`, `Spot`.`state`, `Spot`.`country`, `Spot`.`lat`, `Spot`.`lng`, `Spot`.`name`, `Spot`.`description`, `Spot`.`price`, `Spot`.`createdAt`, `Spot`.`updatedAt`, `Reviews`.`id` AS `Reviews.id`, AVG(`stars`) AS `Reviews.avgRating` FROM `Spots` AS `Spot` LEFT OUTER JOIN `Reviews` AS `Reviews` ON `Spot`.`id` = `Reviews`.`spotId`;
+// SELECT `Spot`.`id`, `Spot`.`ownerId`, `Spot`.`address`, `Spot`.`city`, `Spot`.`state`, `Spot`.`country`, `Spot`.`lat`, `Spot`.`lng`, `Spot`.`name`, `Spot`.`description`, `Spot`.`price`, `Spot`.`createdAt`, `Spot`.`updatedAt`, `Reviews`.`id` AS `Reviews.id`, `Reviews`.`userId` AS `Reviews.userId`, `Reviews`.`spotId` AS `Reviews.spotId`, `Reviews`.`review` AS `Reviews.review`, `Reviews`.`stars` AS `Reviews.stars`, `Reviews`.`createdAt` AS `Reviews.createdAt`, `Reviews`.`updatedAt` AS `Reviews.updatedAt`, AVG(`stars`) AS `Reviews.avgRating`, `SpotImages`.`id` AS `SpotImages.id`, `SpotImages`.`url` AS `SpotImages.url`, `SpotImages`.`preview` AS `SpotImages.preview`, `SpotImages`.`spotId` AS `SpotImages.spotId`, `SpotImages`.`createdAt` AS `SpotImages.createdAt`, `SpotImages`.`updatedAt` AS `SpotImages.updatedAt`
+// FROM `Spots` AS `Spot`
+// LEFT OUTER JOIN `Reviews` AS `Reviews`
+// ON `Spot`.`id` = `Reviews`.`spotId`
+// LEFT OUTER JOIN `SpotImages` AS `SpotImages` ON `Spot`.`id` = `SpotImages`.`spotId`;
