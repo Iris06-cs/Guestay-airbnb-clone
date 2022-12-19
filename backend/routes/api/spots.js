@@ -12,7 +12,7 @@ const { Op } = require("sequelize");
 router.get("/", async (req, res, next) => {
   const spots = [];
   const spotsData = await Spot.findAll({
-    include: [{ model: Review, group: ["Review.id"] }, { model: SpotImage }],
+    include: [{ model: Review, attributes: [] }, { model: SpotImage }],
     attributes: {
       include: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
     },
