@@ -26,7 +26,7 @@ router.get("/", async (req, res, next) => {
     });
     const spotData = spot.toJSON();
     spotData.avgRating = reviewData[0].toJSON().avgRating;
-    spotData.previewImage = previewImage.url;
+    spotData.previewImage = previewImage.toJSON().url;
     spots.push(spotData);
   }
   res.json({ spots });
