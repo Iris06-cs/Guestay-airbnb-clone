@@ -42,9 +42,31 @@ router.get("/current", requireAuth, async (req, res, next) => {
 //Get details of a spot from an id
 router.get("/:spotId", async (req, res, next) => {
   const { spotId } = req.params;
-  console.log(req.params);
-  const spot = await Spot.findByPk(spotId);
-  res.json(spot);
+  const spot = await Spot.findByPk(spotId, {
+    include: [
+      { model: Review, attributes: [] },
+      { model: SpotImage, attributes: ["id", "url", "preview"] },
+      { model: User, as: "Owner", attributes: ["id", "firstName", "lastName"] },
+    ],
+    attributes: {
+      include: [
+        [sequelize.fn("COUNT", sequelize.col("stars")), "numReviews"],
+        [
+          sequelize.fn("ROUND", sequelize.fn("AVG", sequelize.col("stars")), 1),
+          "avgStarRating",
+        ],
+      ],
+    },
+  });
+  if (spot.id !== null) {
+    return res.json(spot);
+  } else {
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.title = "Spot couldn't be found";
+    err.errors = ["Spot couldn't be found with the provided spot id"];
+    return next(err);
+  }
 });
 //Get all spots
 router.get("/", async (req, res, next) => {

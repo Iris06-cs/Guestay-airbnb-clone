@@ -12,7 +12,7 @@ module.exports = {
       [
         {
           ownerId: 1,
-          address: "123 Disney Lane",
+          address: "123 app st",
           city: "city1",
           state: "state1",
           country: "country1",
