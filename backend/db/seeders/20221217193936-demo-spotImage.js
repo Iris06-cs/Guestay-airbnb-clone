@@ -30,6 +30,11 @@ module.exports = {
           preview: true,
           spotId: 3,
         },
+        {
+          url: "image5.url",
+          preview: false,
+          spotId: 3,
+        },
       ],
       {}
     );
