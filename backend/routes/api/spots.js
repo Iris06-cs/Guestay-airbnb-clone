@@ -51,7 +51,12 @@ router.get("/", async (req, res, next) => {
     // subQuery: false,
     include: [{ model: Review, attributes: [] }, { model: SpotImage }],
     attributes: {
-      include: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
+      include: [
+        [
+          sequelize.fn("ROUND", sequelize.fn("AVG", sequelize.col("stars")), 1),
+          "avgRating",
+        ],
+      ],
     },
     group: ["SpotImages.id", "Spot.id"],
   });
