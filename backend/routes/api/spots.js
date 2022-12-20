@@ -7,14 +7,6 @@ const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
 
-//Get details of a spot from an id
-router.get("/:spotId", async (req, res, next) => {
-  const { spotId } = req.params;
-  console.log(req.params);
-  const spot = await Spot.findByPk(spotId);
-  res.json(spot);
-});
-
 //Get all spots owned by the current user
 router.get("/current", requireAuth, async (req, res, next) => {
   const spots = [];
@@ -25,9 +17,14 @@ router.get("/current", requireAuth, async (req, res, next) => {
     },
     include: [{ model: Review, attributes: [] }, { model: SpotImage }],
     attributes: {
-      include: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
+      include: [
+        [
+          sequelize.fn("ROUND", sequelize.fn("AVG", sequelize.col("stars")), 1),
+          "avgRating",
+        ],
+      ],
     },
-    group: ["Spot.id"],
+    group: ["SpotImages.id", "Spot.id"],
   });
   spotsData.forEach((spotData) => {
     spots.push(spotData.toJSON());
@@ -38,12 +35,39 @@ router.get("/current", requireAuth, async (req, res, next) => {
     });
     if (!spot.previewImage) spot.previewImage = "no image";
     delete spot.SpotImages;
-    delete spot.Reviews;
   });
 
   res.json({ spots });
 });
-
+//Get details of a spot from an id
+router.get("/:spotId", async (req, res, next) => {
+  const { spotId } = req.params;
+  const spot = await Spot.findByPk(spotId, {
+    include: [
+      { model: Review, attributes: [] },
+      { model: SpotImage, attributes: ["id", "url", "preview"] },
+      { model: User, as: "Owner", attributes: ["id", "firstName", "lastName"] },
+    ],
+    attributes: {
+      include: [
+        [sequelize.fn("COUNT", sequelize.col("stars")), "numReviews"],
+        [
+          sequelize.fn("ROUND", sequelize.fn("AVG", sequelize.col("stars")), 1),
+          "avgStarRating",
+        ],
+      ],
+    },
+  });
+  if (spot.id !== null) {
+    return res.json(spot);
+  } else {
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.title = "Spot couldn't be found";
+    err.errors = ["Spot couldn't be found with the provided spot id"];
+    return next(err);
+  }
+});
 //Get all spots
 router.get("/", async (req, res, next) => {
   const spots = [];
@@ -51,9 +75,14 @@ router.get("/", async (req, res, next) => {
     // subQuery: false,
     include: [{ model: Review, attributes: [] }, { model: SpotImage }],
     attributes: {
-      include: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
+      include: [
+        [
+          sequelize.fn("ROUND", sequelize.fn("AVG", sequelize.col("stars")), 1),
+          "avgRating",
+        ],
+      ],
     },
-    group: ["SpotImages.id"],
+    group: ["SpotImages.id", "Spot.id"],
   });
   spotsData.forEach((spotData) => {
     spots.push(spotData.toJSON());
@@ -64,7 +93,6 @@ router.get("/", async (req, res, next) => {
     });
     if (!spot.previewImage) spot.previewImage = "no image";
     delete spot.SpotImages;
-    delete spot.Reviews;
   });
   // for (let spot of spotsData) {
   //   const reviewData = await spot.getReviews({
