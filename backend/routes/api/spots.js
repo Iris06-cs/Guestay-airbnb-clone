@@ -59,7 +59,7 @@ router.get("/:spotId", async (req, res, next) => {
     },
     group: ["Spot.id", "Owner.id", "SpotImages.id"],
   });
-  if (spot.id !== null) {
+  if (spot) {
     if (spot.numReviews === 0) spot.avgStarRating = "No Review";
     if (!spot.SpotImages.length) spot.SpotImages = "No Image";
     return res.json(spot);
