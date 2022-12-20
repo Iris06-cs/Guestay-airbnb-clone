@@ -7,6 +7,14 @@ const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
 
+//Get details of a spot from an id
+router.get("/:spotId", async (req, res, next) => {
+  const { spotId } = req.params;
+  console.log(req.params);
+  const spot = await Spot.findByPk(spotId);
+  res.json(spot);
+});
+
 //Get all spots owned by the current user
 router.get("/current", requireAuth, async (req, res, next) => {
   const spots = [];
@@ -45,7 +53,7 @@ router.get("/", async (req, res, next) => {
     attributes: {
       include: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
     },
-    group: ["Spot.id"],
+    group: ["SpotImages.id"],
   });
   spotsData.forEach((spotData) => {
     spots.push(spotData.toJSON());
