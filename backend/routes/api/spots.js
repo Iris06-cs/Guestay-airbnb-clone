@@ -53,7 +53,7 @@ router.get("/", async (req, res, next) => {
     attributes: {
       include: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
     },
-    group: ["SpotImages.id"],
+    group: ["SpotImages.id", "Spot.id"],
   });
   spotsData.forEach((spotData) => {
     spots.push(spotData.toJSON());
