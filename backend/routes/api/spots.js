@@ -2,7 +2,13 @@
 const express = require("express");
 const router = express.Router();
 const { restoreUser, requireAuth } = require("../../utils/auth");
-const { Spot, User, Review, SpotImage, sequelize } = require("../../db/models");
+const {
+  Spot,
+  User,
+  Review,
+  SpotImage,
+  ReviewImage,
+} = require("../../db/models");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { dateFormat } = require("../../utils/dataFormatter");
@@ -63,6 +69,38 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
     const err = new Error("Forbidden");
     err.status = 403;
     next(err);
+  } else {
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.title = "Spot couldn't be found";
+    err.errors = ["Spot couldn't be found"];
+    return next(err);
+  }
+});
+//--------------Get all reviews by a spot id
+router.get("/:spotId/reviews", async (req, res, next) => {
+  const { spotId } = req.params;
+  console.log(spotId);
+  const spot = await Spot.findByPk(spotId);
+  if (spot) {
+    const reviewsData = await Review.findAll({
+      where: {
+        spotId,
+      },
+      include: [
+        { model: User, attributes: ["id", "firstName", "lastName"] },
+        { model: ReviewImage, attributes: ["id", "url"] },
+      ],
+    });
+    const Reviews = [];
+    reviewsData.forEach((review) => {
+      Reviews.push(review.toJSON());
+    });
+    Reviews.forEach((review) => {
+      review.createdAt = dateFormat(review.createdAt);
+      review.updatedAt = dateFormat(review.updatedAt);
+    });
+    return res.json({ Reviews });
   } else {
     const err = new Error("Spot couldn't be found");
     err.status = 404;
