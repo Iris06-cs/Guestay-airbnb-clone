@@ -104,7 +104,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
     if (!spot.avgRating) spot.avgRating = "Spot has no review yet";
     delete spot.SpotImages;
   });
-
+  if (!Spots.length) Spots = "No spots created under current user";
   res.json({ Spots });
 });
 //-----------------Get details of a spot from an id
@@ -136,7 +136,6 @@ router.get("/:spotId", async (req, res, next) => {
       resObj.avgStarRating = "Spot has no review yet";
     if (!resObj.SpotImages.length) resObj.SpotImages = "Spot has no image yet";
     return res.json(resObj);
->>>>>>>>> Temporary merge branch 2
   } else {
     const err = new Error("Spot couldn't be found");
     err.status = 404;
