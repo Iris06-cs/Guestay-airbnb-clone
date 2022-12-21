@@ -127,6 +127,7 @@ router.get("/:spotId", async (req, res, next) => {
     },
     group: ["Spot.id", "Owner.id", "SpotImages.id"],
   });
+
   if (spot.id !== null) {
     const resObj = spot.toJSON();
     resObj.createdAt = Spot.dateFormat(spot.createdAt);
@@ -135,6 +136,7 @@ router.get("/:spotId", async (req, res, next) => {
       resObj.avgStarRating = "Spot has no review yet";
     if (!resObj.SpotImages.length) resObj.SpotImages = "Spot has no image yet";
     return res.json(resObj);
+>>>>>>>>> Temporary merge branch 2
   } else {
     const err = new Error("Spot couldn't be found");
     err.status = 404;
