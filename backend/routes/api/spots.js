@@ -182,6 +182,7 @@ router.put(
         let resObj = spot.toJSON();
         resObj.createdAt = Spot.dateFormat(spot.createdAt);
         resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
+        res.status(201);
         return res.json(resObj);
       }
       const err = new Error("Forbidden");
