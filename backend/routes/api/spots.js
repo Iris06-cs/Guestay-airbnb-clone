@@ -190,6 +190,28 @@ router.put(
     }
   }
 );
+//------------------Delete a spot
+router.delete("/:spotId", requireAuth, async (req, res, next) => {
+  const { spotId } = req.params;
+  const ownerId = req.user.id;
+  const spot = await Spot.findByPk(spotId);
+  if (spot) {
+    //check spot belongs to current user
+    if (ownerId === spot.ownerId) {
+      await spot.destroy();
+      return res.json({ message: "Successfully deleted", statusCode: 200 });
+    }
+    const err = new Error("Forbidden");
+    err.status = 403;
+    next(err);
+  } else {
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.title = "Spot couldn't be found";
+    err.errors = ["Spot couldn't be found with the provided spot id"];
+    return next(err);
+  }
+});
 //------------------Get all spots
 router.get("/", async (req, res, next) => {
   const spots = [];
@@ -205,6 +227,7 @@ router.get("/", async (req, res, next) => {
       ],
     },
     group: ["SpotImages.id", "Spot.id"],
+    order: [["id"]],
   });
   spotsData.forEach((spotData) => {
     spots.push(spotData.toJSON());
