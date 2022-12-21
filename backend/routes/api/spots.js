@@ -8,6 +8,33 @@ const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
 const spot = require("../../db/models/spot");
 
+//-------------Add an image to a spot based on the spot id
+router.post("/:spotId/images", requireAuth, async (req, res, next) => {
+  const { url, preview } = req.body;
+  const currentUserId = req.user.id;
+  const { spotId } = req.params;
+  const spot = await Spot.findByPk(spotId);
+  if (spot) {
+    //check spot belongs to current user
+    if (currentUserId === spot.ownerId) {
+      const newImage = await spot.createSpotImage({
+        url,
+        preview,
+      });
+      const resObj = {};
+      resObj.id = newImage.id;
+      resObj.url = newImage.url;
+      resObj.preview = newImage.preview;
+      return res.json(resObj);
+    }
+  } else {
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.title = "Spot couldn't be found";
+    err.errors = ["Spot couldn't be found"];
+    return next(err);
+  }
+});
 //-------------Get all spots owned by the current user
 router.get("/current", requireAuth, async (req, res, next) => {
   const spots = [];
