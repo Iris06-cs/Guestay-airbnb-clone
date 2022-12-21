@@ -2,9 +2,16 @@
 const express = require("express");
 const router = express.Router();
 const { restoreUser, requireAuth } = require("../../utils/auth");
-const { Spot, User, Review, SpotImage, sequelize } = require("../../db/models");
+const {
+  Spot,
+  User,
+  Review,
+  SpotImage,
+  ReviewImage,
+} = require("../../db/models");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
+const { dateFormat } = require("../../utils/dataFormatter");
 const { Op } = require("sequelize");
 const spot = require("../../db/models/spot");
 //validate req body
@@ -40,6 +47,18 @@ const validateSpotBody = [
     .withMessage("Price per day is required"),
   handleValidationErrors,
 ];
+//validate create review req body
+const validateReviewBody = [
+  check("review")
+    .exists({ checkFalsy: true })
+    .withMessage("Review text is required"),
+  check("stars")
+    .exists({ checkFalsy: true })
+    .withMessage("Stars is required")
+    .isInt({ min: 1, max: 5 })
+    .withMessage("Stars must be an integer from 1 to 5"),
+  handleValidationErrors,
+];
 //-------------Add an image to a spot based on the spot id
 router.post("/:spotId/images", requireAuth, async (req, res, next) => {
   const { url, preview } = req.body;
@@ -70,6 +89,69 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
     return next(err);
   }
 });
+//--------------Get all reviews by a spot id
+router.get("/:spotId/reviews", async (req, res, next) => {
+  const { spotId } = req.params;
+  console.log(spotId);
+  const spot = await Spot.findByPk(spotId);
+  if (spot) {
+    const reviewsData = await Review.findAll({
+      where: {
+        spotId,
+      },
+      include: [
+        { model: User, attributes: ["id", "firstName", "lastName"] },
+        { model: ReviewImage, attributes: ["id", "url"] },
+      ],
+    });
+    const Reviews = [];
+    reviewsData.forEach((review) => {
+      Reviews.push(review.toJSON());
+    });
+    Reviews.forEach((review) => {
+      review.createdAt = dateFormat(review.createdAt);
+      review.updatedAt = dateFormat(review.updatedAt);
+    });
+    return res.json({ Reviews });
+  } else {
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.title = "Spot couldn't be found";
+    err.errors = ["Spot couldn't be found"];
+    return next(err);
+  }
+});
+//-------------create a Review for a spot based on the spot id
+router.post(
+  "/:spotId/reviews",
+  requireAuth,
+  validateReviewBody,
+  async (req, res, next) => {
+    const { spotId } = req.params;
+    const { review, stars } = req.body;
+    const userId = req.user.id;
+    const spot = await Spot.findByPk(spotId);
+    if (spot) {
+      const newReview = await spot.createReview({
+        userId,
+        spotId,
+        review,
+        stars,
+      });
+      const resObj = newReview.toJSON();
+      resObj.createdAt = dateFormat(newReview.createdAt);
+      resObj.updatedAt = dateFormat(newReview.updatedAt);
+      res.staus = 201;
+      return res.json(resObj);
+    } else {
+      const err = new Error("Spot couldn't be found");
+      err.status = 404;
+      err.title = "Spot couldn't be found";
+      err.errors = ["Spot couldn't be found"];
+      return next(err);
+    }
+  }
+);
 //-------------Get all spots owned by the current user
 router.get("/current", requireAuth, async (req, res, next) => {
   let Spots = [];
@@ -98,8 +180,8 @@ router.get("/current", requireAuth, async (req, res, next) => {
     spot.SpotImages.forEach((spotImage) => {
       if (spotImage.preview === true) spot.previewImage = spotImage.url;
     });
-    spot.createdAt = Spot.dateFormat(spot.createdAt);
-    spot.updatedAt = Spot.dateFormat(spot.updatedAt);
+    spot.createdAt = dateFormat(spot.createdAt);
+    spot.updatedAt = dateFormat(spot.updatedAt);
     if (!spot.previewImage) spot.previewImage = "Spot has no image yet";
     if (!spot.avgRating) spot.avgRating = "Spot has no review yet";
     delete spot.SpotImages;
@@ -130,8 +212,8 @@ router.get("/:spotId", async (req, res, next) => {
 
   if (spot) {
     let resObj = spot.toJSON();
-    resObj.createdAt = Spot.dateFormat(spot.createdAt);
-    resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
+    resObj.createdAt = dateFormat(spot.createdAt);
+    resObj.updatedAt = dateFormat(spot.updatedAt);
     if (resObj.numReviews === 0)
       resObj.avgStarRating = "Spot has no review yet";
     if (!resObj.SpotImages.length) resObj.SpotImages = "Spot has no image yet";
@@ -180,8 +262,8 @@ router.put(
         });
         await spot.save();
         let resObj = spot.toJSON();
-        resObj.createdAt = Spot.dateFormat(spot.createdAt);
-        resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
+        resObj.createdAt = dateFormat(spot.createdAt);
+        resObj.updatedAt = dateFormat(spot.updatedAt);
         res.status(201);
         return res.json(resObj);
       }
@@ -243,8 +325,8 @@ router.get("/", async (req, res, next) => {
     spot.SpotImages.forEach((spotImage) => {
       if (spotImage.preview === true) spot.previewImage = spotImage.url;
     });
-    spot.createdAt = Spot.dateFormat(spot.createdAt);
-    spot.updatedAt = Spot.dateFormat(spot.updatedAt);
+    spot.createdAt = dateFormat(spot.createdAt);
+    spot.updatedAt = dateFormat(spot.updatedAt);
     if (!spot.previewImage) spot.previewImage = "Spot has no image yet";
     if (!spot.avgRating) spot.avgRating = "Spot has no review yet";
     delete spot.SpotImages;
@@ -299,8 +381,8 @@ router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
     price,
   });
   let resObj = newSpot.toJSON();
-  resObj.createdAt = Spot.dateFormat(newSpot.createdAt);
-  resObj.updatedAt = Spot.dateFormat(newSpot.updatedAt);
+  resObj.createdAt = dateFormat(newSpot.createdAt);
+  resObj.updatedAt = dateFormat(newSpot.updatedAt);
   res.status = 201;
   return res.json(resObj);
 });
