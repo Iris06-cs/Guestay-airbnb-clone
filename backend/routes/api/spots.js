@@ -7,7 +7,39 @@ const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
 const spot = require("../../db/models/spot");
-
+//validate req body
+const validateSpotBody = [
+  check("address")
+    .exists({ checkFalsy: true })
+    .withMessage("Street address is required"),
+  check("city").exists({ checkFalsy: true }).withMessage("City is required"),
+  check("state").exists({ checkFalsy: true }).withMessage("State is required"),
+  check("country")
+    .exists({ checkFalsy: true })
+    .withMessage("Country is required"),
+  check("lat")
+    .exists({ checkFalsy: true })
+    .withMessage("Latitude is required")
+    .isFloat({ min: -90, max: 90 })
+    .withMessage("Latitude is not valid"),
+  check("lng")
+    .exists({ checkFalsy: true })
+    .withMessage("Longitude is required")
+    .isFloat({ min: -180, max: 180 })
+    .withMessage("Longitude is not valid"),
+  check("name")
+    .exists({ checkFalsy: true })
+    .withMessage("Name is required")
+    .isLength({ max: 50 })
+    .withMessage("Name must be less than 50 characters"),
+  check("description")
+    .exists({ checkFalsy: true })
+    .withMessage("Description is required"),
+  check("price")
+    .exists({ checkFalsy: true })
+    .withMessage("Price per day is required"),
+  handleValidationErrors,
+];
 //-------------Add an image to a spot based on the spot id
 router.post("/:spotId/images", requireAuth, async (req, res, next) => {
   const { url, preview } = req.body;
@@ -27,6 +59,9 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
       resObj.preview = newImage.preview;
       return res.json(resObj);
     }
+    const err = new Error("Forbidden");
+    err.status = 403;
+    next(err);
   } else {
     const err = new Error("Spot couldn't be found");
     err.status = 404;
@@ -103,6 +138,58 @@ router.get("/:spotId", async (req, res, next) => {
     return next(err);
   }
 });
+//-------------------Edit a spot
+router.put(
+  "/:spotId",
+  requireAuth,
+  validateSpotBody,
+  async (req, res, next) => {
+    const {
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    } = req.body;
+    const { spotId } = req.params;
+    const ownerId = req.user.id;
+    const spot = await Spot.findByPk(spotId);
+    if (spot) {
+      //check spot belongs to current user
+      if (ownerId === spot.ownerId) {
+        spot.set({
+          address,
+          city,
+          state,
+          country,
+          lat,
+          lng,
+          name,
+          description,
+          price,
+        });
+        await spot.save();
+        const resObj = spot.toJSON();
+        resObj.createdAt = Spot.dateFormat(spot.createdAt);
+        resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
+        return res.json(resObj);
+      }
+      const err = new Error("Forbidden");
+      err.status = 403;
+      next(err);
+    } else {
+      const err = new Error("Spot couldn't be found");
+      err.status = 404;
+      err.title = "Spot couldn't be found";
+      err.errors = ["Spot couldn't be found with the provided spot id"];
+      return next(err);
+    }
+  }
+);
 //------------------Get all spots
 router.get("/", async (req, res, next) => {
   const spots = [];
@@ -153,47 +240,14 @@ router.get("/", async (req, res, next) => {
 });
 
 //-------------------create a spot under current loggin in user
-//validate req body
-const validateCreateSpot = [
-  check("address")
-    .exists({ checkFalsy: true })
-    .withMessage("Street address is required"),
-  check("city").exists({ checkFalsy: true }).withMessage("City is required"),
-  check("state").exists({ checkFalsy: true }).withMessage("State is required"),
-  check("country")
-    .exists({ checkFalsy: true })
-    .withMessage("Country is required"),
-  check("lat")
-    .exists({ checkFalsy: true })
-    .withMessage("Latitude is required")
-    .isFloat({ min: -90, max: 90 })
-    .withMessage("Latitude is not valid"),
-  check("lng")
-    .exists({ checkFalsy: true })
-    .withMessage("Longitude is required")
-    .isFloat({ min: -180, max: 180 })
-    .withMessage("Longitude is not valid"),
-  check("name")
-    .exists({ checkFalsy: true })
-    .withMessage("Name is required")
-    .isLength({ max: 50 })
-    .withMessage("Name must be less than 50 characters"),
-  check("description")
-    .exists({ checkFalsy: true })
-    .withMessage("Description is required"),
-  check("price")
-    .exists({ checkFalsy: true })
-    .withMessage("Price per day is required"),
-  handleValidationErrors,
-];
-router.post("/", requireAuth, validateCreateSpot, async (req, res, next) => {
+router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
   const { address, city, state, country, lat, lng, name, description, price } =
     req.body;
   //check if address exists
   const checkAddress = await Spot.findOne({
     where: { address },
   });
-  if (address) {
+  if (checkAddress) {
     const err = new Error("Address already exists");
     err.status = 400;
     err.title = "Address already exists";
