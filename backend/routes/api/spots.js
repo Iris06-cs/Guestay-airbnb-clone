@@ -128,7 +128,7 @@ router.get("/:spotId", async (req, res, next) => {
     group: ["Spot.id", "Owner.id", "SpotImages.id"],
   });
 
-  if (spot.id !== null) {
+  if (spot) {
     let resObj = spot.toJSON();
     resObj.createdAt = Spot.dateFormat(spot.createdAt);
     resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
