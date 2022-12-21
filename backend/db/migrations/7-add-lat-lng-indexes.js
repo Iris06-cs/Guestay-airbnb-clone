@@ -13,6 +13,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeIndex("Spots", ["lat", "lng"]);
+    options.tableName = "Spots";
+    await queryInterface.removeIndex(options, ["lat", "lng"]);
   },
 };

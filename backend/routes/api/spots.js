@@ -53,7 +53,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
         url,
         preview,
       });
-      const resObj = {};
+      let resObj = {};
       resObj.id = newImage.id;
       resObj.url = newImage.url;
       resObj.preview = newImage.preview;
@@ -72,7 +72,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
 });
 //-------------Get all spots owned by the current user
 router.get("/current", requireAuth, async (req, res, next) => {
-  const Spots = [];
+  let Spots = [];
   const userId = req.user.id;
   const spotsData = await Spot.findAll({
     where: {
@@ -129,7 +129,7 @@ router.get("/:spotId", async (req, res, next) => {
   });
 
   if (spot.id !== null) {
-    const resObj = spot.toJSON();
+    let resObj = spot.toJSON();
     resObj.createdAt = Spot.dateFormat(spot.createdAt);
     resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
     if (resObj.numReviews === 0)
@@ -179,7 +179,7 @@ router.put(
           price,
         });
         await spot.save();
-        const resObj = spot.toJSON();
+        let resObj = spot.toJSON();
         resObj.createdAt = Spot.dateFormat(spot.createdAt);
         resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
         return res.json(resObj);
@@ -220,7 +220,7 @@ router.delete("/:spotId", requireAuth, async (req, res, next) => {
 });
 //------------------Get all spots
 router.get("/", async (req, res, next) => {
-  const Spots = [];
+  let Spots = [];
   const spotsData = await Spot.findAll({
     // subQuery: false,
     include: [{ model: Review, attributes: [] }, { model: SpotImage }],
@@ -297,7 +297,7 @@ router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
     description,
     price,
   });
-  const resObj = newSpot.toJSON();
+  let resObj = newSpot.toJSON();
   resObj.createdAt = Spot.dateFormat(newSpot.createdAt);
   resObj.updatedAt = Spot.dateFormat(newSpot.updatedAt);
   res.status = 201;
@@ -305,14 +305,3 @@ router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
 });
 
 module.exports = router;
-// Executing (default):
-// SELECT `Spot`.`id`, `Spot`.`ownerId`, `Spot`.`address`, `Spot`.`city`, `Spot`.`state`, `Spot`.`country`, `Spot`.`lat`, `Spot`.`lng`, `Spot`.`name`, `Spot`.`description`, `Spot`.`price`, `Spot`.`createdAt`, `Spot`.`updatedAt`, COUNT(`stars`) AS `numReviews`, ROUND(AVG(`stars`), 1) AS `avgStarRating`, `SpotImages`.`id` AS `SpotImages.id`, `SpotImages`.`url` AS `SpotImages.url`, `SpotImages`.`preview` AS `SpotImages.preview`, `Owner`.`id` AS `Owner.id`, `Owner`.`firstName` AS `Owner.firstName`, `Owner`.`lastName` AS `Owner.lastName`
-// FROM `Spots` AS `Spot`
-// LEFT OUTER JOIN `Reviews` AS `Reviews`
-// ON `Spot`.`id` = `Reviews`.`spotId`
-// LEFT OUTER JOIN `SpotImages` AS `SpotImages`
-// ON `Spot`.`id` = `SpotImages`.`spotId`
-// LEFT OUTER JOIN `Users` AS `Owner`
-// ON `Spot`.`ownerId` = `Owner`.`id`
-// WHERE `Spot`.`id` = '3'
-// GROUP BY `Spot`.`id`, `Owner`.`id`, `SpotImages`.`id`;
