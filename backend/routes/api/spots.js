@@ -129,11 +129,31 @@ router.post(
   async (req, res, next) => {
     const { spotId } = req.params;
     const { review, stars } = req.body;
-    const userId = req.user.id;
+    const currentUserId = req.user.id;
     const spot = await Spot.findByPk(spotId);
+    //check if spotId exists
     if (spot) {
+      const reviews = await spot.getReviews();
+      reviews.forEach((review) => {
+        //check if current user already has a review for this spot
+        if (review.userId === currentUserId) {
+          const err = new Error("User already has a review for this spot");
+          err.status = 403;
+          err.title = "User already has a review for this spot";
+          err.errors = ["User already has a review for this spot"];
+          return next(err);
+        }
+        //check if current user is the spot owner
+        if (spot.ownerId === currentUserId) {
+          const err = new Error("Owner cannot review their own spot");
+          err.status = 403;
+          err.title = "Owner cannot review their own spot";
+          err.errors = ["Owner cannot review their own spot"];
+          return next(err);
+        }
+      });
       const newReview = await spot.createReview({
-        userId,
+        userId: currentUserId,
         spotId,
         review,
         stars,
