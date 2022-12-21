@@ -82,6 +82,12 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Spot",
+      indexes: [
+        {
+          unique: true,
+          fields: ["lat", "lng"],
+        },
+      ],
     }
   );
   return Spot;

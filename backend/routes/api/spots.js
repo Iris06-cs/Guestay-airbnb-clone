@@ -72,7 +72,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
 });
 //-------------Get all spots owned by the current user
 router.get("/current", requireAuth, async (req, res, next) => {
-  const spots = [];
+  const Spots = [];
   const userId = req.user.id;
   const spotsData = await Spot.findAll({
     where: {
@@ -88,12 +88,13 @@ router.get("/current", requireAuth, async (req, res, next) => {
       ],
     },
     group: ["SpotImages.id", "Spot.id"],
+    order: [["id"]],
   });
   spotsData.forEach((spotData) => {
-    spots.push(spotData.toJSON());
+    Spots.push(spotData.toJSON());
   });
 
-  spots.forEach((spot) => {
+  Spots.forEach((spot) => {
     spot.SpotImages.forEach((spotImage) => {
       if (spotImage.preview === true) spot.previewImage = spotImage.url;
     });
@@ -104,7 +105,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
     delete spot.SpotImages;
   });
 
-  res.json({ spots });
+  res.json({ Spots });
 });
 //-----------------Get details of a spot from an id
 router.get("/:spotId", async (req, res, next) => {
@@ -129,6 +130,9 @@ router.get("/:spotId", async (req, res, next) => {
     const resObj = spot.toJSON();
     resObj.createdAt = Spot.dateFormat(spot.createdAt);
     resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
+    if (resObj.numReviews === 0)
+      resObj.avgStarRating = "Spot has no review yet";
+    if (!resObj.SpotImages.length) resObj.SpotImages = "Spot has no image yet";
     return res.json(resObj);
   } else {
     const err = new Error("Spot couldn't be found");
@@ -161,7 +165,7 @@ router.put(
     if (spot) {
       //check spot belongs to current user
       if (ownerId === spot.ownerId) {
-        spot.set({
+        await spot.update({
           address,
           city,
           state,
@@ -214,7 +218,7 @@ router.delete("/:spotId", requireAuth, async (req, res, next) => {
 });
 //------------------Get all spots
 router.get("/", async (req, res, next) => {
-  const spots = [];
+  const Spots = [];
   const spotsData = await Spot.findAll({
     // subQuery: false,
     include: [{ model: Review, attributes: [] }, { model: SpotImage }],
@@ -230,9 +234,9 @@ router.get("/", async (req, res, next) => {
     order: [["id"]],
   });
   spotsData.forEach((spotData) => {
-    spots.push(spotData.toJSON());
+    Spots.push(spotData.toJSON());
   });
-  spots.forEach((spot) => {
+  Spots.forEach((spot) => {
     spot.SpotImages.forEach((spotImage) => {
       if (spotImage.preview === true) spot.previewImage = spotImage.url;
     });
@@ -259,7 +263,7 @@ router.get("/", async (req, res, next) => {
   //   spotData.previewImage = previewImage.toJSON().url;
   //   spots.push(spotData);
   // }
-  res.json({ spots });
+  res.json({ Spots });
 });
 
 //-------------------create a spot under current loggin in user
@@ -277,6 +281,7 @@ router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
     err.errors = ["Spot with this address already exists"];
     return next(err);
   }
+
   const ownerId = req.user.id;
   const newSpot = await Spot.create({
     ownerId,
@@ -291,8 +296,8 @@ router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
     price,
   });
   const resObj = newSpot.toJSON();
-  resObj.createdAt = Spot.dateFormat(spot.createdAt);
-  resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
+  resObj.createdAt = Spot.dateFormat(newSpot.createdAt);
+  resObj.updatedAt = Spot.dateFormat(newSpot.updatedAt);
   res.status = 201;
   return res.json(resObj);
 });
