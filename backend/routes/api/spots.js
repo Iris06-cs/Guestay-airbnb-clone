@@ -47,6 +47,18 @@ const validateSpotBody = [
     .withMessage("Price per day is required"),
   handleValidationErrors,
 ];
+//validate create review req body
+const validateReviewBody = [
+  check("review")
+    .exists({ checkFalsy: true })
+    .withMessage("Review text is required"),
+  check("stars")
+    .exists({ checkFalsy: true })
+    .withMessage("Stars is required")
+    .isInt({ min: 1, max: 5 })
+    .withMessage("Stars must be an integer from 1 to 5"),
+  handleValidationErrors,
+];
 //-------------Add an image to a spot based on the spot id
 router.post("/:spotId/images", requireAuth, async (req, res, next) => {
   const { url, preview } = req.body;
@@ -109,6 +121,37 @@ router.get("/:spotId/reviews", async (req, res, next) => {
     return next(err);
   }
 });
+//-------------create a Review for a spot based on the spot id
+router.post(
+  "/:spotId/reviews",
+  requireAuth,
+  validateReviewBody,
+  async (req, res, next) => {
+    const { spotId } = req.params;
+    const { review, stars } = req.body;
+    const userId = req.user.id;
+    const spot = await Spot.findByPk(spotId);
+    if (spot) {
+      const newReview = await spot.createReview({
+        userId,
+        spotId,
+        review,
+        stars,
+      });
+      const resObj = newReview.toJSON();
+      resObj.createdAt = dateFormat(newReview.createdAt);
+      resObj.updatedAt = dateFormat(newReview.updatedAt);
+      res.staus = 201;
+      return res.json(resObj);
+    } else {
+      const err = new Error("Spot couldn't be found");
+      err.status = 404;
+      err.title = "Spot couldn't be found";
+      err.errors = ["Spot couldn't be found"];
+      return next(err);
+    }
+  }
+);
 //-------------Get all spots owned by the current user
 router.get("/current", requireAuth, async (req, res, next) => {
   let Spots = [];
