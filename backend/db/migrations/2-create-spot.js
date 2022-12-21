@@ -73,9 +73,13 @@ module.exports = {
       },
       options
     );
+    await queryInterface.addIndex("Spots", ["lat", "lng"], {
+      unique: true,
+    });
   },
   async down(queryInterface, Sequelize) {
     options.tableName = "Spots";
+    await queryInterface.removeIndex(options, ["lat", "lng"]);
     return await queryInterface.dropTable(options);
   },
 };
