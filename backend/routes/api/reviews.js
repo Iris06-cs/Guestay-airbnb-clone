@@ -15,6 +15,7 @@ const { Op } = require("sequelize");
 const spot = require("../../db/models/spot");
 const review = require("../../db/models/review");
 const { dateFormat } = require("../../utils/dataFormatter");
+
 //--------------Get all Reviews of the current user
 router.get("/current", requireAuth, async (req, res, next) => {
   const userId = req.user.id;
