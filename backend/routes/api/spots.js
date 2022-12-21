@@ -6,8 +6,9 @@ const { Spot, User, Review, SpotImage, sequelize } = require("../../db/models");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
+const spot = require("../../db/models/spot");
 
-//Get all spots owned by the current user
+//-------------Get all spots owned by the current user
 router.get("/current", requireAuth, async (req, res, next) => {
   const spots = [];
   const userId = req.user.id;
@@ -29,17 +30,21 @@ router.get("/current", requireAuth, async (req, res, next) => {
   spotsData.forEach((spotData) => {
     spots.push(spotData.toJSON());
   });
+
   spots.forEach((spot) => {
     spot.SpotImages.forEach((spotImage) => {
       if (spotImage.preview === true) spot.previewImage = spotImage.url;
     });
-    if (!spot.previewImage) spot.previewImage = "no image";
+    spot.createdAt = Spot.dateFormat(spot.createdAt);
+    spot.updatedAt = Spot.dateFormat(spot.updatedAt);
+    if (!spot.previewImage) spot.previewImage = "Spot has no image yet";
+    if (!spot.avgRating) spot.avgRating = "Spot has no review yet";
     delete spot.SpotImages;
   });
 
   res.json({ spots });
 });
-//Get details of a spot from an id
+//-----------------Get details of a spot from an id
 router.get("/:spotId", async (req, res, next) => {
   const { spotId } = req.params;
   const spot = await Spot.findByPk(spotId, {
@@ -59,7 +64,10 @@ router.get("/:spotId", async (req, res, next) => {
     },
   });
   if (spot.id !== null) {
-    return res.json(spot);
+    const resObj = spot.toJSON();
+    resObj.createdAt = Spot.dateFormat(spot.createdAt);
+    resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
+    return res.json(resObj);
   } else {
     const err = new Error("Spot couldn't be found");
     err.status = 404;
@@ -68,7 +76,7 @@ router.get("/:spotId", async (req, res, next) => {
     return next(err);
   }
 });
-//Get all spots
+//------------------Get all spots
 router.get("/", async (req, res, next) => {
   const spots = [];
   const spotsData = await Spot.findAll({
@@ -91,7 +99,10 @@ router.get("/", async (req, res, next) => {
     spot.SpotImages.forEach((spotImage) => {
       if (spotImage.preview === true) spot.previewImage = spotImage.url;
     });
-    if (!spot.previewImage) spot.previewImage = "no image";
+    spot.createdAt = Spot.dateFormat(spot.createdAt);
+    spot.updatedAt = Spot.dateFormat(spot.updatedAt);
+    if (!spot.previewImage) spot.previewImage = "Spot has no image yet";
+    if (!spot.avgRating) spot.avgRating = "Spot has no review yet";
     delete spot.SpotImages;
   });
   // for (let spot of spotsData) {
@@ -112,6 +123,74 @@ router.get("/", async (req, res, next) => {
   //   spots.push(spotData);
   // }
   res.json({ spots });
+});
+
+//-------------------create a spot
+//validate req body
+const validateCreateSpot = [
+  check("address")
+    .exists({ checkFalsy: true })
+    .withMessage("Street address is required"),
+  check("city").exists({ checkFalsy: true }).withMessage("City is required"),
+  check("state").exists({ checkFalsy: true }).withMessage("State is required"),
+  check("country")
+    .exists({ checkFalsy: true })
+    .withMessage("Country is required"),
+  check("lat")
+    .exists({ checkFalsy: true })
+    .withMessage("Latitude is required")
+    .isFloat({ min: -90, max: 90 })
+    .withMessage("Latitude is not valid"),
+  check("lng")
+    .exists({ checkFalsy: true })
+    .withMessage("Longitude is required")
+    .isFloat({ min: -180, max: 180 })
+    .withMessage("Longitude is not valid"),
+  check("name")
+    .exists({ checkFalsy: true })
+    .withMessage("Name is required")
+    .isLength({ max: 50 })
+    .withMessage("Name must be less than 50 characters"),
+  check("description")
+    .exists({ checkFalsy: true })
+    .withMessage("Description is required"),
+  check("price")
+    .exists({ checkFalsy: true })
+    .withMessage("Price per day is required"),
+  handleValidationErrors,
+];
+router.post("/", requireAuth, validateCreateSpot, async (req, res, next) => {
+  const { address, city, state, country, lat, lng, name, description, price } =
+    req.body;
+  //check if address exists
+  const checkAddress = await Spot.findOne({
+    where: { address },
+  });
+  if (address) {
+    const err = new Error("Address already exists");
+    err.status = 400;
+    err.title = "Address already exists";
+    err.errors = ["Spot with this address already exists"];
+    return next(err);
+  }
+  const ownerId = req.user.id;
+  const newSpot = await Spot.create({
+    ownerId,
+    address,
+    city,
+    state,
+    country,
+    lat,
+    lng,
+    name,
+    description,
+    price,
+  });
+  const resObj = newSpot.toJSON();
+  resObj.createdAt = Spot.dateFormat(spot.createdAt);
+  resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
+  res.status = 201;
+  return res.json(resObj);
 });
 
 module.exports = router;

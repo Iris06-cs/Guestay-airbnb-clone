@@ -2,11 +2,14 @@
 const { Model, Validator } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Spot extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+    //date format
+    //year-month-day h:m:s
+    static dateFormat(date) {
+      const dateStrs = date.toISOString().split("T");
+      dateStrs[1] = dateStrs[1].split(".")[0];
+      const formattedDate = dateStrs.join(" ");
+      return formattedDate;
+    }
     static associate(models) {
       //1-many users-spots
       Spot.belongsTo(models.User, { as: "Owner", foreignKey: "ownerId" });
