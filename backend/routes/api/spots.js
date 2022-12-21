@@ -125,7 +125,7 @@ router.get("/", async (req, res, next) => {
   res.json({ spots });
 });
 
-//-------------------create a spot
+//-------------------create a spot under current loggin in user
 //validate req body
 const validateCreateSpot = [
   check("address")
