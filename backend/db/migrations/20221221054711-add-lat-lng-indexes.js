@@ -6,14 +6,10 @@ if (process.env.NODE_ENV === "production") {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addIndex(
-      "Spots",
-      ["lat", "lng"],
-      {
-        unique: true,
-      },
-      options
-    );
+    options.tableName = "Spots";
+    await queryInterface.addIndex(options, ["lat", "lng"], {
+      unique: true,
+    });
   },
 
   async down(queryInterface, Sequelize) {
