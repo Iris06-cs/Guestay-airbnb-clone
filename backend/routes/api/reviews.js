@@ -142,7 +142,7 @@ router.put(
         const err = new Error("Forbidden");
         err.status = 403;
         err.errors = ["Review does not belong to the current user"];
-        next(err);
+        return next(err);
       }
     } else {
       const err = new Error("Review couldn't be found");
@@ -153,4 +153,29 @@ router.put(
     }
   }
 );
+//------------------delete a review
+router.delete("/:reviewId", requireAuth, async (req, res, next) => {
+  const { reviewId } = req.params;
+  const currentUserId = req.user.id;
+  //check if review exit
+  const reviewData = await Review.findByPk(reviewId);
+  if (reviewData) {
+    //check if review belongs to current user
+    if (reviewData.userId === currentUserId) {
+      await reviewData.destroy();
+      return res.json({ message: "Successfully deleted", statusCode: 200 });
+    } else {
+      const err = new Error("Forbidden");
+      err.status = 403;
+      err.errors = ["Review does not belong to the current user"];
+      return next(err);
+    }
+  } else {
+    const err = new Error("Review couldn't be found");
+    err.status = 404;
+    err.title = "Review couldn't be found";
+    err.errors = ["Review couldn't be found"];
+    return next(err);
+  }
+});
 module.exports = router;
