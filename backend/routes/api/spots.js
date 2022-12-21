@@ -125,7 +125,9 @@ router.get("/:spotId", async (req, res, next) => {
         ],
       ],
     },
+    group: ["Spot.id", "Owner.id", "SpotImages.id"],
   });
+
   if (spot.id !== null) {
     const resObj = spot.toJSON();
     resObj.createdAt = Spot.dateFormat(spot.createdAt);
@@ -303,3 +305,14 @@ router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
 });
 
 module.exports = router;
+// Executing (default):
+// SELECT `Spot`.`id`, `Spot`.`ownerId`, `Spot`.`address`, `Spot`.`city`, `Spot`.`state`, `Spot`.`country`, `Spot`.`lat`, `Spot`.`lng`, `Spot`.`name`, `Spot`.`description`, `Spot`.`price`, `Spot`.`createdAt`, `Spot`.`updatedAt`, COUNT(`stars`) AS `numReviews`, ROUND(AVG(`stars`), 1) AS `avgStarRating`, `SpotImages`.`id` AS `SpotImages.id`, `SpotImages`.`url` AS `SpotImages.url`, `SpotImages`.`preview` AS `SpotImages.preview`, `Owner`.`id` AS `Owner.id`, `Owner`.`firstName` AS `Owner.firstName`, `Owner`.`lastName` AS `Owner.lastName`
+// FROM `Spots` AS `Spot`
+// LEFT OUTER JOIN `Reviews` AS `Reviews`
+// ON `Spot`.`id` = `Reviews`.`spotId`
+// LEFT OUTER JOIN `SpotImages` AS `SpotImages`
+// ON `Spot`.`id` = `SpotImages`.`spotId`
+// LEFT OUTER JOIN `Users` AS `Owner`
+// ON `Spot`.`ownerId` = `Owner`.`id`
+// WHERE `Spot`.`id` = '3'
+// GROUP BY `Spot`.`id`, `Owner`.`id`, `SpotImages`.`id`;
