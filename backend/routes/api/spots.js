@@ -5,6 +5,7 @@ const { restoreUser, requireAuth } = require("../../utils/auth");
 const { Spot, User, Review, SpotImage, sequelize } = require("../../db/models");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
+const { dateFormat } = require("../../utils/dataFormatter");
 const { Op } = require("sequelize");
 const spot = require("../../db/models/spot");
 //validate req body
@@ -98,8 +99,8 @@ router.get("/current", requireAuth, async (req, res, next) => {
     spot.SpotImages.forEach((spotImage) => {
       if (spotImage.preview === true) spot.previewImage = spotImage.url;
     });
-    spot.createdAt = Spot.dateFormat(spot.createdAt);
-    spot.updatedAt = Spot.dateFormat(spot.updatedAt);
+    spot.createdAt = dateFormat(spot.createdAt);
+    spot.updatedAt = dateFormat(spot.updatedAt);
     if (!spot.previewImage) spot.previewImage = "Spot has no image yet";
     if (!spot.avgRating) spot.avgRating = "Spot has no review yet";
     delete spot.SpotImages;
@@ -130,8 +131,8 @@ router.get("/:spotId", async (req, res, next) => {
 
   if (spot) {
     let resObj = spot.toJSON();
-    resObj.createdAt = Spot.dateFormat(spot.createdAt);
-    resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
+    resObj.createdAt = dateFormat(spot.createdAt);
+    resObj.updatedAt = dateFormat(spot.updatedAt);
     if (resObj.numReviews === 0)
       resObj.avgStarRating = "Spot has no review yet";
     if (!resObj.SpotImages.length) resObj.SpotImages = "Spot has no image yet";
@@ -180,8 +181,8 @@ router.put(
         });
         await spot.save();
         let resObj = spot.toJSON();
-        resObj.createdAt = Spot.dateFormat(spot.createdAt);
-        resObj.updatedAt = Spot.dateFormat(spot.updatedAt);
+        resObj.createdAt = dateFormat(spot.createdAt);
+        resObj.updatedAt = dateFormat(spot.updatedAt);
         res.status(201);
         return res.json(resObj);
       }
@@ -243,8 +244,8 @@ router.get("/", async (req, res, next) => {
     spot.SpotImages.forEach((spotImage) => {
       if (spotImage.preview === true) spot.previewImage = spotImage.url;
     });
-    spot.createdAt = Spot.dateFormat(spot.createdAt);
-    spot.updatedAt = Spot.dateFormat(spot.updatedAt);
+    spot.createdAt = dateFormat(spot.createdAt);
+    spot.updatedAt = dateFormat(spot.updatedAt);
     if (!spot.previewImage) spot.previewImage = "Spot has no image yet";
     if (!spot.avgRating) spot.avgRating = "Spot has no review yet";
     delete spot.SpotImages;
@@ -299,8 +300,8 @@ router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
     price,
   });
   let resObj = newSpot.toJSON();
-  resObj.createdAt = Spot.dateFormat(newSpot.createdAt);
-  resObj.updatedAt = Spot.dateFormat(newSpot.updatedAt);
+  resObj.createdAt = dateFormat(newSpot.createdAt);
+  resObj.updatedAt = dateFormat(newSpot.updatedAt);
   res.status = 201;
   return res.json(resObj);
 });
