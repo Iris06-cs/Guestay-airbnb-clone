@@ -227,6 +227,7 @@ router.get(
             User,
             id,
             spotId,
+            userId,
             startDate,
             endDate,
             createdAt,
