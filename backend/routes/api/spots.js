@@ -165,7 +165,7 @@ router.post(
       const resObj = newReview.toJSON();
       resObj.createdAt = dateFormat(newReview.createdAt);
       resObj.updatedAt = dateFormat(newReview.updatedAt);
-      res.staus = 201;
+      res.status(201);
       return res.json(resObj);
     } else {
       const err = new Error("Spot couldn't be found");
@@ -407,7 +407,7 @@ router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
   let resObj = newSpot.toJSON();
   resObj.createdAt = dateFormat(newSpot.createdAt);
   resObj.updatedAt = dateFormat(newSpot.updatedAt);
-  res.status = 201;
+  res.status(201);
   return res.json(resObj);
 });
 

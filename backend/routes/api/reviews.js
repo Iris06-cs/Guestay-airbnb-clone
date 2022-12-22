@@ -145,7 +145,6 @@ router.put(
         let resObj = reviewData.toJSON();
         resObj.createdAt = dateFormat(reviewData.createdAt);
         resObj.updatedAt = dateFormat(reviewData.updatedAt);
-        res.status(200);
         return res.json(resObj);
       } else {
         const err = new Error("Forbidden");
