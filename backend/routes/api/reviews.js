@@ -83,7 +83,13 @@ router.get("/current", requireAuth, async (req, res, next) => {
       },
       { model: ReviewImage, attributes: ["id", "url"] },
     ],
-    group: ["User.id", "Spot.id", "ReviewImages.id"],
+    group: [
+      "Review.id",
+      "User.id",
+      "Spot.id",
+      "ReviewImages.id",
+      "Spot->SpotImages.id",
+    ],
     order: [["id"], ["userId"], ["spotId"]],
   });
   let Reviews = [];
@@ -139,7 +145,6 @@ router.put(
         let resObj = reviewData.toJSON();
         resObj.createdAt = dateFormat(reviewData.createdAt);
         resObj.updatedAt = dateFormat(reviewData.updatedAt);
-        res.status(200);
         return res.json(resObj);
       } else {
         const err = new Error("Forbidden");
