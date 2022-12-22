@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Validator } = require("sequelize");
 const getYesterday = () => {
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
@@ -34,22 +34,28 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       startDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
         validate: {
           isDate: true,
-          //on or after today
-          isAfter: getYesterday(),
         },
+
         unique: true,
       },
       endDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
         validate: {
+          // isDateString(val) {
+          //   if (
+          //     !Validator.isDate(val, { format: "YYYY-MM-DD", strictMode: true })
+          //   )
+          //     throw Error("Not a valid date format");
+          // },
           isDate: true,
-          isAfter: this.startDate,
+          // isAfter: this.startDate,
         },
+
         unique: true,
       },
     },
