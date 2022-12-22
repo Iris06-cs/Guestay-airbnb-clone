@@ -38,8 +38,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           isDate: true,
-          //on or after today
-          // isAfter: getYesterday(),
         },
 
         unique: true,
