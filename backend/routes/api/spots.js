@@ -203,6 +203,7 @@ router.get(
             spotId: spotIdForBooking,
           },
           include: { model: User, attributes: ["id", "firstName", "lastName"] },
+          group: ["Spot.id", "User.id"],
         });
         let bookingDataFormat = [];
         let Bookings = [];
