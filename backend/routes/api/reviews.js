@@ -15,6 +15,7 @@ const { Op } = require("sequelize");
 const spot = require("../../db/models/spot");
 const review = require("../../db/models/review");
 const { dateFormat } = require("../../utils/dataFormatter");
+
 //--------------Add an image to a review based on the review id
 const validateReqBody = [
   check("url").exists({ checkFalsy: true }).withMessage("url is required"),
@@ -81,6 +82,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
       },
       { model: ReviewImage, attributes: ["id", "url"] },
     ],
+    group: ["User.id", "Spot.id", "ReviewImages.id", "SpotImages.id"],
     order: [["id"], ["userId"], ["spotId"]],
   });
   let Reviews = [];
