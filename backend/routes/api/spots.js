@@ -8,6 +8,7 @@ const {
   Review,
   SpotImage,
   ReviewImage,
+  Booking,
   sequelize,
 } = require("../../db/models");
 const { check } = require("express-validator");
@@ -167,6 +168,74 @@ router.post(
       resObj.updatedAt = dateFormat(newReview.updatedAt);
       res.status(201);
       return res.json(resObj);
+    } else {
+      const err = new Error("Spot couldn't be found");
+      err.status = 404;
+      err.title = "Spot couldn't be found";
+      err.errors = ["Spot couldn't be found"];
+      return next(err);
+    }
+  }
+);
+//--------------Get all bookings for a Spot based on the spotId
+router.get(
+  "/:spotIdForBooking/bookings",
+  requireAuth,
+  async (req, res, next) => {
+    const { spotIdForBooking } = req.params;
+    const currentUserId = req.user.id;
+    //check if spot exit
+    const spot = await Spot.findByPk(spotIdForBooking);
+    if (spot) {
+      if (spot.ownerId !== currentUserId) {
+        //current user is not spot owner
+        const Bookings = await Booking.findAll({
+          where: {
+            spotId: spotIdForBooking,
+          },
+          attributes: ["spotId", "startDate", "endDate"],
+        });
+        return res.json({ Bookings });
+      } else {
+        //current user is spot owner
+        const bookingsData = await Booking.findAll({
+          where: {
+            spotId: spotIdForBooking,
+          },
+          include: { model: User, attributes: ["id", "firstName", "lastName"] },
+        });
+        let bookingDataFormat = [];
+        let Bookings = [];
+        bookingsData.forEach((booking) => {
+          bookingDataFormat.push(booking.toJSON());
+        });
+        bookingDataFormat.forEach((booking) => {
+          booking.createdAt = dateFormat(booking.createdAt);
+          booking.updatedAt = dateFormat(booking.updatedAt);
+          const {
+            id,
+            spotId,
+            userId,
+            startDate,
+            endDate,
+            createdAt,
+            updatedAt,
+            User,
+          } = booking;
+          const resBooking = {
+            User,
+            id,
+            spotId,
+            startDate,
+            endDate,
+            createdAt,
+            updatedAt,
+          };
+          Bookings.push(resBooking);
+        });
+
+        return res.json({ Bookings });
+      }
     } else {
       const err = new Error("Spot couldn't be found");
       err.status = 404;
