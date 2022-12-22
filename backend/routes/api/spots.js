@@ -245,6 +245,96 @@ router.get(
     }
   }
 );
+//-------------Create a booking for a spot base on spot id
+const validateBookingBody = [
+  check("startDate")
+    .exists({ checkFalsy: true })
+    .withMessage("startDate is required")
+    .isDate()
+    .withMessage("not a valid date format YYYY-MM-DD"),
+  check("endDate")
+    .exists({ checkFalsy: true })
+    .withMessage("endDate is required")
+    .isDate()
+    .withMessage("not a valid date format YYYY-MM-DD"),
+  handleValidationErrors,
+];
+router.post(
+  "/:spotIdForBooking/bookings",
+  requireAuth,
+  validateBookingBody,
+  async (req, res, next) => {
+    const { spotIdForBooking } = req.params;
+    const currentUserId = req.user.id;
+    const { startDate, endDate } = req.body;
+    if (new Date(startDate) >= new Date(endDate)) {
+      const err = new Error("Validation error");
+      err.status = 400;
+      err.errors = ["endDate cannot be on or before startDate"];
+      return next(err);
+    }
+    //check if spot exits
+    const spot = await Spot.findByPk(spotIdForBooking);
+    if (spot) {
+      //check if current user is spot owner
+      if (spot.ownerId !== currentUserId) {
+        //get all existing bookings for this spot
+        const existingBookings = await spot.getBookings();
+        const bookings = [];
+        existingBookings.forEach((booking) => {
+          bookings.push(booking.toJSON());
+        });
+        for (let booking of bookings) {
+          let start = new Date(booking.startDate);
+          let end = new Date(booking.endDate);
+          const reqStart = new Date(startDate);
+          const reqEnd = new Date(endDate);
+          if (reqStart <= end && reqStart >= start) {
+            const err = new Error(
+              "Sorry,this spot is already booked for the specified dates"
+            );
+            err.status = 403;
+            err.title =
+              "Sorry,this spot is already booked for the specified dates";
+            err.errors = ["Start date conflicts with an existing booking"];
+            next(err);
+          } else if (reqEnd <= end && reqEnd >= start) {
+            const err = new Error(
+              "Sorry,this spot is already booked for the specified dates"
+            );
+            err.status = 403;
+            err.title =
+              "Sorry,this spot is already booked for the specified dates";
+            err.errors = ["End date conflicts with an existing booking"];
+            return next(err);
+          }
+        }
+        const newBooking = await spot.createBooking({
+          spotId: spotIdForBooking,
+          userId: currentUserId,
+          startDate,
+          endDate,
+        });
+        const resObj = newBooking.toJSON();
+        resObj.createdAt = dateFormat(newBooking.createdAt);
+        resObj.updatedAt = dateFormat(newBooking.updatedAt);
+        return res.json(resObj);
+      } else {
+        const err = new Error("Spot cannot belong to the current User");
+        err.status = 403;
+        err.title = "Spot cannot belong to the current User";
+        err.errors = ["Spot cannot belong to the current User"];
+        return next(err);
+      }
+    } else {
+      const err = new Error("Spot couldn't be found");
+      err.status = 404;
+      err.title = "Spot couldn't be found";
+      err.errors = ["Spot couldn't be found"];
+      return next(err);
+    }
+  }
+);
 //-------------Get all spots owned by the current user
 router.get("/current", requireAuth, async (req, res, next) => {
   let Spots = [];
