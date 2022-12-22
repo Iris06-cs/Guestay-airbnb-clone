@@ -18,6 +18,15 @@ module.exports = {
         require: true,
         rejectUnauthorized: false,
       },
+      useUTC: false, //for reading from database
+      dateStrings: true,
+      typeCast: function (field, next) {
+        // for reading from database
+        if (field.type === "DATEONLY") {
+          return field.string();
+        }
+        return next();
+      },
     },
     define: {
       schema: process.env.SCHEMA,
