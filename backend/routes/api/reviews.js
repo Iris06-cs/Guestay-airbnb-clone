@@ -13,8 +13,8 @@ const {
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
-const spot = require("../../db/models/spot");
-const review = require("../../db/models/review");
+// const spot = require("../../db/models/spot");
+// const review = require("../../db/models/review");
 const { dateFormat } = require("../../utils/dataFormatter");
 
 //--------------Add an image to a review based on the review id
@@ -99,13 +99,13 @@ router.get("/current", requireAuth, async (req, res, next) => {
   Reviews.forEach((review) => {
     review.createdAt = dateFormat(review.createdAt);
     review.updatedAt = dateFormat(review.updatedAt);
-    if (review.Spot.SpotImages.length) {
-      review.Spot.SpotImages.forEach((image) => {
-        if (image.preview === true) {
-          review.Spot.previewImage = image.url;
-        }
-      });
-    } else review.Spot.previewImage = "Does not have a preview image";
+    review.Spot.previewImage = "Does not have a preview image";
+
+    review.Spot.SpotImages.forEach((image) => {
+      if (image.preview === true) {
+        review.Spot.previewImage = image.url;
+      }
+    });
     if (!review.ReviewImages.length)
       review.ReviewImages = "Does not have any review images";
     delete review.Spot.SpotImages;

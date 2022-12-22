@@ -5,7 +5,7 @@ const sessionRouter = require("./session.js");
 const usersRouter = require("./users.js");
 const spotsRouter = require("./spots.js");
 const reviewRouter = require("./reviews.js");
-
+const bookingRouter = require("./bookings.js");
 //connect to restoreUser middleware
 // If current user session is valid, set req.user to the user in the database
 // If current user session is not valid, set req.user to null
@@ -18,6 +18,9 @@ router.use("/users", usersRouter);
 router.use("/spots", spotsRouter);
 //connect to reviewRouter
 router.use("/reviews", reviewRouter);
+//connect to bookingRouter
+router.use("/bookings", bookingRouter);
+
 router.post("/test", function (req, res) {
   res.json({ requestBody: req.body });
 });
