@@ -8,6 +8,7 @@ const {
   Review,
   ReviewImage,
   SpotImage,
+  sequelize,
 } = require("../../db/models");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -82,7 +83,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
       },
       { model: ReviewImage, attributes: ["id", "url"] },
     ],
-    group: ["User.id", "Spot.id", "ReviewImages.id", "SpotImages.id"],
+    group: ["User.id", "Spot.id", "ReviewImages.id"],
     order: [["id"], ["userId"], ["spotId"]],
   });
   let Reviews = [];

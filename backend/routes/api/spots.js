@@ -8,6 +8,7 @@ const {
   Review,
   SpotImage,
   ReviewImage,
+  sequelize,
 } = require("../../db/models");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -113,6 +114,7 @@ router.get("/:spotId/reviews", async (req, res, next) => {
     Reviews.forEach((review) => {
       review.createdAt = dateFormat(review.createdAt);
       review.updatedAt = dateFormat(review.updatedAt);
+      if (!review.ReviewImages.length) review.ReviewImages = "No ReviewImages";
     });
     return res.json({ Reviews });
   } else {
