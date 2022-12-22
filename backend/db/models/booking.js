@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           isDate: true,
           //on or after today
-          isAfter: getYesterday(),
+          // isAfter: getYesterday(),
         },
 
         unique: true,
@@ -55,7 +55,7 @@ module.exports = (sequelize, DataTypes) => {
           //     throw Error("Not a valid date format");
           // },
           isDate: true,
-          isAfter: this.startDate,
+          // isAfter: this.startDate,
         },
 
         unique: true,
