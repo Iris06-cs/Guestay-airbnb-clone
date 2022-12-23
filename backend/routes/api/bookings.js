@@ -92,8 +92,9 @@ router.put("/:bookingId", requireAuth, async (req, res, next) => {
     return next(err);
   }
   //check if end date is before today
-  const reqStart = new Date(startDate);
-  const reqEnd = new Date(endDate);
+  const reqStart = new Date(booking.startDate);
+  const reqEnd = new Date(booking.endDate);
+  console.log(reqEnd, Date.now());
   if (reqEnd < Date.now()) {
     const err = new Error("Past bookings can't be modified");
     err.status = 403;
