@@ -337,6 +337,7 @@ router.post(
     }
   }
 );
+
 //-------------Get all spots owned by the current user
 router.get("/current", requireAuth, async (req, res, next) => {
   let Spots = [];
@@ -488,9 +489,90 @@ router.delete("/:spotId", requireAuth, async (req, res, next) => {
 });
 //------------------Get all spots
 router.get("/", async (req, res, next) => {
+  let errorResponse = {
+    message: "Validation Error",
+    statusCode: 400,
+    errors: [],
+  };
   let Spots = [];
+
+  let query = { where: {} };
+
+  //parse query parmeters from string to number
+  const queryParms = Object.keys(req.query);
+  queryParms.forEach((key) => {
+    if (key === "page" || key === "size")
+      req.query[key] = parseInt(req.query[key]);
+    else req.query[key] = parseFloat(req.query[key]);
+  });
+  let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } =
+    req.query;
+
+  if (minLat) {
+    if (minLat < -90 || minLat > 90)
+      errorResponse.errors.push("Minimum latitude is invalid");
+    else query.where.lat = { [Op.gte]: minLat };
+  }
+  if (maxLat) {
+    if (maxLat > 90 || maxLat < -90)
+      errorResponse.errors.push("Maximum latitude is invalid");
+    else if (minLat) query.where.lat = { [Op.between]: [minLat, maxLat] };
+    else query.where.lat = { [Op.lte]: maxLat };
+  }
+  if (minLng) {
+    if (minLng < -180 || minLng > 180)
+      errorResponse.errors.push("Minimum longitude is invalid");
+    else query.where.lng = { [Op.gte]: minLng };
+  }
+  if (maxLng) {
+    if (maxLng > 180 || maxLng < -180)
+      errorResponse.errors.push("Maximum latitude is invalid");
+    else if (minLat) query.where.lng = { [Op.between]: [minLng, maxLng] };
+    else query.where.lng = { [Op.lte]: maxLng };
+  }
+  if (minPrice) {
+    if (minPrice < 0)
+      errorResponse.errors.push(
+        "Minimum price must be greater than or equal to 0"
+      );
+    else query.where.price = { [Op.gte]: minPrice };
+  }
+  if (maxPrice) {
+    if (maxPrice < 0)
+      errorResponse.errors.push(
+        "Maximum price must be greater than or equal to 0"
+      );
+    else if (minPrice)
+      query.where.price = { [Op.between]: [minPrice, maxPrice] };
+    else query.where.price = { [Op.lte]: maxPrice };
+  }
+  //pagination
+  if (!page) page = 0;
+  if (!size) size = 20;
+  const pagination = {};
+  //check size
+  if (Number.isInteger(size) && size >= 0 && size <= 20) {
+    if (size !== 0) pagination.limit = size;
+  } else {
+    errorResponse.errors.push("Size must be greater than or equal to 0");
+  }
+  //check page
+  if (Number.isInteger(page) && page >= 0 && page <= 10) {
+    if (page !== 0) pagination.offset = size * (page - 1);
+  } else {
+    errorResponse.errors.push("Page must be greater than or equal to 0");
+  }
+
+  //query parameter validation errors
+  if (errorResponse.errors.length) {
+    res.status(400);
+    res.json(errorResponse);
+    return;
+  }
+
   const spotsData = await Spot.findAll({
     // subQuery: false,
+
     include: [{ model: Review, attributes: [] }, { model: SpotImage }],
     attributes: {
       include: [
@@ -500,8 +582,10 @@ router.get("/", async (req, res, next) => {
         ],
       ],
     },
+    ...query,
     group: ["SpotImages.id", "Spot.id"],
     order: [["id"]],
+    pagination,
   });
   spotsData.forEach((spotData) => {
     Spots.push(spotData.toJSON());
@@ -514,26 +598,12 @@ router.get("/", async (req, res, next) => {
     spot.updatedAt = dateFormat(spot.updatedAt);
     if (!spot.previewImage) spot.previewImage = "Spot has no image yet";
     if (!spot.avgRating) spot.avgRating = "Spot has no review yet";
+
     delete spot.SpotImages;
   });
-  // for (let spot of spotsData) {
-  //   const reviewData = await spot.getReviews({
-  //     attributes: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
-  //     group: ["Review.id"],
-  //   });
-  //   const previewImage = await SpotImage.findOne({
-  //     attributes: ["url"],
-  //     where: {
-  //       spotId: spot.id,
-  //       preview: true,
-  //     },
-  //   });
-  // const spotData = spot.toJSON();
-  // spotData.avgRating = reviewData[0].toJSON().avgRating;
-  //   spotData.previewImage = previewImage.toJSON().url;
-  //   spots.push(spotData);
-  // }
-  res.json({ Spots });
+  if (!Spots.length) Spots = "No matching spots";
+  resObj = { Spots, page, size };
+  res.json(resObj);
 });
 
 //-------------------create a spot under current loggin in user
