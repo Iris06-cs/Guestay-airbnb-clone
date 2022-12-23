@@ -6,6 +6,8 @@ const usersRouter = require("./users.js");
 const spotsRouter = require("./spots.js");
 const reviewRouter = require("./reviews.js");
 const bookingRouter = require("./bookings.js");
+const spotImageRouter = require("./spot-images.js");
+const reviewImageRouter = require("./review-images.js");
 //connect to restoreUser middleware
 // If current user session is valid, set req.user to the user in the database
 // If current user session is not valid, set req.user to null
@@ -20,6 +22,10 @@ router.use("/spots", spotsRouter);
 router.use("/reviews", reviewRouter);
 //connect to bookingRouter
 router.use("/bookings", bookingRouter);
+//connect to spotImageRouter
+router.use("/spot-images", spotImageRouter);
+//connect to reviewImageRouter
+router.use("/review-images", reviewImageRouter);
 
 router.post("/test", function (req, res) {
   res.json({ requestBody: req.body });
