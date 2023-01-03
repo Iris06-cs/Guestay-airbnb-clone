@@ -1,7 +1,7 @@
 // backend/routes/api/bookings.js
 const express = require("express");
 const router = express.Router();
-const { restoreUser, requireAuth } = require("../../utils/auth");
+const { restoreUser, requireAuth, forbidden } = require("../../utils/auth");
 const {
   Booking,
   Spot,
@@ -151,32 +151,29 @@ router.delete("/:bookingId", requireAuth, async (req, res, next) => {
     include: { model: Spot, attributes: ["ownerId"] },
     group: ["Booking.id", "Spot.id"],
   });
-
-  if (booking) {
-    //check if booking has been started
-    const startDate = new Date(booking.startDate);
-    if (startDate <= Date.now()) {
-      const err = new Error("Bookings that have been started can't be deleted");
-      err.status = 403;
-      return next(err);
-    }
-    //check if booking belongs to current user or spot belongs to current user
-    const bookingUserId = booking.userId;
-    const ownerId = booking.Spot.ownerId;
-    if (bookingUserId === currentUserId || ownerId === currentUserId) {
-      await booking.destroy();
-      return res.json({ message: "Successfully deleted", statusCode: 200 });
-    } else {
-      const err = new Error("Forbidden");
-      err.status = 403;
-      next(err);
-    }
-  } else {
+  //if booking not existing
+  if (!booking) {
     const err = new Error("Booking couldn't be found");
     err.status = 404;
     err.title = "Booking couldn't be found";
     err.errors = ["Booking couldn't be found"];
     return next(err);
+  }
+  //check if booking has been started
+  const startDate = new Date(booking.startDate);
+  if (startDate <= Date.now()) {
+    const err = new Error("Bookings that have been started can't be deleted");
+    err.status = 403;
+    return next(err);
+  }
+  //check if booking belongs to current user or spot belongs to current user
+  const bookingUserId = booking.userId;
+  const ownerId = booking.Spot.ownerId;
+  if (bookingUserId === currentUserId || ownerId === currentUserId) {
+    await booking.destroy();
+    return res.json({ message: "Successfully deleted", statusCode: 200 });
+  } else {
+    forbidden(req, res, next);
   }
 });
 module.exports = router;

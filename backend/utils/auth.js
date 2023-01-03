@@ -62,4 +62,11 @@ const requireAuth = function (req, _res, next) {
   return next(err);
 };
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+//current user does not have the corrent role/permission
+const forbidden = function (_req, _res, next) {
+  const err = new Error("Forbidden");
+  err.status = 403;
+  return next(err);
+};
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, forbidden };

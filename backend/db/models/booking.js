@@ -1,21 +1,16 @@
 "use strict";
 const { Model, Validator } = require("sequelize");
-const getYesterday = () => {
-  const today = new Date();
-  const yesterday = new Date(today.setDate(today.getDate() - 1));
-  const year = yesterday.getFullYear();
-  const month = yesterday.getMonth() + 1;
-  const day = yesterday.getDate();
-  return `${year}-${month}-${day}`;
-};
+// const getYesterday = () => {
+//   const today = new Date();
+//   const yesterday = new Date(today.setDate(today.getDate() - 1));
+//   const year = yesterday.getFullYear();
+//   const month = yesterday.getMonth() + 1;
+//   const day = yesterday.getDate();
+//   return `${year}-${month}-${day}`;
+// };
 
 module.exports = (sequelize, DataTypes) => {
   class Booking extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // 1-many users-bookings
       Booking.belongsTo(models.User, { foreignKey: "userId" });
