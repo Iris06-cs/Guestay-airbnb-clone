@@ -19,7 +19,6 @@ const validateLogin = [
 // Log in
 router.post("/", validateLogin, async (req, res, next) => {
   const { credential, password } = req.body;
-  const { token } = req.cookies;
   const user = await User.login({ credential, password });
   //Error Response Invalid credentials
   if (!user) {
@@ -31,6 +30,7 @@ router.post("/", validateLogin, async (req, res, next) => {
   }
 
   await setTokenCookie(res, user);
+  const { token } = req.cookies;
   //Successful Response
   const resObj = user.toSafeObject();
   resObj.token = token;
