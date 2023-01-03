@@ -29,12 +29,14 @@ router.post("/", validateLogin, async (req, res, next) => {
     return next(err);
   }
 
-  await setTokenCookie(res, user);
-  const { token } = req.cookies;
+  // await setTokenCookie(res, user);
+  // const { token } = req.cookies;
+  const token = await setTokenCookie(res, user);
   //Successful Response
   let resObj = user.toSafeObject();
   resObj.token = token;
   user.token = token;
+  // console.log(resObj);
   return res.json({
     user: resObj,
   });
