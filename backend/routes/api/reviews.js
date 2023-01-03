@@ -98,6 +98,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
       review.ReviewImages = "Does not have any review images";
     delete review.Spot.SpotImages;
   });
+  if (!Reviews.length) Reviews = "Does not have any reviews yet";
   return res.json({ Reviews });
 });
 //----------------edit a review

@@ -9,7 +9,7 @@ const { handleValidationErrors } = require("../../utils/validation");
 const validateLogin = [
   check("credential")
     .exists({ checkFalsy: true })
-    .notEmpty()
+    .notEmpty() //invalid value error message
     .withMessage("Email or username is required"),
   check("password")
     .exists({ checkFalsy: true })

@@ -455,7 +455,7 @@ router.put(
     let resObj = spot.toJSON();
     resObj.createdAt = dateFormat(spot.createdAt);
     resObj.updatedAt = dateFormat(spot.updatedAt);
-    res.status(201);
+    res.status(200);
     return res.json(resObj);
   }
 );
@@ -537,7 +537,7 @@ router.get("/", async (req, res, next) => {
   //pagination
   if (!page) page = 0;
   if (!size) size = 20;
-  const pagination = {};
+  let pagination = {};
   //check size
   if (Number.isInteger(size) && size >= 0 && size <= 20) {
     if (size !== 0) pagination.limit = size;
@@ -585,8 +585,16 @@ router.get("/", async (req, res, next) => {
     delete spot.SpotImages;
   });
   if (!Spots.length) Spots = "No matching spots";
-  resObj = { Spots, page, size };
-  res.json(resObj);
+  //if page size not in query parmas,response with no size page
+  if (!req.query.page && !req.query.size) {
+    resObj = { Spots };
+  } else if (!(page === 0 && size === 0)) {
+    resObj = { Spots, page, size };
+  } else {
+    resObj = { Spots };
+  }
+
+  return res.json(resObj);
 });
 
 //-------------------create a spot under current loggin in user
