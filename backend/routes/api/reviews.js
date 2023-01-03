@@ -1,22 +1,17 @@
 // backend/routes/api/reviews.js
 const express = require("express");
 const router = express.Router();
-const { restoreUser, requireAuth } = require("../../utils/auth");
+const { requireAuth, forbidden } = require("../../utils/auth");
 const {
   Spot,
   User,
   Review,
   ReviewImage,
   SpotImage,
-  sequelize,
 } = require("../../db/models");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
-const { Op } = require("sequelize");
-// const spot = require("../../db/models/spot");
-// const review = require("../../db/models/review");
 const { dateFormat } = require("../../utils/dataFormatter");
-
 //--------------Add an image to a review based on the review id
 const validateReqBody = [
   check("url").exists({ checkFalsy: true }).withMessage("url is required"),
@@ -32,39 +27,32 @@ router.post(
     const currentUserId = req.user.id;
     //check if review exits
     const review = await Review.findByPk(reviewId);
-    if (review) {
-      //check if review belongs to current user
-      if (review.userId === currentUserId) {
-        const images = await review.getReviewImages();
-        if (images.length === 10) {
-          const err = new Error(
-            "Maximum number of images for this resource was reached"
-          );
-          err.status = 403;
-          err.title = "Maximum number of images for this resource was reached";
-          err.errors = [
-            "Maximum number of images for this resource was reached",
-          ];
-          return next(err);
-        } else {
-          const newImage = await review.createReviewImage({ url });
-          let resObj = {};
-          resObj.id = newImage.id;
-          resObj.url = newImage.url;
-          return res.json(resObj);
-        }
-      } else {
-        const err = new Error("Forbidden");
-        err.status = 403;
-        next(err);
-      }
-    } else {
+    if (!review) {
       const err = new Error("Review couldn't be found");
       err.status = 404;
       err.title = "Review couldn't be found";
       err.errors = ["Review couldn't be found with the provided review id"];
       return next(err);
     }
+    //check if review belongs to current user
+    if (review.userId !== currentUserId) {
+      forbidden(req, res, next);
+    }
+    const images = await review.getReviewImages();
+    if (images.length === 10) {
+      const err = new Error(
+        "Maximum number of images for this resource was reached"
+      );
+      err.status = 403;
+      err.title = "Maximum number of images for this resource was reached";
+      err.errors = ["Maximum number of images for this resource was reached"];
+      return next(err);
+    }
+    const newImage = await review.createReviewImage({ url });
+    let resObj = {};
+    resObj.id = newImage.id;
+    resObj.url = newImage.url;
+    return res.json(resObj);
   }
 );
 //--------------Get all Reviews of the current user
@@ -78,7 +66,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
       { model: User, attributes: ["id", "firstName", "lastName"] },
       {
         model: Spot,
-        attributes: { exclude: ["createdAt", "updatedAt"] },
+        attributes: { exclude: ["description", "createdAt", "updatedAt"] },
         include: { model: SpotImage, attributes: ["url", "preview"] },
       },
       { model: ReviewImage, attributes: ["id", "url"] },
@@ -134,31 +122,26 @@ router.put(
     const currentUserId = req.user.id;
     //check if review exit
     const reviewData = await Review.findByPk(reviewId);
-    if (reviewData) {
-      //check if review belongs to current user
-      if (reviewData.userId === currentUserId) {
-        await reviewData.update({
-          review,
-          stars,
-        });
-        await reviewData.save();
-        let resObj = reviewData.toJSON();
-        resObj.createdAt = dateFormat(reviewData.createdAt);
-        resObj.updatedAt = dateFormat(reviewData.updatedAt);
-        return res.json(resObj);
-      } else {
-        const err = new Error("Forbidden");
-        err.status = 403;
-        err.errors = ["Review does not belong to the current user"];
-        return next(err);
-      }
-    } else {
+    if (!reviewData) {
       const err = new Error("Review couldn't be found");
       err.status = 404;
       err.title = "Review couldn't be found";
       err.errors = ["Review couldn't be found"];
       return next(err);
     }
+    //check if review belongs to current user
+    if (reviewData.userId !== currentUserId) {
+      forbidden(req, res, next);
+    }
+    await reviewData.update({
+      review,
+      stars,
+    });
+    await reviewData.save();
+    let resObj = reviewData.toJSON();
+    resObj.createdAt = dateFormat(reviewData.createdAt);
+    resObj.updatedAt = dateFormat(reviewData.updatedAt);
+    return res.json(resObj);
   }
 );
 //------------------delete a review
@@ -167,23 +150,18 @@ router.delete("/:reviewId", requireAuth, async (req, res, next) => {
   const currentUserId = req.user.id;
   //check if review exit
   const reviewData = await Review.findByPk(reviewId);
-  if (reviewData) {
-    //check if review belongs to current user
-    if (reviewData.userId === currentUserId) {
-      await reviewData.destroy();
-      return res.json({ message: "Successfully deleted", statusCode: 200 });
-    } else {
-      const err = new Error("Forbidden");
-      err.status = 403;
-      err.errors = ["Review does not belong to the current user"];
-      return next(err);
-    }
-  } else {
+  if (!reviewData) {
     const err = new Error("Review couldn't be found");
     err.status = 404;
     err.title = "Review couldn't be found";
     err.errors = ["Review couldn't be found"];
     return next(err);
   }
+  //check if review belongs to current user
+  if (reviewData.userId !== currentUserId) {
+    forbidden(req, res, next);
+  }
+  await reviewData.destroy();
+  return res.json({ message: "Successfully deleted", statusCode: 200 });
 });
 module.exports = router;

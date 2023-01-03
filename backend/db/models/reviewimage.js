@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       //1-many reviews-reviewImages
       ReviewImage.belongsTo(models.Review, {
         foreignKey: "reviewId",
-        onDelete: "CASCADE",
+        // onDelete: "CASCADE",
       });
     }
   }

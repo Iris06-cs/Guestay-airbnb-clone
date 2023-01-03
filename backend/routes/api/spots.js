@@ -15,40 +15,72 @@ const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { dateFormat } = require("../../utils/dataFormatter");
 const { Op } = require("sequelize");
-const spot = require("../../db/models/spot");
-//validate req body
-const validateSpotBody = [
-  check("address")
-    .exists({ checkFalsy: true })
-    .withMessage("Street address is required"),
-  check("city").exists({ checkFalsy: true }).withMessage("City is required"),
-  check("state").exists({ checkFalsy: true }).withMessage("State is required"),
-  check("country")
-    .exists({ checkFalsy: true })
-    .withMessage("Country is required"),
-  check("lat")
-    .exists({ checkFalsy: true })
-    .withMessage("Latitude is required")
-    .isFloat({ min: -90, max: 90 })
-    .withMessage("Latitude is not valid"),
-  check("lng")
-    .exists({ checkFalsy: true })
-    .withMessage("Longitude is required")
-    .isFloat({ min: -180, max: 180 })
-    .withMessage("Longitude is not valid"),
-  check("name")
-    .exists({ checkFalsy: true })
-    .withMessage("Name is required")
-    .isLength({ max: 50 })
-    .withMessage("Name must be less than 50 characters"),
-  check("description")
-    .exists({ checkFalsy: true })
-    .withMessage("Description is required"),
-  check("price")
-    .exists({ checkFalsy: true })
-    .withMessage("Price per day is required"),
-  handleValidationErrors,
-];
+
+//-------------Add an image to a spot based on the spot id
+//add request body validation
+router.post("/:spotId/images", requireAuth, async (req, res, next) => {
+  const { url, preview } = req.body;
+  const currentUserId = req.user.id;
+  const { spotId } = req.params;
+  const spot = await Spot.findByPk(spotId);
+  //check if spot exist
+  if (!spot) {
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.title = "Spot couldn't be found";
+    err.errors = ["Spot couldn't be found"];
+    return next(err);
+  }
+  //check spot belongs to current user
+  if (currentUserId !== spot.ownerId) {
+    forbidden(req, res, next);
+  }
+  const newImage = await spot.createSpotImage({
+    url,
+    preview,
+  });
+  let resObj = {};
+  resObj.id = newImage.id;
+  resObj.url = newImage.url;
+  resObj.preview = newImage.preview;
+  return res.json(resObj);
+});
+//--------------Get all reviews by a spot id
+router.get("/:spotId/reviews", async (req, res, next) => {
+  const { spotId } = req.params;
+  console.log(spotId);
+  const spot = await Spot.findByPk(spotId);
+  //check if spot exist
+  if (!spot) {
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.title = "Spot couldn't be found";
+    err.errors = ["Spot couldn't be found"];
+    return next(err);
+  }
+  const reviewsData = await Review.findAll({
+    where: {
+      spotId,
+    },
+    include: [
+      { model: User, attributes: ["id", "firstName", "lastName"] },
+      { model: ReviewImage, attributes: ["id", "url"] },
+    ],
+    group: ["Review.id", "User.id", "ReviewImages.id"],
+    order: ["id"],
+  });
+  const Reviews = [];
+  reviewsData.forEach((review) => {
+    Reviews.push(review.toJSON());
+  });
+  Reviews.forEach((review) => {
+    review.createdAt = dateFormat(review.createdAt);
+    review.updatedAt = dateFormat(review.updatedAt);
+    if (!review.ReviewImages.length) review.ReviewImages = "No ReviewImages";
+  });
+  return res.json({ Reviews });
+});
+//-------------create a Review for a spot based on the spot id
 //validate create review req body
 const validateReviewBody = [
   check("review")
@@ -61,72 +93,6 @@ const validateReviewBody = [
     .withMessage("Stars must be an integer from 1 to 5"),
   handleValidationErrors,
 ];
-//-------------Add an image to a spot based on the spot id
-router.post("/:spotId/images", requireAuth, async (req, res, next) => {
-  const { url, preview } = req.body;
-  const currentUserId = req.user.id;
-  const { spotId } = req.params;
-  const spot = await Spot.findByPk(spotId);
-  if (spot) {
-    //check spot belongs to current user
-    if (currentUserId === spot.ownerId) {
-      const newImage = await spot.createSpotImage({
-        url,
-        preview,
-      });
-      let resObj = {};
-      resObj.id = newImage.id;
-      resObj.url = newImage.url;
-      resObj.preview = newImage.preview;
-      return res.json(resObj);
-    }
-    const err = new Error("Forbidden");
-    err.status = 403;
-    next(err);
-  } else {
-    const err = new Error("Spot couldn't be found");
-    err.status = 404;
-    err.title = "Spot couldn't be found";
-    err.errors = ["Spot couldn't be found"];
-    return next(err);
-  }
-});
-//--------------Get all reviews by a spot id
-router.get("/:spotId/reviews", async (req, res, next) => {
-  const { spotId } = req.params;
-  console.log(spotId);
-  const spot = await Spot.findByPk(spotId);
-  if (spot) {
-    const reviewsData = await Review.findAll({
-      where: {
-        spotId,
-      },
-      include: [
-        { model: User, attributes: ["id", "firstName", "lastName"] },
-        { model: ReviewImage, attributes: ["id", "url"] },
-      ],
-      group: ["Review.id", "User.id", "ReviewImages.id"],
-      order: ["id"],
-    });
-    const Reviews = [];
-    reviewsData.forEach((review) => {
-      Reviews.push(review.toJSON());
-    });
-    Reviews.forEach((review) => {
-      review.createdAt = dateFormat(review.createdAt);
-      review.updatedAt = dateFormat(review.updatedAt);
-      if (!review.ReviewImages.length) review.ReviewImages = "No ReviewImages";
-    });
-    return res.json({ Reviews });
-  } else {
-    const err = new Error("Spot couldn't be found");
-    err.status = 404;
-    err.title = "Spot couldn't be found";
-    err.errors = ["Spot couldn't be found"];
-    return next(err);
-  }
-});
-//-------------create a Review for a spot based on the spot id
 router.post(
   "/:spotId/reviews",
   requireAuth,
@@ -137,44 +103,43 @@ router.post(
     const currentUserId = req.user.id;
     const spot = await Spot.findByPk(spotId);
     //check if spotId exists
-    if (spot) {
-      const reviews = await spot.getReviews();
-      reviews.forEach((review) => {
-        //check if current user already has a review for this spot
-        if (review.userId === currentUserId) {
-          const err = new Error("User already has a review for this spot");
-          err.status = 403;
-          err.title = "User already has a review for this spot";
-          err.errors = ["User already has a review for this spot"];
-          return next(err);
-        }
-        //check if current user is the spot owner
-        if (spot.ownerId === currentUserId) {
-          const err = new Error("Owner cannot review their own spot");
-          err.status = 403;
-          err.title = "Owner cannot review their own spot";
-          err.errors = ["Owner cannot review their own spot"];
-          return next(err);
-        }
-      });
-      const newReview = await spot.createReview({
-        userId: currentUserId,
-        spotId,
-        review,
-        stars,
-      });
-      const resObj = newReview.toJSON();
-      resObj.createdAt = dateFormat(newReview.createdAt);
-      resObj.updatedAt = dateFormat(newReview.updatedAt);
-      res.status(201);
-      return res.json(resObj);
-    } else {
+    if (!spot) {
       const err = new Error("Spot couldn't be found");
       err.status = 404;
       err.title = "Spot couldn't be found";
       err.errors = ["Spot couldn't be found"];
       return next(err);
     }
+    const reviews = await spot.getReviews();
+    reviews.forEach((review) => {
+      //check if current user already has a review for this spot
+      if (review.userId === currentUserId) {
+        const err = new Error("User already has a review for this spot");
+        err.status = 403;
+        err.title = "User already has a review for this spot";
+        err.errors = ["User already has a review for this spot"];
+        return next(err);
+      }
+      //check if current user is the spot owner?
+      if (spot.ownerId === currentUserId) {
+        const err = new Error("Owner cannot review their own spot");
+        err.status = 403;
+        err.title = "Owner cannot review their own spot";
+        err.errors = ["Owner cannot review their own spot"];
+        return next(err);
+      }
+    });
+    const newReview = await spot.createReview({
+      userId: currentUserId,
+      spotId,
+      review,
+      stars,
+    });
+    const resObj = newReview.toJSON();
+    resObj.createdAt = dateFormat(newReview.createdAt);
+    resObj.updatedAt = dateFormat(newReview.updatedAt);
+    res.status(201);
+    return res.json(resObj);
   }
 );
 //--------------Get all bookings for a Spot based on the spotId
@@ -409,6 +374,40 @@ router.get("/:spotId", async (req, res, next) => {
     return next(err);
   }
 });
+//validate req body
+const validateSpotBody = [
+  check("address")
+    .exists({ checkFalsy: true })
+    .withMessage("Street address is required"),
+  check("city").exists({ checkFalsy: true }).withMessage("City is required"),
+  check("state").exists({ checkFalsy: true }).withMessage("State is required"),
+  check("country")
+    .exists({ checkFalsy: true })
+    .withMessage("Country is required"),
+  check("lat")
+    .exists({ checkFalsy: true })
+    .withMessage("Latitude is required")
+    .isFloat({ min: -90, max: 90 })
+    .withMessage("Latitude is not valid"),
+  check("lng")
+    .exists({ checkFalsy: true })
+    .withMessage("Longitude is required")
+    .isFloat({ min: -180, max: 180 })
+    .withMessage("Longitude is not valid"),
+  check("name")
+    .exists({ checkFalsy: true })
+    .withMessage("Name is required")
+    .isLength({ max: 50 })
+    .withMessage("Name must be less than 50 characters"),
+  check("description")
+    .exists({ checkFalsy: true })
+    .withMessage("Description is required"),
+  check("price")
+    .exists({ checkFalsy: true })
+    .withMessage("Price per day is required"),
+  handleValidationErrors,
+];
+
 //-------------------Edit a spot
 router.put(
   "/:spotId",
@@ -429,37 +428,35 @@ router.put(
     const { spotId } = req.params;
     const ownerId = req.user.id;
     const spot = await Spot.findByPk(spotId);
-    if (spot) {
-      //check spot belongs to current user
-      if (ownerId === spot.ownerId) {
-        await spot.update({
-          address,
-          city,
-          state,
-          country,
-          lat,
-          lng,
-          name,
-          description,
-          price,
-        });
-        await spot.save();
-        let resObj = spot.toJSON();
-        resObj.createdAt = dateFormat(spot.createdAt);
-        resObj.updatedAt = dateFormat(spot.updatedAt);
-        res.status(201);
-        return res.json(resObj);
-      }
-      const err = new Error("Forbidden");
-      err.status = 403;
-      next(err);
-    } else {
+    //check if spot exist
+    if (!spot) {
       const err = new Error("Spot couldn't be found");
       err.status = 404;
       err.title = "Spot couldn't be found";
       err.errors = ["Spot couldn't be found with the provided spot id"];
       return next(err);
     }
+    //check spot belongs to current user
+    if (ownerId !== spot.ownerId) {
+      forbidden(req, res, next);
+    }
+    await spot.update({
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    });
+    await spot.save();
+    let resObj = spot.toJSON();
+    resObj.createdAt = dateFormat(spot.createdAt);
+    resObj.updatedAt = dateFormat(spot.updatedAt);
+    res.status(201);
+    return res.json(resObj);
   }
 );
 //------------------Delete a spot
@@ -467,24 +464,21 @@ router.delete("/:spotId", requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
   const ownerId = req.user.id;
   const spot = await Spot.findByPk(spotId);
-  if (spot) {
-    //check spot belongs to current user
-    if (ownerId === spot.ownerId) {
-      await spot.destroy();
-      return res.json({ message: "Successfully deleted", statusCode: 200 });
-    }
-    const err = new Error("Forbidden");
-    err.status = 403;
-    next(err);
-  } else {
+  if (!spot) {
     const err = new Error("Spot couldn't be found");
     err.status = 404;
     err.title = "Spot couldn't be found";
     err.errors = ["Spot couldn't be found with the provided spot id"];
     return next(err);
   }
+  //check spot belongs to current user
+  if (ownerId !== spot.ownerId) {
+    forbidden(req, res, next);
+  }
+  await spot.destroy();
+  return res.json({ message: "Successfully deleted", statusCode: 200 });
 });
-//------------------Get all spots
+//------------------Get all spots(with query)
 router.get("/", async (req, res, next) => {
   let errorResponse = {
     message: "Validation Error",
@@ -492,9 +486,7 @@ router.get("/", async (req, res, next) => {
     errors: [],
   };
   let Spots = [];
-
   let query = { where: {} };
-
   //parse query parmeters from string to number
   const queryParms = Object.keys(req.query);
   queryParms.forEach((key) => {
@@ -504,7 +496,6 @@ router.get("/", async (req, res, next) => {
   });
   let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } =
     req.query;
-
   if (minLat) {
     if (minLat < -90 || minLat > 90)
       errorResponse.errors.push("Minimum latitude is invalid");
@@ -559,17 +550,13 @@ router.get("/", async (req, res, next) => {
   } else {
     errorResponse.errors.push("Page must be greater than or equal to 0");
   }
-
   //query parameter validation errors
   if (errorResponse.errors.length) {
     res.status(400);
     res.json(errorResponse);
     return;
   }
-
   const spotsData = await Spot.findAll({
-    // subQuery: false,
-
     include: [{ model: Review, attributes: [] }, { model: SpotImage }],
     attributes: {
       include: [
@@ -595,7 +582,6 @@ router.get("/", async (req, res, next) => {
     spot.updatedAt = dateFormat(spot.updatedAt);
     if (!spot.previewImage) spot.previewImage = "Spot has no image yet";
     if (!spot.avgRating) spot.avgRating = "Spot has no review yet";
-
     delete spot.SpotImages;
   });
   if (!Spots.length) Spots = "No matching spots";

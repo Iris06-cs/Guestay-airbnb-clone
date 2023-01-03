@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       // 1-many users-bookings
       Booking.belongsTo(models.User, { foreignKey: "userId" });
       //1-many spots-bookings
-      Booking.belongsTo(models.Spot, { foreignKey: "spotId" });
+      Booking.belongsTo(models.Spot, {
+        foreignKey: "spotId",
+        onDelete: "CASCADE",
+      });
     }
   }
   Booking.init(
