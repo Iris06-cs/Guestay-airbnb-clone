@@ -500,6 +500,13 @@ router.get("/", async (req, res, next) => {
   });
   let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } =
     req.query;
+  //minLat<=query lat<= maxLat
+  if (minLat && maxLat) {
+    if (minLat > maxLat)
+      errorResponse.errors.push(
+        "Minimum latitude cannot be greater than maximum latitude"
+      );
+  }
   if (minLat) {
     if (minLat < -90 || minLat > 90)
       errorResponse.errors.push("Minimum latitude is invalid");
@@ -511,6 +518,13 @@ router.get("/", async (req, res, next) => {
     else if (minLat) query.where.lat = { [Op.between]: [minLat, maxLat] };
     else query.where.lat = { [Op.lte]: maxLat };
   }
+  //minLng<=query lng<= maxLng
+  if (minLng && maxLng) {
+    if (minLng > maxLng)
+      errorResponse.errors.push(
+        "Minimum longitude cannot be greater than maximum longitude"
+      );
+  }
   if (minLng) {
     if (minLng < -180 || minLng > 180)
       errorResponse.errors.push("Minimum longitude is invalid");
@@ -521,6 +535,13 @@ router.get("/", async (req, res, next) => {
       errorResponse.errors.push("Maximum latitude is invalid");
     else if (minLat) query.where.lng = { [Op.between]: [minLng, maxLng] };
     else query.where.lng = { [Op.lte]: maxLng };
+  }
+  //minPrice<=query price<= maxPrice
+  if (minPrice && maxPrice) {
+    if (minPrice > maxPrice)
+      errorResponse.errors.push(
+        "Minimum price cannot be greater than maximum price"
+      );
   }
   if (minPrice) {
     if (minPrice < 0)
@@ -534,9 +555,9 @@ router.get("/", async (req, res, next) => {
       errorResponse.errors.push(
         "Maximum price must be greater than or equal to 0"
       );
-    else if (minPrice)
+    else if (minPrice) {
       query.where.price = { [Op.between]: [minPrice, maxPrice] };
-    else query.where.price = { [Op.lte]: maxPrice };
+    } else query.where.price = { [Op.lte]: maxPrice };
   }
   //pagination
   if (!page) page = 0;
