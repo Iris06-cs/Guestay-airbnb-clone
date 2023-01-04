@@ -103,6 +103,7 @@ router.put(
     //check if booking belongs to current user
     if (booking.userId !== currentUserId) {
       forbidden(req, res, next);
+      return;
     }
     //check if end date is before today(has past)
     const start = new Date(booking.startDate);
@@ -185,6 +186,7 @@ router.delete("/:bookingId", requireAuth, async (req, res, next) => {
   } else {
     //if current user is not the spot owner or the booking user
     forbidden(req, res, next);
+    return;
   }
 });
 module.exports = router;

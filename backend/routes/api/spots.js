@@ -34,6 +34,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
   //check spot belongs to current user
   if (currentUserId !== spot.ownerId) {
     forbidden(req, res, next);
+    return;
   }
   const newImage = await spot.createSpotImage({
     url,
@@ -254,6 +255,7 @@ router.post(
     if (spot.ownerId === currentUserId) {
       //spot cannot belong to the current User
       forbidden(req, res, next);
+      return;
     }
     //get all existing bookings for this spot
     const existingBookings = await spot.getBookings();
@@ -439,6 +441,7 @@ router.put(
     //check spot belongs to current user
     if (ownerId !== spot.ownerId) {
       forbidden(req, res, next);
+      return;
     }
     await spot.update({
       address,
@@ -474,6 +477,7 @@ router.delete("/:spotId", requireAuth, async (req, res, next) => {
   //check spot belongs to current user
   if (ownerId !== spot.ownerId) {
     forbidden(req, res, next);
+    return;
   }
   await spot.destroy();
   return res.json({ message: "Successfully deleted", statusCode: 200 });

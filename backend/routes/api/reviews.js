@@ -37,6 +37,7 @@ router.post(
     //check if review belongs to current user
     if (review.userId !== currentUserId) {
       forbidden(req, res, next);
+      return;
     }
     const images = await review.getReviewImages();
     if (images.length === 10) {
@@ -133,6 +134,7 @@ router.put(
     //check if review belongs to current user
     if (reviewData.userId !== currentUserId) {
       forbidden(req, res, next);
+      return;
     }
     await reviewData.update({
       review,
@@ -161,6 +163,7 @@ router.delete("/:reviewId", requireAuth, async (req, res, next) => {
   //check if review belongs to current user
   if (reviewData.userId !== currentUserId) {
     forbidden(req, res, next);
+    return;
   }
   await reviewData.destroy();
   return res.json({ message: "Successfully deleted", statusCode: 200 });
