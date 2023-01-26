@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 
 import { loginThunk } from "../../store/session";
+import "./LoginForm.css";
 
 const LoginFormPage = () => {
   const dispatch = useDispatch();
@@ -30,28 +31,33 @@ const LoginFormPage = () => {
     });
   };
   return (
-    <form onSubmit={handleOnSubmit}>
+    <form className="login-form" onSubmit={handleOnSubmit}>
       <ul>
         {errors.map((error, idx) => (
           <li key={idx}>{error}</li>
         ))}
       </ul>
-      <label htmlFor="credential">username/email</label>
+
+      <label htmlFor="credential">Username/Email</label>
       <input
         id="credential"
         type="text"
         value={credential}
+        placeholder="Username/Email"
         onChange={(e) => setCredential(e.target.value)}
         required
       />
-      <label htmlFor="password">password</label>
+
+      <label htmlFor="password">Password</label>
       <input
         id="password"
         type="password"
         value={password}
+        placeholder="Password"
         onChange={(e) => setPassword(e.target.value)}
         required
       />
+
       <button type="submit">Submit</button>
     </form>
   );
