@@ -23,11 +23,9 @@ export const loginThunk =
       method: "POST",
       body: JSON.stringify({ credential, password }),
     });
-    if (response.ok) {
-      const data = await response.json();
-      dispatch(addSession(data.user));
-      return data;
-    }
+    const data = await response.json();
+    dispatch(addSession(data.user));
+    return response; //what's this return value data?response?
   };
 // export const logoutThunk = () => async (dispatch) => {
 //   const response = await csrfFetch("/api/session", {
