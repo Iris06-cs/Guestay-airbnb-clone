@@ -1,7 +1,7 @@
 "use strict";
 let options = {};
 if (process.env.NODE_ENV === "production") {
-  options.schema = process.env.SCHEMA; // define your schema in options object
+  options.schema = process.env.SCHEMA;
 }
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -22,6 +22,7 @@ module.exports = {
             model: "Spots",
             key: "id",
           },
+          onDelete: "CASCADE",
         },
         userId: {
           type: Sequelize.INTEGER,

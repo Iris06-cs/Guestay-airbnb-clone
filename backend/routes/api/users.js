@@ -42,19 +42,22 @@ router.post("/", validateSignup, async (req, res, next) => {
       email,
     },
   });
+  let duplicateUserError = {
+    message: "User already exists",
+    statusCode: 403,
+    title: "User already exists",
+    errors: [],
+  };
   if (existsUsername) {
-    const err = new Error("User already exists");
-    err.status = 403;
-    err.title = "User already exists";
-    err.errors = ["User with that username already exists"];
-    return next(err);
+    duplicateUserError.errors.push("User with that username already exists");
   }
   if (existsEmail) {
-    const err = new Error("User already exists");
-    err.status = 403;
-    err.title = "User already exists";
-    err.errors = ["User with that email already exists"];
-    return next(err);
+    duplicateUserError.errors.push("User with that email already exists");
+  }
+  if (duplicateUserError.errors.length) {
+    res.status(403);
+    res.json(duplicateUserError);
+    return;
   }
   const user = await User.signup({
     firstName,
@@ -64,8 +67,8 @@ router.post("/", validateSignup, async (req, res, next) => {
     password,
   });
 
-  await setTokenCookie(res, user);
-  const { token } = req.cookies;
+  const token = await setTokenCookie(res, user);
+  // const { token } = req.cookies;
   let resObj = user.toSafeObject();
   resObj.token = token;
   user.token = token;

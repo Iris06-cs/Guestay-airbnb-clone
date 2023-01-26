@@ -9,7 +9,7 @@ const { handleValidationErrors } = require("../../utils/validation");
 const validateLogin = [
   check("credential")
     .exists({ checkFalsy: true })
-    .notEmpty()
+    .notEmpty() //invalid value error message
     .withMessage("Email or username is required"),
   check("password")
     .exists({ checkFalsy: true })
@@ -19,7 +19,6 @@ const validateLogin = [
 // Log in
 router.post("/", validateLogin, async (req, res, next) => {
   const { credential, password } = req.body;
-  const { token } = req.cookies;
   const user = await User.login({ credential, password });
   //Error Response Invalid credentials
   if (!user) {
@@ -30,10 +29,13 @@ router.post("/", validateLogin, async (req, res, next) => {
     return next(err);
   }
 
-  await setTokenCookie(res, user);
+  // await setTokenCookie(res, user);
+  // const { token } = req.cookies;
+  const token = await setTokenCookie(res, user);
   //Successful Response
-  const resObj = user.toSafeObject();
+  let resObj = user.toSafeObject();
   resObj.token = token;
+  user.token = token;
   return res.json({
     user: resObj,
   });

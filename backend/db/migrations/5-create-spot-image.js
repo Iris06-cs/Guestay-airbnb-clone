@@ -1,7 +1,7 @@
 "use strict";
 let options = {};
 if (process.env.NODE_ENV === "production") {
-  options.schema = process.env.SCHEMA; // define your schema in options object
+  options.schema = process.env.SCHEMA;
 }
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
         url: {
           type: Sequelize.STRING,
           allowNull: false,
-          unique: true,
+          // unique: true,
         },
         preview: {
           type: Sequelize.BOOLEAN,

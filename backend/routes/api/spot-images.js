@@ -1,13 +1,8 @@
 // backend/routes/api/spot-images.js
 const express = require("express");
 const router = express.Router();
-const { restoreUser, requireAuth } = require("../../utils/auth");
-const { SpotImage, Spot, sequelize } = require("../../db/models");
-const { check } = require("express-validator");
-const { handleValidationErrors } = require("../../utils/validation");
-const { dateFormat } = require("../../utils/dataFormatter");
-const { Op } = require("sequelize");
-
+const { requireAuth, forbidden } = require("../../utils/auth");
+const { SpotImage, Spot } = require("../../db/models");
 //-----------Delete a spot image
 router.delete("/:spotImageId", requireAuth, async (req, res, next) => {
   const { spotImageId } = req.params;
@@ -16,7 +11,6 @@ router.delete("/:spotImageId", requireAuth, async (req, res, next) => {
     include: { model: Spot, attributes: ["ownerId"] },
     group: ["SpotImage.id", "Spot.id"],
   });
-
   //spotImage does not exit
   if (!image) {
     const err = new Error("Spot Image couldn't be found");
@@ -28,9 +22,7 @@ router.delete("/:spotImageId", requireAuth, async (req, res, next) => {
   const spotOwnerId = image.Spot.ownerId;
   //spot does not belong to current user
   if (currentUserId !== spotOwnerId) {
-    const err = new Error("Forbidden");
-    err.status = 403;
-    return next(err);
+    forbidden(req, res, next);
   }
   await image.destroy();
   return res.json({ message: "Successfully deleted", statusCode: 200 });
