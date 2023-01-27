@@ -47,15 +47,14 @@ export const signupThunk = (newUser) => async (dispatch) => {
   dispatch(addSession(data.user));
   return response;
 };
-// export const logoutThunk = () => async (dispatch) => {
-//   const response = await csrfFetch("/api/session", {
-//     method: "DELETE",
-//   });
-//   if (response.ok) {
-//     const deleteMsg = await response.json();
-//     dispatch(removeSession());
-//   }
-// };
+export const logoutThunk = () => async (dispatch) => {
+  const response = await csrfFetch("/api/session", {
+    method: "DELETE",
+  });
+  const deleteMsg = await response.json();
+  dispatch(removeSession());
+  return response;
+};
 const initialState = { user: null };
 const sessionReducer = (state = initialState, action) => {
   let newState;
