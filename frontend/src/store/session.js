@@ -3,6 +3,7 @@ import { csrfFetch } from "./csrf";
 
 const ADD_SESSION = "session/addSession";
 const REMOVE_SESSION = "session/removeSession";
+
 //actioin creators
 const addSession = (user) => {
   return {
@@ -10,6 +11,7 @@ const addSession = (user) => {
     payload: user,
   };
 };
+
 const removeSession = () => {
   return {
     type: REMOVE_SESSION,
@@ -27,6 +29,12 @@ export const loginThunk =
     dispatch(addSession(data.user));
     return response; //what's this return value data?response?
   };
+export const restoreSessionThunk = () => async (dispatch) => {
+  const response = await csrfFetch("/api/session");
+  const data = await response.json();
+  dispatch(addSession(data.user));
+  return response;
+};
 // export const logoutThunk = () => async (dispatch) => {
 //   const response = await csrfFetch("/api/session", {
 //     method: "DELETE",
