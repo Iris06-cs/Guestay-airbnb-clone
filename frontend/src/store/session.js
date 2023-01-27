@@ -17,6 +17,7 @@ const removeSession = () => {
     type: REMOVE_SESSION,
   };
 };
+
 //thunk creators
 export const loginThunk =
   ({ credential, password }) =>
@@ -27,10 +28,21 @@ export const loginThunk =
     });
     const data = await response.json();
     dispatch(addSession(data.user));
-    return response; //what's this return value data?response?
+    return response;
   };
+
 export const restoreSessionThunk = () => async (dispatch) => {
   const response = await csrfFetch("/api/session");
+  const data = await response.json();
+  dispatch(addSession(data.user));
+  return response;
+};
+
+export const signupThunk = (newUser) => async (dispatch) => {
+  const response = await csrfFetch("/api/users", {
+    method: "POST",
+    body: JSON.stringify(newUser),
+  });
   const data = await response.json();
   dispatch(addSession(data.user));
   return response;

@@ -20,7 +20,7 @@ const LoginFormPage = () => {
   }
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    // setErrors([]);
+    setErrors([]);
     return dispatch(loginThunk({ credential, password })).catch(async (res) => {
       const data = await res.json();
       const err = [];
