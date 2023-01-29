@@ -1,7 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 import logo from "../../images/logo.jpg";
 import ProfileButton from "./ProfileButton";
+import OpenModalButton from "../OpenModalButton";
+import LoginFormModal from "../LoginFormModal";
+import SignupFormModal from "../SignupFormModal";
 import "./Navigation.css";
 
 const Navigation = ({ isLoaded }) => {
@@ -13,10 +17,18 @@ const Navigation = ({ isLoaded }) => {
     conditionalLinks = (
       <>
         <li>
-          <NavLink to="/signup">Signup</NavLink>
+          {/* <NavLink to="/signup">Signup</NavLink> */}
+          <OpenModalButton
+            buttonText="Sign Up"
+            modalComponent={<SignupFormModal />}
+          />
         </li>
         <li>
-          <NavLink to="/login">Login</NavLink>
+          {/* <NavLink to="/login">Login</NavLink> */}
+          <OpenModalButton
+            buttonText="Log In"
+            modalComponent={<LoginFormModal />}
+          />
         </li>
       </>
     );
