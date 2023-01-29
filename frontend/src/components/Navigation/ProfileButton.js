@@ -2,9 +2,10 @@ import { useDispatch } from "react-redux";
 import { useState, useRef, useEffect } from "react";
 
 import * as sessionActions from "../../store/session";
-import OpenModalButton from "../OpenModalButton";
+import OpenModalMenuItem from "./OpenModalMenuItem";
 import SignupFormModal from "../SignupFormModal";
 import LoginFormModal from "../LoginFormModal";
+
 const ProfileButton = ({ sessionUser }) => {
   const dispatch = useDispatch();
 
@@ -44,16 +45,16 @@ const ProfileButton = ({ sessionUser }) => {
     conditionalRender = (
       <>
         <li>
-          <OpenModalButton
-            buttonText="Sign Up"
-            onButtonClick={closeDropdown}
+          <OpenModalMenuItem
+            itemText="Sign Up"
+            onItemClick={closeDropdown}
             modalComponent={<SignupFormModal />}
           />
         </li>
         <li>
-          <OpenModalButton
-            buttonText="Log In"
-            onButtonClick={closeDropdown}
+          <OpenModalMenuItem
+            itemText="Log In"
+            onItemClick={closeDropdown}
             modalComponent={<LoginFormModal />}
           />
         </li>
