@@ -1,19 +1,11 @@
-import { NavLink, useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 import logo from "../../images/logo.jpg";
 import ProfileButton from "./ProfileButton";
-import * as sessionActions from "../../store/session";
+import "./Navigation.css";
 
 const Navigation = ({ isLoaded }) => {
-  const history = useHistory();
   const sessionUser = useSelector((state) => state.session.user);
-  const dispatch = useDispatch();
-  const logout = (e) => {
-    e.preventDefault();
-    dispatch(sessionActions.logoutThunk());
-    history.push("/");
-  };
 
   let conditionalLinks;
   //   console.log(sessionUser);
@@ -30,14 +22,9 @@ const Navigation = ({ isLoaded }) => {
     );
   } else {
     conditionalLinks = (
-      <>
-        <li>
-          <ProfileButton />
-        </li>
-        <li>
-          <button onClick={logout}>Log out</button>
-        </li>
-      </>
+      <li>
+        <ProfileButton sessionUser={sessionUser} />
+      </li>
     );
   }
 
