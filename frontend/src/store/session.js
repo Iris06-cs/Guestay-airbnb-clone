@@ -51,7 +51,7 @@ export const logoutThunk = () => async (dispatch) => {
   const response = await csrfFetch("/api/session", {
     method: "DELETE",
   });
-  const deleteMsg = await response.json();
+  await response.json();
   dispatch(removeSession());
   return response;
 };

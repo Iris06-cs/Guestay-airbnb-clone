@@ -11,34 +11,33 @@ import "./Navigation.css";
 const Navigation = ({ isLoaded }) => {
   const sessionUser = useSelector((state) => state.session.user);
 
-  let conditionalLinks;
-  //   console.log(sessionUser);
-  if (!sessionUser) {
-    conditionalLinks = (
-      <>
-        <li>
-          {/* <NavLink to="/signup">Signup</NavLink> */}
-          <OpenModalButton
-            buttonText="Sign Up"
-            modalComponent={<SignupFormModal />}
-          />
-        </li>
-        <li>
-          {/* <NavLink to="/login">Login</NavLink> */}
-          <OpenModalButton
-            buttonText="Log In"
-            modalComponent={<LoginFormModal />}
-          />
-        </li>
-      </>
-    );
-  } else {
-    conditionalLinks = (
-      <li>
-        <ProfileButton sessionUser={sessionUser} />
-      </li>
-    );
-  }
+  // let conditionalLinks;
+  // //   console.log(sessionUser);
+  // if (!sessionUser) {
+  //   conditionalLinks = (
+  //     <>
+  //       <li>
+  //         {/* <NavLink to="/signup">Signup</NavLink> */}
+  //         <OpenModalButton
+  //           buttonText="Sign Up"
+  //           modalComponent={<SignupFormModal />}
+  //         />
+  //       </li>
+  //       <li>
+  //         {/* <NavLink to="/login">Login</NavLink> */}
+  //         <OpenModalButton
+  //           buttonText="Log In"
+  //           modalComponent={<LoginFormModal />}
+  //         />
+  //       </li>
+  //     </>
+  //   );
+  // }
+  // conditionalLinks = (
+  //   <li>
+  //     <ProfileButton sessionUser={sessionUser} />
+  //   </li>
+  // );
 
   return (
     <ul>
@@ -52,7 +51,11 @@ const Navigation = ({ isLoaded }) => {
           Home
         </NavLink>
       </li>
-      {isLoaded && conditionalLinks}
+      {isLoaded && (
+        <li>
+          <ProfileButton sessionUser={sessionUser} />
+        </li>
+      )}
     </ul>
   );
 };

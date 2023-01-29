@@ -1,22 +1,17 @@
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 
 import * as sessionActions from "../../store/session";
-
+import OpenModalButton from "../OpenModalButton";
+import SignupFormModal from "../SignupFormModal";
+import LoginFormModal from "../LoginFormModal";
 const ProfileButton = ({ sessionUser }) => {
   const dispatch = useDispatch();
-  const history = useHistory();
+
   const dropdownRef = useRef();
 
   const [showDropdown, setShowDropdown] = useState(false);
-  const { username, email } = sessionUser;
-  //handle logout button
-  const logout = (e) => {
-    e.preventDefault();
-    dispatch(sessionActions.logoutThunk());
-    history.push("/");
-  };
+
   const openDropdown = () => {
     if (showDropdown) return;
     else setShowDropdown(true);
@@ -33,9 +28,49 @@ const ProfileButton = ({ sessionUser }) => {
 
     return () => document.removeEventListener("click", closeDropdown);
   }, [showDropdown]);
+
   const dropdownClassName = `profile-dropdown ${
     showDropdown ? "" : "hidden-dropdown"
   }`;
+  const closeDropdown = () => setShowDropdown(false);
+  //handle logout button
+  const logout = (e) => {
+    e.preventDefault();
+    dispatch(sessionActions.logoutThunk());
+    closeDropdown();
+  };
+  let conditionalRender;
+  if (!sessionUser) {
+    conditionalRender = (
+      <>
+        <li>
+          <OpenModalButton
+            buttonText="Sign Up"
+            onButtonClick={closeDropdown}
+            modalComponent={<SignupFormModal />}
+          />
+        </li>
+        <li>
+          <OpenModalButton
+            buttonText="Log In"
+            onButtonClick={closeDropdown}
+            modalComponent={<LoginFormModal />}
+          />
+        </li>
+      </>
+    );
+  } else {
+    const { username, email } = sessionUser;
+    conditionalRender = (
+      <>
+        <li>{username}</li>
+        <li>{email}</li>
+        <li>
+          <button onClick={logout}>Log out</button>
+        </li>
+      </>
+    );
+  }
   return (
     <>
       <button onClick={openDropdown}>
@@ -44,11 +79,12 @@ const ProfileButton = ({ sessionUser }) => {
 
       {showDropdown && (
         <ul className={dropdownClassName} ref={dropdownRef}>
-          <li>{username}</li>
+          {/* <li>{username}</li>
           <li>{email}</li>
           <li>
             <button onClick={logout}>Log out</button>
-          </li>
+          </li> */}
+          {conditionalRender}
         </ul>
       )}
     </>
