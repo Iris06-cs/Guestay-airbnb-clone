@@ -7,6 +7,7 @@
   margin: auto;
   padding: 20px 0;
   width: 600px;
+  color: #484848;
 }
 .close-modal-button {
   position: absolute;
@@ -24,19 +25,32 @@
 #login-title {
   margin-top: 0;
 }
-.login-form input {
+.login-form label {
   box-sizing: border-box;
-  border: 1.5px solid rgba(149, 147, 147, 0.4);
+  /* border: 1.5px solid rgba(149, 147, 147, 0.4); */
   background-color: rgba(252, 252, 252, 0.2);
-  border-radius: 10px;
-  font-size: 18px;
+  /* border-radius: 10px; */
+  border: none;
+  font-size: 12px;
   font-weight: 300;
-  margin: 0 auto 10px auto;
-  padding: 10px 15px;
+  text-align: left;
+  padding: 10px 10px;
   width: 90%;
 }
 
+.login-form input {
+  box-sizing: border-box;
+  background-color: rgba(252, 252, 252, 0.2);
+  border: none;
+  font-size: 18px;
+  font-weight: 300;
+  /* margin: 0 auto 10px auto; */
+  padding: 10px 10px;
+  width: 100%;
+}
+
 .login-form ul {
+  box-sizing: border-box;
   margin: 0 auto 10px auto;
   padding: 10px 15px;
   width: 250px;
@@ -54,4 +68,29 @@
   margin: 0 auto 10px auto;
   padding: 10px 15px;
   width: 90%;
+}
+.loginForm-label.hidden-loginlabel {
+  visibility: hidden;
+}
+.loginForm-label.hidden-passwordlabel {
+  visibility: hidden;
+}
+#login-inputarea {
+  box-sizing: border-box;
+  border: 1px solid rgba(149, 147, 147, 0.4);
+  border-radius: 10px;
+  margin: 0 auto 10px auto;
+  /* padding: 10px 15px; */
+  width: 90%;
+}
+#login-area {
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(149, 147, 147, 0.4);
+  width: 100%;
+  margin: 0;
+}
+#login-red,
+#psw-red {
+  color: red;
+  visibility: visible;
 }
