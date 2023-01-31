@@ -5,6 +5,8 @@ ul {
   display: flex;
   justify-content: space-between;
   padding: 5%;
+  border-top: solid rgb(219, 216, 216) 1px;
+  border-bottom: solid rgb(219, 216, 216) 1px;
 }
 #home-logo {
   margin: 0;
