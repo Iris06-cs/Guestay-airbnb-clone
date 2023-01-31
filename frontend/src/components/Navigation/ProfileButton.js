@@ -1,5 +1,5 @@
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useState, useRef, useEffect } from "react";
 
 import * as sessionActions from "../../store/session";
 import OpenModalMenuItem from "./OpenModalMenuItem";
@@ -8,15 +8,14 @@ import LoginFormModal from "../LoginFormModal";
 
 const ProfileButton = ({ sessionUser }) => {
   const dispatch = useDispatch();
-
   const dropdownRef = useRef();
-
   const [showDropdown, setShowDropdown] = useState(false);
 
   const openDropdown = () => {
     if (showDropdown) return;
-    else setShowDropdown(true);
+    setShowDropdown(true);
   };
+  console.log(showDropdown);
   useEffect(() => {
     //if dropdown menu not showing
     if (!showDropdown) return;
@@ -29,10 +28,6 @@ const ProfileButton = ({ sessionUser }) => {
 
     return () => document.removeEventListener("click", closeDropdown);
   }, [showDropdown]);
-
-  const dropdownClassName = `profile-dropdown ${
-    showDropdown ? "" : "hidden-dropdown"
-  }`;
   const closeDropdown = () => setShowDropdown(false);
   //handle logout button
   const logout = (e) => {
@@ -40,54 +35,61 @@ const ProfileButton = ({ sessionUser }) => {
     dispatch(sessionActions.logoutThunk());
     closeDropdown();
   };
-  let conditionalRender;
-  if (!sessionUser) {
-    conditionalRender = (
-      <>
-        <li>
-          <OpenModalMenuItem
-            itemText="Sign Up"
-            onItemClick={closeDropdown}
-            modalComponent={<SignupFormModal />}
-          />
-        </li>
-        <li>
-          <OpenModalMenuItem
-            itemText="Log In"
-            onItemClick={closeDropdown}
-            modalComponent={<LoginFormModal />}
-          />
-        </li>
-      </>
-    );
-  } else {
-    const { username, email } = sessionUser;
-    conditionalRender = (
-      <>
-        <li>{username}</li>
-        <li>{email}</li>
-        <li>
-          <button onClick={logout}>Log out</button>
-        </li>
-      </>
-    );
-  }
+  const demoUserLogin = () => {
+    const credential = {
+      credential: "user1@user.io",
+      password: "password1",
+    };
+    dispatch(sessionActions.loginThunk(credential));
+    setShowDropdown(false);
+  };
+
+  const dropdownClassName =
+    "profile-dropdown" + (showDropdown ? "" : " hidden");
+
   return (
     <>
-      <button onClick={openDropdown}>
-        <i className="fa-solid fa-user"></i>
-      </button>
+      <button onClick={openDropdown} id="profile-button">
+        <span style={{ color: "grey" }}>
+          <i className="fas fa-bars"></i>
+        </span>
 
-      {showDropdown && (
-        <ul className={dropdownClassName} ref={dropdownRef}>
-          {/* <li>{username}</li>
-          <li>{email}</li>
-          <li>
-            <button onClick={logout}>Log out</button>
-          </li> */}
-          {conditionalRender}
-        </ul>
-      )}
+        <span style={{ color: "white" }}>
+          <i className="fa-solid fa-user"></i>
+        </span>
+      </button>
+      <ul className={dropdownClassName} ref={dropdownRef}>
+        {sessionUser ? (
+          <>
+            <li>{sessionUser.username}</li>
+            <li>{sessionUser.email}</li>
+            <li>
+              <button onClick={logout}>Log out</button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <OpenModalMenuItem
+                itemText="Log in"
+                onItemClick={closeDropdown}
+                modalComponent={<LoginFormModal />}
+              />
+            </li>
+            <li>
+              <OpenModalMenuItem
+                itemText="Sign up"
+                onItemClick={closeDropdown}
+                modalComponent={<SignupFormModal />}
+              />
+            </li>
+
+            <li>
+              <button onClick={demoUserLogin}>DemoUser-Log in</button>
+            </li>
+          </>
+        )}
+      </ul>
     </>
   );
 };

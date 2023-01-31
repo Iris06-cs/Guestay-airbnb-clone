@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 import { loginThunk } from "../../store/session";
 import { useModal } from "../../context/Modal";
@@ -17,10 +16,7 @@ const LoginFormModal = () => {
   const [validationErrors, setValidationErrors] = useState([]);
   const [errors, setErrors] = useState([]);
   //validation inputs
-  //if there's a session user in redux store, redirect to "/"
-  // if (sessionUser) {
-  //   // return <Redirect to="/" />;
-  // }
+  useEffect(() => {});
   const handleOnSubmit = (e) => {
     e.preventDefault();
     setErrors([]);
@@ -36,16 +32,13 @@ const LoginFormModal = () => {
       });
   };
   return (
-    <>
-      <h1>Log In</h1>
+    <div className="login-form">
+      <button onClick={closeModal} className="close-modal-button">
+        <i className="fa-sharp fa-solid fa-xmark"></i>
+      </button>
+      <h1 id="login-title">Log In</h1>
       <form className="login-form" onSubmit={handleOnSubmit}>
-        <ul>
-          {errors.map((error, idx) => (
-            <li key={idx}>{error}</li>
-          ))}
-        </ul>
-
-        <label htmlFor="credential">Username/Email</label>
+        {/* <label htmlFor="credential">Username/Email</label> */}
         <input
           id="credential"
           type="text"
@@ -55,7 +48,7 @@ const LoginFormModal = () => {
           required
         />
 
-        <label htmlFor="password">Password</label>
+        {/* <label htmlFor="password">Password</label> */}
         <input
           id="password"
           type="password"
@@ -64,10 +57,21 @@ const LoginFormModal = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
-        <button type="submit">Submit</button>
+        <ul>
+          {errors.map((error, idx) => (
+            <li key={idx}>
+              <span style={{ color: "red", padding: "5px" }}>
+                <i className="fa-solid fa-circle-exclamation"></i>
+              </span>
+              {error}
+            </li>
+          ))}
+        </ul>
+        <button id="login-submit" type="submit">
+          Submit
+        </button>
       </form>
-    </>
+    </div>
   );
 };
 

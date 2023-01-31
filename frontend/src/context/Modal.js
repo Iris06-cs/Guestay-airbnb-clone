@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./Modal.css";
 const ModalContext = createContext();
 export const useModal = () => useContext(ModalContext);
+
 export const ModalProvider = (props) => {
   const modalRef = useRef();
   //data type:component,render inside modal
@@ -15,8 +16,8 @@ export const ModalProvider = (props) => {
     setModalContent(null);
     if (typeof onModalClose === "function") {
       // If callback function is truthy, call the callback function and reset it to null:
-      setOnModalClose(null); //why reset first???
       onModalClose();
+      setOnModalClose(null); //why reset first???
     }
   };
   const contextValue = {
@@ -32,7 +33,6 @@ export const ModalProvider = (props) => {
       <ModalContext.Provider value={contextValue}>
         {props.children}
       </ModalContext.Provider>
-      ;
       <div ref={modalRef} />
     </>
   );

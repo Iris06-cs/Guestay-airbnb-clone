@@ -1,62 +1,30 @@
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import logo from "../../images/logo.jpg";
+import logo from "../../images/logo1.jpg";
 import ProfileButton from "./ProfileButton";
-import OpenModalButton from "../OpenModalButton";
-import LoginFormModal from "../LoginFormModal";
-import SignupFormModal from "../SignupFormModal";
 import "./Navigation.css";
 
 const Navigation = ({ isLoaded }) => {
   const sessionUser = useSelector((state) => state.session.user);
 
-  // let conditionalLinks;
-  // //   console.log(sessionUser);
-  // if (!sessionUser) {
-  //   conditionalLinks = (
-  //     <>
-  //       <li>
-  //         {/* <NavLink to="/signup">Signup</NavLink> */}
-  //         <OpenModalButton
-  //           buttonText="Sign Up"
-  //           modalComponent={<SignupFormModal />}
-  //         />
-  //       </li>
-  //       <li>
-  //         {/* <NavLink to="/login">Login</NavLink> */}
-  //         <OpenModalButton
-  //           buttonText="Log In"
-  //           modalComponent={<LoginFormModal />}
-  //         />
-  //       </li>
-  //     </>
-  //   );
-  // }
-  // conditionalLinks = (
-  //   <li>
-  //     <ProfileButton sessionUser={sessionUser} />
-  //   </li>
-  // );
-
   return (
-    <ul>
-      <li>
-        <NavLink exact to="/">
-          <img src={logo} alt="logo" style={{ width: 120 }} />
-        </NavLink>
-      </li>
-      <li>
-        <NavLink exact to="/">
-          Home
-        </NavLink>
-      </li>
-      {isLoaded && (
+    <>
+      <ul className="navigation">
         <li>
-          <ProfileButton sessionUser={sessionUser} />
+          <NavLink exact to="/">
+            <img id="home-logo" src={logo} alt="logo" style={{ width: 120 }} />
+          </NavLink>
         </li>
-      )}
-    </ul>
+
+        {isLoaded && (
+          <li id="profile-section">
+            <ProfileButton sessionUser={sessionUser} />
+          </li>
+        )}
+      </ul>
+    </>
   );
 };
 export default Navigation;
