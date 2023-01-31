@@ -49,7 +49,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
 //--------------Get all reviews by a spot id
 router.get("/:spotId/reviews", async (req, res, next) => {
   const { spotId } = req.params;
-  console.log(spotId);
+  // console.log(spotId);
   const spot = await Spot.findByPk(spotId);
   //check if spot exist
   if (!spot) {

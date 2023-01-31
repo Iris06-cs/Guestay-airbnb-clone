@@ -89,8 +89,8 @@
   width: 100%;
   margin: 0;
 }
-#login-red,
-#psw-red {
+
+.loginForm-label.red {
   color: red;
   visibility: visible;
 }

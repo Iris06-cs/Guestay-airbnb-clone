@@ -15,7 +15,7 @@ const ProfileButton = ({ sessionUser }) => {
     if (showDropdown) return;
     setShowDropdown(true);
   };
-  console.log(showDropdown);
+  // console.log(showDropdown);
   useEffect(() => {
     //if dropdown menu not showing
     if (!showDropdown) return;

@@ -16,7 +16,7 @@ const LoginFormModal = () => {
   const [showLoginLabel, setShowLoginLabel] = useState(false);
   const [showPasswordLabel, setShowPasswordLabel] = useState(false);
   const [errors, setErrors] = useState([]);
-  const [loginIds, setLabelIds] = useState({});
+  const [redLabel, setshowRedLabel] = useState(false);
   const handleOnSubmit = (e) => {
     e.preventDefault();
     setErrors([]);
@@ -27,18 +27,22 @@ const LoginFormModal = () => {
         let err = [];
         if (data && data.statusCode === 400) {
           setErrors(data.errors);
-          setLabelIds({ loginId: "login-red", passwordId: "psw-red" });
+          setshowRedLabel(true);
         } else if (data && data.statusCode === 401) {
           err.push("The Email/Username or password you entered is invalid");
           setErrors(err);
-          setLabelIds({ loginId: "login-red", passwordId: "psw-red" });
+          setshowRedLabel(true);
         }
       });
   };
   const loginlabel =
-    "loginForm-label " + (showLoginLabel ? "" : "hidden-loginlabel ");
+    "loginForm-label " +
+    (showLoginLabel ? "" : "hidden-loginlabel ") +
+    (redLabel ? "red" : "");
   const passwordlabel =
-    "loginForm-label " + (showPasswordLabel ? "" : "hidden-passwordlabel ");
+    "loginForm-label " +
+    (showPasswordLabel ? "" : "hidden-passwordlabel ") +
+    (redLabel ? "red" : "");
   return (
     <div className="login-form">
       <button onClick={closeModal} className="close-modal-button">
@@ -48,11 +52,7 @@ const LoginFormModal = () => {
       <form className="login-form" onSubmit={handleOnSubmit}>
         <div id="login-inputarea">
           <div id="login-area">
-            <label
-              id={loginIds.loginId}
-              className={loginlabel}
-              htmlFor="credential"
-            >
+            <label className={loginlabel} htmlFor="credential">
               Username/Email
             </label>
             <input
@@ -66,11 +66,7 @@ const LoginFormModal = () => {
             />
           </div>
           <div id="password-area">
-            <label
-              id={loginIds.passwordId}
-              className={passwordlabel}
-              htmlFor="password"
-            >
+            <label className={passwordlabel} htmlFor="password">
               Password{" "}
             </label>
             <input

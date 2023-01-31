@@ -8,6 +8,7 @@
   margin: auto;
   padding: 20px 0;
   width: 600px;
+  color: #484848;
 }
 .close-modal-button {
   position: absolute;
@@ -25,16 +26,30 @@
 #signup-title {
   margin-top: 0;
 }
+.signup-form label {
+  box-sizing: border-box;
+  /* border: 1.5px solid rgba(149, 147, 147, 0.4); */
+  background-color: rgba(252, 252, 252, 0.2);
+  /* border-radius: 10px; */
+  border: none;
+  font-size: 12px;
+  font-weight: 300;
+  text-align: left;
+  padding: 5px 10px;
+  width: 90%;
+}
 .signup-form input {
   box-sizing: border-box;
-  border: 1.5px solid rgba(149, 147, 147, 0.4);
+  /* border: 1.5px solid rgba(149, 147, 147, 0.4); */
   background-color: rgba(252, 252, 252, 0.2);
-  border-radius: 10px;
+  /* border-radius: 10px; */
+  border: none;
   font-size: 18px;
   font-weight: 300;
-  margin: 0 auto 10px auto;
-  padding: 10px 15px;
-  width: 90%;
+  /* margin: 0 auto 10px auto; */
+  padding: 10px 10px;
+  width: 100%;
+  display: block;
 }
 
 .signup-form ul {
@@ -55,4 +70,20 @@
   margin: 0 auto 10px auto;
   padding: 10px 15px;
   width: 90%;
+}
+.signupForm-label.hidden-signuplabel {
+  visibility: hidden;
+}
+.signup-inputarea {
+  box-sizing: border-box;
+  border: 1px solid rgba(149, 147, 147, 0.4);
+  border-radius: 10px;
+  margin: 0 auto 10px auto;
+  /* padding: 10px 15px; */
+  width: 90%;
+}
+
+.signupForm-label.red {
+  color: red;
+  visibility: visible;
 }
