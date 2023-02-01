@@ -4,7 +4,9 @@ import { useDispatch } from "react-redux";
 import Footer from "./components/Footer";
 
 import Navigation from "./components/Navigation";
+import MainHome from "./components/MainHome";
 import * as sessionActions from "./store/session";
+import { Route, Switch } from "react-router-dom";
 
 function App() {
   const dispatch = useDispatch();
@@ -17,6 +19,12 @@ function App() {
   return (
     <>
       <Navigation isLoaded={isLoaded} />
+      <Switch>
+        <Route exact path="/">
+          <MainHome />
+        </Route>
+      </Switch>
+
       {/* {isLoaded && (
         <Switch> */}
       {/* <Route path="/login">

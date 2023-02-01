@@ -1,0 +1,40 @@
+/* ul */
+.spots-cards {
+  display: flex;
+  justify-content: space-between;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 0;
+  column-gap: 20px;
+  /* border: solid rgb(80, 243, 4) 3px; */
+}
+/* li photo card */
+.spot-photo-card {
+  display: grid;
+  /* border: solid rgb(72, 0, 255) 2px; */
+  border-radius: 10px;
+}
+.spot-photo-img {
+  /* border: solid red 2px; */
+  border-radius: 10px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+.address {
+  grid-area: address;
+}
+.rating {
+  grid-area: rating;
+  text-align: right;
+}
+.price {
+  grid-area: price;
+}
+
+.spot-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    "address address rating"
+    "price price price";
+}
