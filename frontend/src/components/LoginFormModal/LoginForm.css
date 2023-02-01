@@ -1,0 +1,96 @@
+.login-form {
+  background-color: #fbf9f933;
+  border-radius: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: auto;
+  padding: 20px 0;
+  width: 600px;
+  color: #484848;
+}
+.close-modal-button {
+  position: absolute;
+  left: 15px;
+  top: 25px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background-color: white;
+}
+.close-modal-button:hover {
+  background-color: rgb(248, 246, 246);
+}
+#login-title {
+  margin-top: 0;
+}
+.login-form label {
+  box-sizing: border-box;
+  /* border: 1.5px solid rgba(149, 147, 147, 0.4); */
+  background-color: rgba(252, 252, 252, 0.2);
+  /* border-radius: 10px; */
+  border: none;
+  font-size: 12px;
+  font-weight: 300;
+  text-align: left;
+  padding: 10px 10px;
+  width: 90%;
+}
+
+.login-form input {
+  box-sizing: border-box;
+  background-color: rgba(252, 252, 252, 0.2);
+  border: none;
+  font-size: 18px;
+  font-weight: 300;
+  /* margin: 0 auto 10px auto; */
+  padding: 10px 10px;
+  width: 100%;
+}
+
+.login-form ul {
+  box-sizing: border-box;
+  margin: 0 auto 10px auto;
+  padding: 10px 15px;
+  width: 250px;
+  width: 90%;
+}
+
+#login-submit {
+  box-sizing: border-box;
+  border: 1.5px solid rgba(255, 90, 95, 0.4);
+  background-color: #e11962;
+  border-radius: 10px;
+  color: white;
+  font-size: 18px;
+  font-weight: 300;
+  margin: 0 auto 10px auto;
+  padding: 10px 15px;
+  width: 90%;
+}
+.loginForm-label.hidden-loginlabel {
+  visibility: hidden;
+}
+.loginForm-label.hidden-passwordlabel {
+  visibility: hidden;
+}
+#login-inputarea {
+  box-sizing: border-box;
+  border: 1px solid rgba(149, 147, 147, 0.4);
+  border-radius: 10px;
+  margin: 0 auto 10px auto;
+  /* padding: 10px 15px; */
+  width: 90%;
+}
+#login-area {
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(149, 147, 147, 0.4);
+  width: 100%;
+  margin: 0;
+}
+
+.loginForm-label.red {
+  color: red;
+  visibility: visible;
+}

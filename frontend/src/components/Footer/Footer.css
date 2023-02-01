@@ -1,0 +1,15 @@
+footer {
+  box-sizing: border-box;
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 5%;
+  bottom: 0;
+  border-top: solid rgb(219, 216, 216) 1px;
+  border-bottom: solid rgb(219, 216, 216) 1px;
+}
+#copyrigh {
+  font-size: 15px;
+}

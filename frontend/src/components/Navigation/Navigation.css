@@ -1,3 +1,83 @@
-.hidden-dropdown {
-  display: hidden;
+ul {
+  list-style-type: none;
+}
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 5% 10px 5%;
+  border-top: solid rgb(219, 216, 216) 1px;
+  border-bottom: solid rgb(219, 216, 216) 1px;
+  height: 40px;
+}
+#home-logo {
+  margin: 0;
+}
+#profile-section {
+  display: flex;
+  border: solid white 1px;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 250px;
+  position: fixed;
+  top: 25px;
+  right: 5%;
+}
+#profile-button {
+  background-color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: solid rgb(219, 216, 216) 1px;
+
+  border-radius: 20px;
+  align-self: flex-end;
+  padding: 5px 5px;
+  width: 30%;
+}
+.fa-solid.fa-user {
+  background-color: grey;
+  border-radius: 50%;
+  padding: 5px;
+}
+.profile-dropdown {
+  align-self: flex-start;
+  background-color: white;
+  border: solid white;
+  border-radius: 15px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  width: 100%;
+  padding: 10px 0;
+  /* margin-top: 15px; */
+  position: relative;
+  top: 10px;
+}
+.profile-dropdown li {
+  width: 100%;
+  border: none;
+  border-radius: 15px;
+  padding: 0;
+}
+.profile-dropdown button {
+  background-color: white;
+  border: 0px;
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  font-size: 15px;
+  font-family: "Manrope", sans-serif;
+  font-weight: lighter;
+  color: #484848;
+}
+.profile-dropdown button:hover {
+  background-color: rgb(248, 246, 246);
+}
+ul.profile-dropdown.hidden {
+  display: none;
+}
+#login-button {
+  font-weight: bold;
 }

@@ -51,7 +51,7 @@ export const logoutThunk = () => async (dispatch) => {
   const response = await csrfFetch("/api/session", {
     method: "DELETE",
   });
-  const deleteMsg = await response.json();
+
   dispatch(removeSession());
   return response;
 };
@@ -60,11 +60,13 @@ const sessionReducer = (state = initialState, action) => {
   let newState;
   switch (action.type) {
     case ADD_SESSION:
-      newState = { ...state };
+      // newState = { ...state };
+      newState = Object.assign({}, state);
       newState.user = action.payload;
       return newState;
     case REMOVE_SESSION:
-      newState = { ...state };
+      // newState = { ...state };
+      newState = Object.assign({}, state);
       newState.user = null;
       return newState;
     default:
