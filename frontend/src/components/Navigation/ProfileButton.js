@@ -85,7 +85,7 @@ const ProfileButton = ({ sessionUser }) => {
             </li>
 
             <li>
-              <button onClick={demoUserLogin}>DemoUser-Log in</button>
+              <button onClick={demoUserLogin}>DemoUser</button>
             </li>
           </>
         )}

@@ -4,9 +4,11 @@ ul {
 .navigation {
   display: flex;
   justify-content: space-between;
-  padding: 5%;
+  align-items: center;
+  padding: 10px 5% 10px 5%;
   border-top: solid rgb(219, 216, 216) 1px;
   border-bottom: solid rgb(219, 216, 216) 1px;
+  height: 40px;
 }
 #home-logo {
   margin: 0;
@@ -17,6 +19,9 @@ ul {
   justify-content: flex-start;
   flex-direction: column;
   width: 250px;
+  position: fixed;
+  top: 25px;
+  right: 5%;
 }
 #profile-button {
   background-color: white;
@@ -46,7 +51,9 @@ ul {
   text-align: left;
   width: 100%;
   padding: 10px 0;
-  margin-top: 15px;
+  /* margin-top: 15px; */
+  position: relative;
+  top: 10px;
 }
 .profile-dropdown li {
   width: 100%;
