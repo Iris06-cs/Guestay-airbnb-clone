@@ -4,6 +4,7 @@ import { csrfFetch } from "./csrf";
 const LOAD_ALL_SPOTS = "spots/loadAllSpots";
 const ADD_SPOTS = "spots/addSpots";
 const REMOVE_SPOT = "spots/removeSpots";
+const ADD_IMG = "spots/addImg";
 //actions creators
 const loadAllSpots = (spots) => {
   return {
@@ -15,6 +16,12 @@ const addSpot = (spot) => {
   return {
     type: ADD_SPOTS,
     spot,
+  };
+};
+const addSpotImg = (image) => {
+  return {
+    type: ADD_IMG,
+    image,
   };
 };
 //thunks
@@ -39,6 +46,15 @@ export const createSpotThunk = (inputSpot) => async (dispatch) => {
   dispatch(addSpot(data));
   return data;
 };
+export const addSpotImgThunk = (spotId, img) => async (dispatch) => {
+  const res = await csrfFetch(`/api/spots/${spotId}/images`, {
+    method: "POST",
+    body: JSON.stringify(img),
+  });
+  const data = await res.json();
+  dispatch(addSpotImg(data));
+  return data;
+};
 const initialSpots = {};
 const spotsReducer = (state = initialSpots, action) => {
   let newState;
@@ -50,12 +66,16 @@ const spotsReducer = (state = initialSpots, action) => {
       return newState;
     case ADD_SPOTS:
       newState = Object.assign({}, state);
-      newState.spots = action.spots;
+      newState.spot = action.spot;
       return newState;
     case REMOVE_SPOT:
       // newState = { ...state };
       newState = Object.assign({}, state);
-      newState.spts = null;
+      newState.spots = null;
+      return newState;
+    case ADD_IMG:
+      newState = Object.assign({}, state);
+      newState.image = action.image;
       return newState;
     default:
       return state;
