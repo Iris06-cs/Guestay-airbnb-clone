@@ -1,0 +1,54 @@
+.owner-spots {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 90%;
+  padding: 0;
+  margin: 0 auto;
+  border-bottom: rgb(219, 216, 216) 1px solid;
+}
+.owner-spot-list {
+  box-sizing: border-box;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 8% 20% 40% 12% 12%;
+  justify-content: space-between;
+
+  /* column-gap: 20%; */
+  padding: 20px;
+  border-top: rgb(219, 216, 216) 1px solid;
+  font-size: 15px;
+}
+.owner-spot-list:hover {
+  background-color: #f8f6f6;
+}
+.edit-spot-btn,
+.delete-spot-btn {
+  width: 85px;
+  height: 45px;
+  padding: 5px 10px 5px 10px;
+  font-size: 15px;
+  justify-self: end;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.owner-spot-name {
+  justify-self: start;
+}
+.owner-spot-column {
+  box-sizing: border-box;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 8% 20% 40% 12% 12%;
+  justify-content: space-between;
+
+  /* column-gap: 20%; */
+  padding: 5px 20px;
+  border: none;
+  font-size: 15px;
+  font-weight: bold;
+}
+.align-right {
+  justify-self: end;
+}

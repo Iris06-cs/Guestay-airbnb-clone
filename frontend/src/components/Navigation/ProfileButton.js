@@ -64,6 +64,12 @@ const ProfileButton = ({ sessionUser }) => {
             <li>{sessionUser.username}</li>
             <li>{sessionUser.email}</li>
             <li>
+              <button>Reviews</button>
+            </li>
+            <li>
+              <button>Bookings</button>
+            </li>
+            <li>
               <button onClick={logout}>Log out</button>
             </li>
           </>

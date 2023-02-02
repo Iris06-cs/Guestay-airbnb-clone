@@ -1,17 +1,15 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import * as spotsActions from "../../store/spots";
-import "./MainHome.css";
+import * as spotsActions from "../../../store/spots";
+import "./AllSpots.css";
 // list of photo cards
 const MainHome = () => {
   const spots = useSelector((state) => state.spotsState.spots);
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(spotsActions.loadSpots()).then((res) =>
-      console.log("effect", res)
-    );
+    dispatch(spotsActions.loadSpots());
   }, [dispatch]);
 
   return (

@@ -24,7 +24,13 @@ export const loadSpots = () => async (dispatch) => {
   dispatch(loadAllSpots(data.Spots));
   return data.Spots;
 };
-export const addSpotThunk = (inputSpot) => async (dispatch) => {
+export const loadOwnerSpots = () => async (dispatch) => {
+  const res = await csrfFetch("/api/spots/current");
+  const data = await res.json();
+  dispatch(loadAllSpots(data.Spots));
+  return data.Spots;
+};
+export const createSpotThunk = (inputSpot) => async (dispatch) => {
   const res = await csrfFetch("/api/spots", {
     method: "POST",
     body: JSON.stringify(inputSpot),

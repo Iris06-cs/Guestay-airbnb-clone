@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Route } from "react-router-dom";
 
 import logo from "../../images/logo1.jpg";
 import ProfileButton from "./ProfileButton";
+import SwichHostButton from "./SwitchHostButton";
+import HostingNavLinks from "./HostingNavLinks";
 import "./Navigation.css";
 
 const Navigation = ({ isLoaded }) => {
+  // const Navigation = ({ isLogedIn }) => {
   const sessionUser = useSelector((state) => state.session.user);
-  const [hostSwitch, setHostSwitch] = useState(false);
-  const hostBtnClass = "hosting-button " + (hostSwitch ? "hover" : "");
+
   return (
     <>
       <ul className="navigation">
@@ -18,17 +21,23 @@ const Navigation = ({ isLoaded }) => {
             <img id="home-logo" src={logo} alt="logo" style={{ width: 120 }} />
           </NavLink>
         </li>
+
         {sessionUser && (
-          <li>
-            <button
-              className={hostBtnClass}
-              onMouseOver={(e) => setHostSwitch(true)}
-            >
-              Switch to hosting
-            </button>
-          </li>
+          <Route exact path="/">
+            <SwichHostButton />
+          </Route>
         )}
+        {sessionUser && (
+          <Route
+            exact
+            path={["/hosting/", "/hosting/bookings", "/hosting/spots"]}
+          >
+            <HostingNavLinks sessionUser={sessionUser} />
+          </Route>
+        )}
+
         {isLoaded && (
+          // {isLogedIn && (
           <li id="profile-section">
             <ProfileButton sessionUser={sessionUser} />
           </li>

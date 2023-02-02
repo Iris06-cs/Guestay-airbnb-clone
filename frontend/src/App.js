@@ -1,40 +1,27 @@
 import React, { useEffect, useState } from "react";
-// import { Switch } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import Footer from "./components/Footer";
 
+import Footer from "./components/Footer";
 import Navigation from "./components/Navigation";
-import MainHome from "./components/MainHome";
+import Spots from "./components/Spots";
 import * as sessionActions from "./store/session";
-import { Route, Switch } from "react-router-dom";
 
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
+  // const { isLogedIn, setIsLogedIn } = useIsLogedInContext();
   useEffect(() => {
-    dispatch(sessionActions.restoreSessionThunk()).then(() =>
-      setIsLoaded(true)
-    );
+    dispatch(sessionActions.restoreSessionThunk()).then((res) => {
+      setIsLoaded(true);
+      // setIsLogedIn(true);
+    });
   }, [dispatch]);
+
   return (
     <>
       <Navigation isLoaded={isLoaded} />
-      <Switch>
-        <Route exact path="/">
-          <MainHome />
-        </Route>
-      </Switch>
+      <Spots isLoaded={isLoaded} />
 
-      {/* {isLoaded && (
-        <Switch> */}
-      {/* <Route path="/login">
-            <LoginFormPage />
-          </Route>
-          <Route path="/signup">
-            <SignupFormPage />
-          </Route> */}
-      {/* </Switch>
-      )} */}
       <Footer />
     </>
   );
