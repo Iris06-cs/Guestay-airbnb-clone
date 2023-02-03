@@ -22,8 +22,12 @@
 .owner-spot-list:hover {
   background-color: #f8f6f6;
 }
+
 .edit-spot-btn,
 .delete-spot-btn {
+  box-sizing: border-box;
+  color: black;
+  text-align: center;
   width: 85px;
   height: 45px;
   padding: 5px 10px 5px 10px;
@@ -33,6 +37,17 @@
   border: 1px solid black;
   border-radius: 10px;
 }
+.edit-spot-link {
+  box-sizing: border-box;
+  color: black;
+  text-align: center;
+  width: 85px;
+  height: 45px;
+  font-size: 15px;
+  justify-self: end;
+  border: none;
+}
+
 .owner-spot-name {
   justify-self: start;
 }

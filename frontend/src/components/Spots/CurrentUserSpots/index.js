@@ -5,13 +5,15 @@ import { Redirect, useHistory } from "react-router-dom";
 
 import * as spotsActions from "../../../store/spots";
 import DeleteSpotButton from "./DeleteSpotButton";
+import UpdateSpot from "../UpdateSpot";
 import "./CurrentUserSpots.css";
 
 const CurrentUserSpots = ({ isLoaded }) => {
   const history = useHistory();
   const user = useSelector((state) => state.session.user);
   const spots = useSelector((state) => Object.values(state.spotsState.spots));
-
+  const spstate = useSelector((state) => state.spotsState);
+  console.log(spstate);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(spotsActions.loadOwnerSpots())
@@ -20,11 +22,7 @@ const CurrentUserSpots = ({ isLoaded }) => {
         history.push("/");
       });
   }, [dispatch, history]);
-
-  const handleEdit = (e) => {
-    e.preventDefault();
-  };
-
+  console.log("spots", spots);
   return (
     <ul className="owner-spots">
       {spots && isLoaded && (
@@ -46,10 +44,8 @@ const CurrentUserSpots = ({ isLoaded }) => {
               />
               <p className="owner-spot-name">{name}</p>
               <p className="owner-spot-address">{`${address},${city},${state}`}</p>
-              <button onClick={handleEdit} className="edit-spot-btn">
-                Edit
-              </button>
-              <DeleteSpotButton id={id} />
+              <UpdateSpot spotId={id} />
+              <DeleteSpotButton spotId={id} />
             </li>
           ))}
         </>

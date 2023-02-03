@@ -5,6 +5,7 @@ const LOAD_ALL_SPOTS = "spots/loadAllSpots";
 const ADD_SPOTS = "spots/addSpots";
 const REMOVE_SPOT = "spots/removeSpots";
 const ADD_IMG = "spots/addImg";
+const GET_SPOT = "spots/getSpot";
 //actions creators
 const loadAllSpots = (spots) => {
   return {
@@ -22,6 +23,18 @@ const deleteSpot = (id) => {
   return {
     type: REMOVE_SPOT,
     id,
+  };
+};
+const editSpot = (spot) => {
+  return {
+    type: ADD_SPOTS,
+    spot,
+  };
+};
+const getSpot = (spot) => {
+  return {
+    type: GET_SPOT,
+    spot,
   };
 };
 const addSpotImg = (image) => {
@@ -56,6 +69,15 @@ export const createSpotThunk = (inputSpot) => async (dispatch) => {
   dispatch(addSpot(data));
   return res;
 };
+export const editSpotThunk = (spotId, spot) => async (dispatch) => {
+  const res = await csrfFetch(`/api/spots/${spotId}`, {
+    method: "PUT",
+    body: JSON.stringify(spot),
+  });
+  const data = await res.json();
+  dispatch(editSpot(data));
+  return res;
+};
 export const deleteSpotThunk = (spotId) => async (dispatch) => {
   const res = await csrfFetch(`/api/spots/${spotId}`, {
     method: "DELETE",
@@ -64,6 +86,7 @@ export const deleteSpotThunk = (spotId) => async (dispatch) => {
   dispatch(deleteSpot(spotId));
   return data;
 };
+
 export const addSpotImgThunk = (spotId, img) => async (dispatch) => {
   const res = await csrfFetch(`/api/spots/${spotId}/images`, {
     method: "POST",
@@ -73,7 +96,12 @@ export const addSpotImgThunk = (spotId, img) => async (dispatch) => {
   dispatch(addSpotImg(data));
   return data;
 };
-
+export const getSpotThunk = (spoId) => async (dispatch) => {
+  const res = await csrfFetch(`/api/spots/${spoId}`);
+  const data = await res.json();
+  dispatch(getSpot(data));
+  return data;
+};
 const initialSpots = {};
 const spotsReducer = (state = initialSpots, action) => {
   let newState;
@@ -85,6 +113,7 @@ const spotsReducer = (state = initialSpots, action) => {
       return newState;
     case ADD_SPOTS:
       newState = Object.assign({}, state);
+      console.log("state", newState);
       newState.spots[action.spot.id] = action.spot;
       return newState;
     case REMOVE_SPOT:
@@ -95,6 +124,10 @@ const spotsReducer = (state = initialSpots, action) => {
     case ADD_IMG:
       newState = Object.assign({}, state);
       newState.image = action.image;
+      return newState;
+    case GET_SPOT:
+      newState = { ...state };
+      newState.spot = action.spot;
       return newState;
     default:
       return state;

@@ -42,7 +42,6 @@ const Navigation = ({ isLoaded }) => {
         )}
 
         {isLoaded && (
-          // {isLogedIn && (
           <li id="profile-section">
             <ProfileButton sessionUser={sessionUser} />
           </li>

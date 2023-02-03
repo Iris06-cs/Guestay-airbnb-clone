@@ -1,35 +1,45 @@
-import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useHistory, Redirect, NavLink } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
 import * as spotsActions from "../../../store/spots";
 
-const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
+const UpdateSpotForm = ({ isLoaded }) => {
   const history = useHistory();
-  const spotState = useSelector((state) => state.spotState);
-  console.log(isLoaded);
   const dispatch = useDispatch();
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [country, setCountry] = useState("");
-  const [lat, setLat] = useState("");
-  const [lng, setLng] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(50);
-  const [remainingChars, setRemainingChars] = useState(50);
-  const [url, setUrl] = useState("");
-  const [imgPreview, setImgPreview] = useState(false);
-  const [isSubmited, setIsSubmited] = useState(false);
-  const [spotId, setSpotId] = useState();
+  const { spotId } = useParams();
+  const currSpotInfo = useSelector((state) => state.spotsState);
+  const user = useSelector((state) => state.session.user);
+  const [street, setInputStreet] = useState("");
+  const [inputCity, setInputCity] = useState("");
+  const [inputState, setInputState] = useState("");
+  const [inputCountry, setInputCountry] = useState("");
+  const [inputLat, setInputLat] = useState("");
+  const [inputLng, setInputLng] = useState("");
+  const [inputName, setInputName] = useState("");
+  const [inputDescription, setInputDescription] = useState("");
+  const [inputPrice, setInputPrice] = useState(50);
   const [errors, setErrors] = useState([]);
-
+  const [isSubmited, setIsSubmited] = useState(false);
+  const [remainingChars, setRemainingChars] = useState(50);
+  useEffect(() => {
+    dispatch(spotsActions.getSpotThunk(spotId)).then((res) => {
+      setInputStreet(res.address);
+      setInputCity(res.city);
+      setInputState(res.state);
+      setInputCountry(res.country);
+      setInputLat(res.lat);
+      setInputLng(res.lng);
+      setInputName(res.name);
+      setInputDescription(res.description);
+      setInputPrice(res.price);
+    });
+  }, [dispatch, spotId]);
   const handleOnChange = (e, callback) => {
     callback(e.target.value);
   };
   //textarea max length
-  const currentLength = name.length;
+  const currentLength = inputName.length;
   useEffect(() => {
     const maxName = 50;
     setRemainingChars(maxName - currentLength);
@@ -37,11 +47,11 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
   //set price
   const increasePrice = (e) => {
     e.preventDefault();
-    setPrice((prev) => prev + 1);
+    setInputPrice((prev) => prev + 1);
   };
   const decreasePrice = (e) => {
     e.preventDefault();
-    setPrice((prev) => prev - 1);
+    setInputPrice((prev) => prev - 1);
   };
   //click next button submit form, go to add image page
   const handleFormSubmit = (e) => {
@@ -49,40 +59,38 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
     setErrors([]);
     const newSpot = {
       address: street,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
+      city: inputCity,
+      state: inputState,
+      country: inputCountry,
+      lat: inputLat,
+      lng: inputLng,
+      name: inputName,
+      description: inputDescription,
+      price: inputPrice,
     };
-    dispatch(spotsActions.createSpotThunk(newSpot))
-      .then((data) => setSpotId(data.id))
+    dispatch(spotsActions.editSpotThunk(spotId, newSpot))
+      .then()
       .catch(async (res) => {
         const data = await res.json();
         if (data && data.statusCode >= 400) setErrors(data.errors);
       });
     setIsSubmited(true);
+    history.replace("/hosting/spots");
   };
-  //hasn't click next or clicked next but having input validation err
-  //render form
-  // otherwise form successfully submitted will render add image page
-  if (!isSubmited || (isSubmited && errors.length > 0))
+  if (isLoaded && user)
     return (
       <>
         <form className="Create-spot-form" onSubmit={handleFormSubmit}>
           <div className="address-form">
+            <h1>Update your spot</h1>
             <h2>Where's your place located?</h2>
             <div>
               <label htmlFor="street">Street</label>
               <input
                 id="street"
                 type="text"
-                placeholder="Street"
                 value={street}
-                onChange={(e) => handleOnChange(e, setStreet)}
+                onChange={(e) => handleOnChange(e, setInputStreet)}
               />
             </div>
             <div>
@@ -90,9 +98,8 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
               <input
                 id="city"
                 type="text"
-                placeholder="City"
-                value={city}
-                onChange={(e) => handleOnChange(e, setCity)}
+                value={inputCity}
+                onChange={(e) => handleOnChange(e, setInputCity)}
               />
             </div>
             <div>
@@ -100,9 +107,8 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
               <input
                 id="state"
                 type="text"
-                placeholder="State"
-                value={state}
-                onChange={(e) => handleOnChange(e, setState)}
+                value={inputState}
+                onChange={(e) => handleOnChange(e, setInputState)}
               />
             </div>
             <div>
@@ -110,9 +116,8 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
               <input
                 id="country"
                 type="text"
-                placeholder="Country"
-                value={country}
-                onChange={(e) => handleOnChange(e, setCountry)}
+                value={inputCity}
+                onChange={(e) => handleOnChange(e, setInputCountry)}
               />
             </div>
             <div>
@@ -120,9 +125,8 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
               <input
                 id="latitude"
                 type="text"
-                placeholder="Latitude"
-                value={lat}
-                onChange={(e) => handleOnChange(e, setLat)}
+                value={inputLat}
+                onChange={(e) => handleOnChange(e, setInputLat)}
               />
             </div>
             <div>
@@ -130,9 +134,8 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
               <input
                 id="longitude"
                 type="text"
-                placeholder="Longitude"
-                value={lng}
-                onChange={(e) => handleOnChange(e, setLng)}
+                value={inputLng}
+                onChange={(e) => handleOnChange(e, setInputLng)}
               />
             </div>
           </div>
@@ -140,8 +143,8 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
             <div>
               <h2>Give your spot a name</h2>
               <textarea
-                value={name}
-                onChange={(e) => handleOnChange(e, setName)}
+                value={inputName}
+                onChange={(e) => handleOnChange(e, setInputName)}
               />
               <p>{remainingChars}/50</p>
             </div>
@@ -149,8 +152,8 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
               <h2>Create your description</h2>
               <p>Share some special points make your spot unique</p>
               <textarea
-                value={description}
-                onChange={(e) => handleOnChange(e, setDescription)}
+                value={inputDescription}
+                onChange={(e) => handleOnChange(e, setInputDescription)}
               />
             </div>
             <div>
@@ -162,7 +165,7 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
                     <i className="fa-solid fa-minus"></i>
                   </span>
                 </button>
-                <span>{`$${price}`}</span>
+                <span>{`$${inputPrice}`}</span>
                 <button onClick={increasePrice}>
                   <span>
                     <i className="fa-solid fa-plus"></i>
@@ -182,47 +185,17 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
             ))}
           </ul>
           <div className="direct-btns">
-            <button id="back-btn" onClick={(e) => setIsClicked(false)}>
-              back
-            </button>
+            <NavLink to="/hosting/spots">
+              <button id="back-btn">back</button>
+            </NavLink>
 
             <button type="Submit" id="next-btn">
-              Next
+              Confirm Changes
             </button>
           </div>
         </form>
       </>
     );
-  else {
-    const submitImg = (e) => {
-      e.preventDefault();
-      dispatch(
-        spotsActions.addSpotImgThunk(spotId, { url, preview: imgPreview })
-      );
-      history.push("/hosting/spots");
-    };
-    return (
-      <>
-        <h1>Add image</h1>
-        <input
-          type="text"
-          value={url}
-          onChange={(e) => handleOnChange(e, setUrl)}
-        />
-        <div>{url && <img src={url} alt="spot" />}</div>
-        <label>Set As Preview Image</label>
-        <input
-          type="checkBox"
-          onChange={(e) => setImgPreview((prev) => !prev)}
-          checked={imgPreview}
-        />
-        <button onClick={submitImg}>Confirm</button>
-        <button onClick={(e) => history.push("/hosting/spots")}>
-          Skip and Finish
-        </button>
-      </>
-    );
-  }
+  return <Redirect to="/" />;
 };
-
-export default CreateSpotForm;
+export default UpdateSpotForm;

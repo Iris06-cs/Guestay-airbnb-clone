@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
 const HostingNavLinks = () => {
+  const [isClickedCreate, setIsClickedCreate] = useState(false);
   const setStyle = ({ isActive }) => {
     return {
       textDecoration: "none",
@@ -14,7 +15,15 @@ const HostingNavLinks = () => {
       <NavLink className={hostNavs} style={setStyle} to="/hosting/spots">
         Spots
       </NavLink>
-      <NavLink className={hostNavs} style={setStyle} to="/hosting/spots/new">
+      <NavLink
+        className={hostNavs}
+        style={{
+          ...setStyle,
+          visibility: isClickedCreate ? "hidden" : "visible",
+        }}
+        to="/hosting/spots/new"
+        onClick={(e) => setIsClickedCreate(true)}
+      >
         Create a new spot
       </NavLink>
       <NavLink className={hostNavs} style={setStyle} to="/hosting/bookings">

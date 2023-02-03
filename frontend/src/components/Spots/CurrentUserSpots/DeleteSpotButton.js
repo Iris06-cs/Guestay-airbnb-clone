@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as spotsActions from "../../../store/spots";
-const DeleteSpotButton = ({ id }) => {
+const DeleteSpotButton = ({ spotId }) => {
   const dispatch = useDispatch();
   const [clickedDel, setClickedDel] = useState(false);
   const [targetSpotId, setTargetSpotId] = useState("");
@@ -24,8 +24,8 @@ const DeleteSpotButton = ({ id }) => {
   };
   return (
     <button
-      id={`btn${id}`}
-      name={id}
+      id={`btn${spotId}`}
+      name={spotId}
       onClick={clickedDel ? handleComfirm : handleDelete}
       className="delete-spot-btn"
     >
