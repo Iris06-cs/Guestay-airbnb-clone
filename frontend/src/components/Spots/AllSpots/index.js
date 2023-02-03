@@ -29,7 +29,9 @@ const AllSpots = () => {
                   <span>
                     <i className="fa-solid fa-star"></i>
                   </span>
-                  {spot.avgRating}
+                  {spot.avgRating === "Spot has no review yet"
+                    ? ""
+                    : spot.avgRating}
                 </p>
                 <p className="price">{`$${spot.price} night`}</p>
               </div>

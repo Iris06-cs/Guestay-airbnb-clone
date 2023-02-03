@@ -8,8 +8,8 @@ const UpdateSpotForm = ({ isLoaded }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { spotId } = useParams();
-  const currSpotInfo = useSelector((state) => state.spotsState);
   const user = useSelector((state) => state.session.user);
+  const spots = useSelector((state) => state.spotsState);
   const [street, setInputStreet] = useState("");
   const [inputCity, setInputCity] = useState("");
   const [inputState, setInputState] = useState("");
@@ -77,125 +77,130 @@ const UpdateSpotForm = ({ isLoaded }) => {
     setIsSubmited(true);
     history.replace("/hosting/spots");
   };
-  if (isLoaded && user)
-    return (
-      <>
-        <form className="Create-spot-form" onSubmit={handleFormSubmit}>
-          <div className="address-form">
-            <h1>Update your spot</h1>
-            <h2>Where's your place located?</h2>
-            <div>
-              <label htmlFor="street">Street</label>
-              <input
-                id="street"
-                type="text"
-                value={street}
-                onChange={(e) => handleOnChange(e, setInputStreet)}
-              />
-            </div>
-            <div>
-              <label htmlFor="city">City</label>
-              <input
-                id="city"
-                type="text"
-                value={inputCity}
-                onChange={(e) => handleOnChange(e, setInputCity)}
-              />
-            </div>
-            <div>
-              <label htmlFor="state">State</label>
-              <input
-                id="state"
-                type="text"
-                value={inputState}
-                onChange={(e) => handleOnChange(e, setInputState)}
-              />
-            </div>
-            <div>
-              <label htmlFor="country">Country</label>
-              <input
-                id="country"
-                type="text"
-                value={inputCity}
-                onChange={(e) => handleOnChange(e, setInputCountry)}
-              />
-            </div>
-            <div>
-              <label htmlFor="latitude">Latitude</label>
-              <input
-                id="latitude"
-                type="text"
-                value={inputLat}
-                onChange={(e) => handleOnChange(e, setInputLat)}
-              />
-            </div>
-            <div>
-              <label htmlFor="longitude">Longitude</label>
-              <input
-                id="longitude"
-                type="text"
-                value={inputLng}
-                onChange={(e) => handleOnChange(e, setInputLng)}
-              />
-            </div>
-          </div>
-          <div className="intro-form">
-            <div>
-              <h2>Give your spot a name</h2>
-              <textarea
-                value={inputName}
-                onChange={(e) => handleOnChange(e, setInputName)}
-              />
-              <p>{remainingChars}/50</p>
-            </div>
-            <div>
-              <h2>Create your description</h2>
-              <p>Share some special points make your spot unique</p>
-              <textarea
-                value={inputDescription}
-                onChange={(e) => handleOnChange(e, setInputDescription)}
-              />
-            </div>
-            <div>
-              <h2>Set your price</h2>
-              <p>You can change it at anytime</p>
-              <div>
-                <button onClick={decreasePrice}>
-                  <span>
-                    <i className="fa-solid fa-minus"></i>
-                  </span>
-                </button>
-                <span>{`$${inputPrice}`}</span>
-                <button onClick={increasePrice}>
-                  <span>
-                    <i className="fa-solid fa-plus"></i>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <ul>
-            {errors.map((error, idx) => (
-              <li key={idx}>
-                <span style={{ color: "red", padding: "5px" }}>
-                  <i className="fa-solid fa-circle-exclamation"></i>
-                </span>
-                {error}
-              </li>
-            ))}
-          </ul>
-          <div className="direct-btns">
-            <NavLink to="/hosting/spots">
-              <button id="back-btn">back</button>
-            </NavLink>
+  //no session user after loaded-->home
+  if (isLoaded && !user) return <Redirect to="/" />;
 
-            <button type="Submit" id="next-btn">
-              Confirm Changes
-            </button>
+  return (
+    <>
+      <form className="Create-spot-form" onSubmit={handleFormSubmit}>
+        <div className="address-form">
+          <h1>Update your spot</h1>
+          <h2>Where's your place located?</h2>
+          <div>
+            <label htmlFor="street">Street</label>
+            <input
+              id="street"
+              type="text"
+              value={street}
+              onChange={(e) => handleOnChange(e, setInputStreet)}
+            />
           </div>
-        </form>
-      </>
-    );
-  return <Redirect to="/" />;
+          <div>
+            <label htmlFor="city">City</label>
+            <input
+              id="city"
+              type="text"
+              value={inputCity}
+              onChange={(e) => handleOnChange(e, setInputCity)}
+            />
+          </div>
+          <div>
+            <label htmlFor="state">State</label>
+            <input
+              id="state"
+              type="text"
+              value={inputState}
+              onChange={(e) => handleOnChange(e, setInputState)}
+            />
+          </div>
+          <div>
+            <label htmlFor="country">Country</label>
+            <input
+              id="country"
+              type="text"
+              value={inputCity}
+              onChange={(e) => handleOnChange(e, setInputCountry)}
+            />
+          </div>
+          <div>
+            <label htmlFor="latitude">Latitude</label>
+            <input
+              id="latitude"
+              type="text"
+              value={inputLat}
+              onChange={(e) => handleOnChange(e, setInputLat)}
+            />
+          </div>
+          <div>
+            <label htmlFor="longitude">Longitude</label>
+            <input
+              id="longitude"
+              type="text"
+              value={inputLng}
+              onChange={(e) => handleOnChange(e, setInputLng)}
+            />
+          </div>
+        </div>
+        <div className="intro-form">
+          <div>
+            <h2>Give your spot a name</h2>
+            <textarea
+              value={inputName}
+              onChange={(e) => handleOnChange(e, setInputName)}
+            />
+            <p>{remainingChars}/50</p>
+          </div>
+          <div>
+            <h2>Create your description</h2>
+            <p>Share some special points make your spot unique</p>
+            <textarea
+              value={inputDescription}
+              onChange={(e) => handleOnChange(e, setInputDescription)}
+            />
+          </div>
+          <div>
+            <h2>Set your price</h2>
+            <p>You can change it at anytime</p>
+            <div>
+              <button onClick={decreasePrice}>
+                <span>
+                  <i className="fa-solid fa-minus"></i>
+                </span>
+              </button>
+              <span>{`$${inputPrice}`}</span>
+              <button onClick={increasePrice}>
+                <span>
+                  <i className="fa-solid fa-plus"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <ul>
+          {errors.map((error, idx) => (
+            <li key={idx}>
+              <span style={{ color: "red", padding: "5px" }}>
+                <i className="fa-solid fa-circle-exclamation"></i>
+              </span>
+              {error}
+            </li>
+          ))}
+        </ul>
+        <div className="direct-btns">
+          <NavLink to="/hosting/spots">
+            <button id="back-btn">back</button>
+          </NavLink>
+          <NavLink to={`/spots/${spotId}/images`}>
+            <button type="Submit" id="next-btn">
+              Add Photo
+            </button>
+          </NavLink>
+          <button type="Submit" id="next-btn">
+            Confirm Changes
+          </button>
+        </div>
+      </form>
+    </>
+  );
 };
 export default UpdateSpotForm;

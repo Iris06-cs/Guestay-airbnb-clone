@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import * as spotsActions from "../../../store/spots";
 
-const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
+const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
   const history = useHistory();
-  const spotState = useSelector((state) => state.spotState);
-  console.log(isLoaded);
+  const spotState = useSelector((state) => state.spotsState);
+  console.log(spotState);
+  const user = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
@@ -28,6 +29,13 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
   const handleOnChange = (e, callback) => {
     callback(e.target.value);
   };
+  useEffect(() => {
+    dispatch(spotsActions.loadOwnerSpots())
+      .then()
+      .catch(async (res) => {
+        history.push("/");
+      });
+  }, [dispatch, history]);
   //textarea max length
   const currentLength = name.length;
   useEffect(() => {
@@ -42,6 +50,17 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
   const decreasePrice = (e) => {
     e.preventDefault();
     setPrice((prev) => prev - 1);
+  };
+  const resetForm = () => {
+    setStreet("");
+    setCity("");
+    setState("");
+    setCountry("");
+    setLat("");
+    setLng("");
+    setName("");
+    setDescription("");
+    setPrice(50);
   };
   //click next button submit form, go to add image page
   const handleFormSubmit = (e) => {
@@ -59,13 +78,26 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
       price,
     };
     dispatch(spotsActions.createSpotThunk(newSpot))
-      .then((data) => setSpotId(data.id))
+      .then((data) => {
+        console.log("fetch", data);
+        setSpotId(data.id);
+      })
       .catch(async (res) => {
         const data = await res.json();
         if (data && data.statusCode >= 400) setErrors(data.errors);
       });
+    // setIsClicked(false);
     setIsSubmited(true);
+    resetForm();
   };
+
+  // useEffect(() => {
+  //   setIsClicked(JSON.parse(window.localStorage.getItem("isClicked")));
+  // }, [setIsClicked]);
+
+  // useEffect(() => {
+  //   window.localStorage.setItem("isClicked", isClicked);
+  // }, [isClicked]);
   //hasn't click next or clicked next but having input validation err
   //render form
   // otherwise form successfully submitted will render add image page
@@ -193,7 +225,7 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
         </form>
       </>
     );
-  else {
+  else if (isLoaded && user) {
     const submitImg = (e) => {
       e.preventDefault();
       dispatch(

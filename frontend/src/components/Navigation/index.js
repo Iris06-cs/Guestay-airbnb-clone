@@ -35,6 +35,7 @@ const Navigation = ({ isLoaded }) => {
               "/hosting/bookings",
               "/hosting/spots",
               "/hosting/spots/new",
+              "/hosting/spots/:spotId/edit",
             ]}
           >
             <HostingNavLinks sessionUser={sessionUser} />

@@ -23,7 +23,7 @@ const Spots = ({ isLoaded }) => {
           <UpdateSpotForm isLoaded={isLoaded} />
         </Route>
         <Route path="/spots/:spotId/images">
-          <AddSpotPhoto />
+          <AddSpotPhoto isLoaded={isLoaded} />
         </Route>
       </Switch>
     </div>

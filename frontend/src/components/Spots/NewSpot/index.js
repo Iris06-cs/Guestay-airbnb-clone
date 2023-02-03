@@ -37,7 +37,11 @@ const NewSpot = ({ isLoaded }) => {
               <button onClick={(e) => setIsClicked(true)}>Get started</button>
             </div>
           ) : (
-            <CreateSpotForm isLoaded={isLoaded} setIsClicked={setIsClicked} />
+            <CreateSpotForm
+              isLoaded={isLoaded}
+              setIsClicked={setIsClicked}
+              isClicked={isClicked}
+            />
           )}
         </div>
       )}
