@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as spotsAcctions from "../../../store/spots";
 
 const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
+  const history = useHistory();
   const spotState = useSelector((state) => state.spotState);
   console.log(isLoaded);
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
   const [price, setPrice] = useState(50);
   const [remainingChars, setRemainingChars] = useState(50);
   const [url, setUrl] = useState("");
-  const [imgPreview, setImgPreview] = useState(true);
+  const [imgPreview, setImgPreview] = useState(false);
   const [isSubmited, setIsSubmited] = useState(false);
   const [spotId, setSpotId] = useState();
   const [errors, setErrors] = useState([]);
@@ -44,6 +45,7 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
   //click next button submit form, go to add image page
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    setErrors([]);
     const newSpot = {
       address: street,
       city,
@@ -63,7 +65,9 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
       });
     setIsSubmited(true);
   };
-  //   console.log("id:", id);
+  //hasn't click next or clicked next but having input validation err
+  //render form
+  // otherwise form successfully submitted will render add image page
   if (!isSubmited || (isSubmited && errors.length > 0))
     return (
       <>
@@ -192,7 +196,10 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
   else {
     const submitImg = (e) => {
       e.preventDefault();
-      dispatch(spotsAcctions.addSpotImgThunk(spotId, { url, imgPreview }));
+      dispatch(
+        spotsAcctions.addSpotImgThunk(spotId, { url, preview: imgPreview })
+      );
+      history.push("/hosting/spots");
     };
     return (
       <>
@@ -210,6 +217,9 @@ const CreateSpotForm = ({ isLoaded, setIsClicked }) => {
           checked={imgPreview}
         />
         <button onClick={submitImg}>Confirm</button>
+        <button onClick={(e) => history.push("/hosting/spots")}>
+          Skip and Finish
+        </button>
       </>
     );
   }

@@ -30,7 +30,12 @@ const Navigation = ({ isLoaded }) => {
         {sessionUser && (
           <Route
             exact
-            path={["/hosting/", "/hosting/bookings", "/hosting/spots"]}
+            path={[
+              "/hosting/",
+              "/hosting/bookings",
+              "/hosting/spots",
+              "/hosting/spots/new",
+            ]}
           >
             <HostingNavLinks sessionUser={sessionUser} />
           </Route>

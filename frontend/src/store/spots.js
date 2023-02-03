@@ -18,6 +18,12 @@ const addSpot = (spot) => {
     spot,
   };
 };
+const deleteSpot = (id) => {
+  return {
+    type: REMOVE_SPOT,
+    id,
+  };
+};
 const addSpotImg = (image) => {
   return {
     type: ADD_IMG,
@@ -28,14 +34,18 @@ const addSpotImg = (image) => {
 export const loadSpots = () => async (dispatch) => {
   const res = await csrfFetch("/api/spots");
   const data = await res.json();
-  dispatch(loadAllSpots(data.Spots));
-  return data.Spots;
+  let spots = {};
+  data.Spots.forEach((spot) => (spots[spot.id] = spot));
+  dispatch(loadAllSpots(spots));
+  return spots;
 };
 export const loadOwnerSpots = () => async (dispatch) => {
   const res = await csrfFetch("/api/spots/current");
   const data = await res.json();
-  dispatch(loadAllSpots(data.Spots));
-  return data.Spots;
+  let spots = {};
+  data.Spots.forEach((spot) => (spots[spot.id] = spot));
+  dispatch(loadAllSpots(spots));
+  return spots;
 };
 export const createSpotThunk = (inputSpot) => async (dispatch) => {
   const res = await csrfFetch("/api/spots", {
@@ -44,6 +54,14 @@ export const createSpotThunk = (inputSpot) => async (dispatch) => {
   });
   const data = await res.json();
   dispatch(addSpot(data));
+  return res;
+};
+export const deleteSpotThunk = (spotId) => async (dispatch) => {
+  const res = await csrfFetch(`/api/spots/${spotId}`, {
+    method: "DELETE",
+  });
+  const data = await res.json();
+  dispatch(deleteSpot(spotId));
   return data;
 };
 export const addSpotImgThunk = (spotId, img) => async (dispatch) => {
@@ -55,6 +73,7 @@ export const addSpotImgThunk = (spotId, img) => async (dispatch) => {
   dispatch(addSpotImg(data));
   return data;
 };
+
 const initialSpots = {};
 const spotsReducer = (state = initialSpots, action) => {
   let newState;
@@ -66,12 +85,12 @@ const spotsReducer = (state = initialSpots, action) => {
       return newState;
     case ADD_SPOTS:
       newState = Object.assign({}, state);
-      newState.spot = action.spot;
+      newState.spots[action.spot.id] = action.spot;
       return newState;
     case REMOVE_SPOT:
       // newState = { ...state };
       newState = Object.assign({}, state);
-      newState.spots = null;
+      delete newState.spots[action.id];
       return newState;
     case ADD_IMG:
       newState = Object.assign({}, state);

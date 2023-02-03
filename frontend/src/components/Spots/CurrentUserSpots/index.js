@@ -1,17 +1,17 @@
 //get spots by owner id
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 
 import * as spotsActions from "../../../store/spots";
+import DeleteSpotButton from "./DeleteSpotButton";
 import "./CurrentUserSpots.css";
 
 const CurrentUserSpots = ({ isLoaded }) => {
-  // const CurrentUserSpots = ({ isLogedIn }) => {
   const history = useHistory();
   const user = useSelector((state) => state.session.user);
-  const spots = useSelector((state) => state.spotsState.spots);
-  // console.log(user, isLoaded);
+  const spots = useSelector((state) => Object.values(state.spotsState.spots));
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(spotsActions.loadOwnerSpots())
@@ -20,9 +20,7 @@ const CurrentUserSpots = ({ isLoaded }) => {
         history.push("/");
       });
   }, [dispatch, history]);
-  const handleDelete = (e) => {
-    e.preventDefault();
-  };
+
   const handleEdit = (e) => {
     e.preventDefault();
   };
@@ -30,7 +28,6 @@ const CurrentUserSpots = ({ isLoaded }) => {
   return (
     <ul className="owner-spots">
       {spots && isLoaded && (
-        // {spots && isLogedIn && (
         <>
           <li className="owner-spot-column">
             <p>Spot</p>
@@ -52,15 +49,12 @@ const CurrentUserSpots = ({ isLoaded }) => {
               <button onClick={handleEdit} className="edit-spot-btn">
                 Edit
               </button>
-              <button onClick={handleDelete} className="delete-spot-btn">
-                Delete
-              </button>
+              <DeleteSpotButton id={id} />
             </li>
           ))}
         </>
       )}
       {!user && isLoaded && <Redirect to="/" />}
-      {/* {!user && isLogedIn && <Redirect to="/" />} */}
     </ul>
   );
 };

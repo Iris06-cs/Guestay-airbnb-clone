@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as spotsActions from "../../../store/spots";
 import "./AllSpots.css";
 // list of photo cards
-const MainHome = () => {
+const AllSpots = () => {
   const spots = useSelector((state) => state.spotsState.spots);
 
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const MainHome = () => {
     <>
       <ul className="spots-cards">
         {spots &&
-          spots.map((spot) => (
+          Object.values(spots).map((spot) => (
             <li key={spot.id} className="spot-photo-card">
               <img
                 className="spot-photo-img"
@@ -40,4 +40,4 @@ const MainHome = () => {
   );
 };
 
-export default MainHome;
+export default AllSpots;
