@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import * as spotsActions from "../../../store/spots";
-
+// import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
+import * as entitiesActions from "../../../store/entities";
 const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
   const history = useHistory();
-  const spotState = useSelector((state) => state.spotsState);
-  console.log(spotState);
+  // const spotState = useSelector((state) => state.spotsState);
+  // console.log(spotState);
+  const spotState = useSelector((state) => state.entities.spot);
   const user = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
   const [street, setStreet] = useState("");
@@ -26,16 +27,16 @@ const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
   const [spotId, setSpotId] = useState();
   const [errors, setErrors] = useState([]);
 
+  useEffect(() => {
+    if (spotState) setSpotId(spotState.id);
+  }, [spotState]);
+  useEffect(() => {
+    if (spotId) dispatch(entitiesActions.loadOneSpotThunk(spotId));
+  }, [dispatch, spotId]);
   const handleOnChange = (e, callback) => {
     callback(e.target.value);
   };
-  useEffect(() => {
-    dispatch(spotsActions.loadOwnerSpots())
-      .then()
-      .catch(async (res) => {
-        history.push("/");
-      });
-  }, [dispatch, history]);
+
   //textarea max length
   const currentLength = name.length;
   useEffect(() => {
@@ -77,11 +78,12 @@ const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
       description,
       price,
     };
-    dispatch(spotsActions.createSpotThunk(newSpot))
-      .then((data) => {
-        console.log("fetch", data);
-        setSpotId(data.id);
-      })
+    // dispatch(spotsActions.createSpotThunk(newSpot))
+    dispatch(entitiesActions.createSpotThunk(newSpot))
+      // .then((data) => {
+      //   console.log("fetch", data);
+      //   setSpotId(data.id);
+      // })
       .catch(async (res) => {
         const data = await res.json();
         if (data && data.statusCode >= 400) setErrors(data.errors);
@@ -91,13 +93,6 @@ const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
     resetForm();
   };
 
-  // useEffect(() => {
-  //   setIsClicked(JSON.parse(window.localStorage.getItem("isClicked")));
-  // }, [setIsClicked]);
-
-  // useEffect(() => {
-  //   window.localStorage.setItem("isClicked", isClicked);
-  // }, [isClicked]);
   //hasn't click next or clicked next but having input validation err
   //render form
   // otherwise form successfully submitted will render add image page
@@ -228,8 +223,11 @@ const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
   else if (isLoaded && user) {
     const submitImg = (e) => {
       e.preventDefault();
+      // dispatch(
+      //   spotsActions.addSpotImgThunk(spotId, { url, preview: imgPreview })
+      // );
       dispatch(
-        spotsActions.addSpotImgThunk(spotId, { url, preview: imgPreview })
+        entitiesActions.addSpotImgThunk(spotId, { url, preview: imgPreview })
       );
       history.push("/hosting/spots");
     };

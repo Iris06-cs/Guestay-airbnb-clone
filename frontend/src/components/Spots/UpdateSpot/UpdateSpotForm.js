@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useHistory, Redirect, NavLink } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import * as spotsActions from "../../../store/spots";
-
+// import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
+import * as entitiesActions from "../../../store/entities";
 const UpdateSpotForm = ({ isLoaded }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { spotId } = useParams();
   const user = useSelector((state) => state.session.user);
-  const spots = useSelector((state) => state.spotsState);
+  // const spots = useSelector((state) => state.spotsState);
+  const spot = useSelector((state) => state.entities.spot);
+
   const [street, setInputStreet] = useState("");
   const [inputCity, setInputCity] = useState("");
   const [inputState, setInputState] = useState("");
@@ -23,18 +25,35 @@ const UpdateSpotForm = ({ isLoaded }) => {
   const [isSubmited, setIsSubmited] = useState(false);
   const [remainingChars, setRemainingChars] = useState(50);
   useEffect(() => {
-    dispatch(spotsActions.getSpotThunk(spotId)).then((res) => {
-      setInputStreet(res.address);
-      setInputCity(res.city);
-      setInputState(res.state);
-      setInputCountry(res.country);
-      setInputLat(res.lat);
-      setInputLng(res.lng);
-      setInputName(res.name);
-      setInputDescription(res.description);
-      setInputPrice(res.price);
-    });
+    // dispatch(spotsActions.getSpotThunk(spotId)).then((res) => {
+    dispatch(entitiesActions.loadOneSpotThunk(spotId))
+      .then
+      //   (res) => {
+      //   setInputStreet(res.address);
+      //   setInputCity(res.city);
+      //   setInputState(res.state);
+      //   setInputCountry(res.country);
+      //   setInputLat(res.lat);
+      //   setInputLng(res.lng);
+      //   setInputName(res.name);
+      //   setInputDescription(res.description);
+      //   setInputPrice(res.price);
+      // }
+      ();
   }, [dispatch, spotId]);
+  useEffect(() => {
+    if (spot) {
+      setInputStreet(spot.address);
+      setInputCity(spot.city);
+      setInputState(spot.state);
+      setInputCountry(spot.country);
+      setInputLat(spot.lat);
+      setInputLng(spot.lng);
+      setInputName(spot.name);
+      setInputDescription(spot.description);
+      setInputPrice(spot.price);
+    }
+  }, [spot]);
   const handleOnChange = (e, callback) => {
     callback(e.target.value);
   };
@@ -68,7 +87,8 @@ const UpdateSpotForm = ({ isLoaded }) => {
       description: inputDescription,
       price: inputPrice,
     };
-    dispatch(spotsActions.editSpotThunk(spotId, newSpot))
+    // dispatch(spotsActions.editSpotThunk(spotId, newSpot))
+    dispatch(entitiesActions.editSpotThunk(spotId, newSpot))
       .then()
       .catch(async (res) => {
         const data = await res.json();

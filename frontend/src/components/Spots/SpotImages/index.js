@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useHistory, Redirect, NavLink } from "react-router-dom";
-import * as spotsActions from "../../../store/spots";
+// import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
+import * as entitiesActions from "../../../store/entities";
 const AddSpotPhoto = ({ isLoaded }) => {
   const user = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
@@ -16,8 +17,11 @@ const AddSpotPhoto = ({ isLoaded }) => {
   };
   const submitImg = (e) => {
     e.preventDefault();
+    // dispatch(
+    //   spotsActions.addSpotImgThunk(spotId, { url, preview: imgPreview })
+    // );
     dispatch(
-      spotsActions.addSpotImgThunk(spotId, { url, preview: imgPreview })
+      entitiesActions.addSpotImgThunk(spotId, { url, preview: imgPreview })
     );
     history.push("/hosting/spots");
   };

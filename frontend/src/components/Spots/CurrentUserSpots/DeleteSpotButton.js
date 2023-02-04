@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import * as spotsActions from "../../../store/spots";
-
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+// import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
+import * as entitiesActions from "../../../store/entities";
 const DeleteSpotButton = ({ spotId }) => {
   const dispatch = useDispatch();
   const [clickedDel, setClickedDel] = useState(false);
@@ -16,11 +16,12 @@ const DeleteSpotButton = ({ spotId }) => {
     currentBtn.innerText = "Confirm";
     // console.log("click delete", e.target.name);
   };
-  console.log(targetSpotId);
+
   //condirm delete, make delete api call,rerender page
   const handleComfirm = (e) => {
     e.preventDefault();
-    dispatch(spotsActions.deleteSpotThunk(targetSpotId));
+    // dispatch(spotsActions.deleteSpotThunk(targetSpotId));
+    dispatch(entitiesActions.deleteSpotThunk(targetSpotId));
     setClickedDel(false);
     // console.log("click comfirm");
   };

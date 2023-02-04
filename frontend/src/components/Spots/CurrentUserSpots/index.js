@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 
-import * as spotsActions from "../../../store/spots";
+// import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
+import * as entitiesActions from "../../../store/entities";
 import DeleteSpotButton from "./DeleteSpotButton";
 import UpdateSpot from "../UpdateSpot";
 import "./CurrentUserSpots.css";
@@ -12,11 +13,13 @@ const CurrentUserSpots = ({ isLoaded }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.session.user);
-  const spotsState = useSelector((state) => state.spotsState);
-  const spots = useSelector((state) => state.spotsState.spots);
-  console.log("not change", spots);
+  const spotsState = useSelector((state) => state.entities);
+  // const spots = useSelector((state) => state.spotsState.spots);
+  const spots = useSelector((state) => state.entities.userSpots);
+
   useEffect(() => {
-    dispatch(spotsActions.loadOwnerSpots())
+    // dispatch(spotsActions.loadOwnerSpots())
+    dispatch(entitiesActions.loadUserSpotsThunk())
       .then()
       .catch(async (res) => {
         history.push("/");

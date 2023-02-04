@@ -6,12 +6,12 @@ import AddSpotPhoto from "./SpotImages";
 import NewSpot from "./NewSpot";
 import "./Spot.css";
 import UpdateSpotForm from "./UpdateSpot/UpdateSpotForm";
-const Spots = ({ isLoaded }) => {
+const Spots = ({ isLoaded, updatedSpots }) => {
   return (
     <div className="main-spots">
       <Switch>
         <Route exact path="/">
-          <AllSpots />
+          <AllSpots updatedSpots={updatedSpots} />
         </Route>
         <Route exact path="/hosting/spots">
           <CurrentUserSpots isLoaded={isLoaded} />

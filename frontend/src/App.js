@@ -5,10 +5,11 @@ import Footer from "./components/Footer";
 import Navigation from "./components/Navigation";
 import Spots from "./components/Spots";
 import * as sessionActions from "./store/session";
-
+import * as entitiesActions from "./store/entities";
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [updatedSpots, setIsUpdatedSpots] = useState(false);
   // const { isLogedIn, setIsLogedIn } = useIsLogedInContext();
   useEffect(() => {
     dispatch(sessionActions.restoreSessionThunk()).then((res) => {
@@ -16,11 +17,15 @@ function App() {
       // setIsLogedIn(true);
     });
   }, [dispatch]);
-
+  useEffect(() => {
+    dispatch(entitiesActions.restoreSpots()).then((res) => {
+      setIsUpdatedSpots(true);
+    });
+  }, [dispatch]);
   return (
     <>
       <Navigation isLoaded={isLoaded} />
-      <Spots isLoaded={isLoaded} />
+      <Spots isLoaded={isLoaded} updatedSpots={updatedSpots} />
 
       <Footer />
     </>

@@ -1,21 +1,25 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import * as spotsActions from "../../../store/spots";
+// import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
+import * as entitiesActions from "../../../store/entities";
 import "./AllSpots.css";
 // list of photo cards
-const AllSpots = () => {
-  const spots = useSelector((state) => state.spotsState.spots);
+const AllSpots = ({ updatedSpots }) => {
+  const spots = useSelector((state) => state.entities.spots);
 
   const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(spotsActions.loadSpots());
+    // dispatch(spotsActions.loadSpots());
+    dispatch(entitiesActions.loadSpotsThunk());
   }, [dispatch]);
 
   return (
     <>
       <ul className="spots-cards">
         {spots &&
+          // updatedSpots &&
           Object.values(spots).map((spot) => (
             <li key={spot.id} className="spot-photo-card">
               <img
