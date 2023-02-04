@@ -1,6 +1,6 @@
 import { csrfFetch } from "./csrf";
 
-const LOAD = "entities/LOAD";
+const LOAD = "entities/LOAD_FIELD";
 const REMOVE_USERSPOT = "spot/REMOVE";
 const EDIT = "entities/EDID";
 const ADD = "entities/ADD";
@@ -35,6 +35,11 @@ const createSpot = (spot) => ({
   type: ADD,
   spot,
   key: "spot",
+});
+const createReview = (spotReview) => ({
+  type: ADD,
+  spotReview,
+  key: "spotReview",
 });
 const editUserSpot = (userSpots, id) => ({
   type: EDIT,
@@ -79,7 +84,10 @@ export const loadSpotsThunk = () => async (dispatch) => {
 export const loadUserSpotsThunk = () => async (dispatch) => {
   const res = await csrfFetch("/api/spots/current");
   const data = await res.json();
-  let userSpots = flattingArray(data.Spots);
+  let userSpots;
+  console.log(typeof data.Spots);
+  if (typeof data.Spots === "string") userSpots = data.Spots;
+  else userSpots = flattingArray(data.Spots);
   dispatch(loadUserSpots(userSpots));
   return userSpots;
 };
@@ -114,6 +122,16 @@ export const createSpotThunk = (inputSpot) => async (dispatch) => {
   const spot = await res.json();
   dispatch(createSpot(spot));
   return spot;
+};
+//create review
+export const createReviewThunk = (inputReview, spotId) => async (dispatch) => {
+  const res = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+    method: "POST",
+    body: JSON.stringify(inputReview),
+  });
+  const spotReview = await res.json();
+  dispatch(createSpot(spotReview));
+  return spotReview;
 };
 //edit spot reload current user spots
 export const editSpotThunk = (spotId, spot) => async (dispatch) => {
@@ -158,7 +176,10 @@ const entitiesReducer = (state = initialSpots, action) => {
     // newState.spotReviews=
     case LOAD:
       newState = updateObject({}, state);
-      newState[action.key] = { ...action[action.key] };
+      if (typeof action[action.key] === "string")
+        newState[action.key] = action[action.key];
+      else newState[action.key] = { ...action[action.key] };
+      console.log(action, newState);
       return newState;
     case EDIT:
       //edit a spot edit a review--payload spot userSpot--/review id exit
@@ -172,21 +193,22 @@ const entitiesReducer = (state = initialSpots, action) => {
       //add a spot--userSpots(edit button) or single spot(in detail page) detail add a review--userReview--current user(not owner)
       newState = updateObject({}, state);
       newState[action.key] = { ...action[action.key] };
+
       return newState;
     case REMOVE_USERSPOT: //delete spot review current user id
       newState = updateObject({}, state);
+      console.log(action.id);
       delete newState.userSpots[action.id];
       return newState;
     case ADD_IMG: //under one spot==>userspots update both,spotID
       newState = updateObject({}, state);
       let targetSpot = newState.spot;
       if (targetSpot.SpotImages === "Spot has no image yet")
-        targetSpot.SpotImages = action.image;
+        targetSpot.SpotImages = [action.image];
       else targetSpot.SpotImages.push(action.image);
       if (action.image.preview && newState.userSpots[targetSpot.id])
         newState.userSpots[targetSpot.id].previewImage = action.image.url;
       return newState; //{spots:{1:{id...images}}}
-
     default:
       return state;
   }
@@ -211,7 +233,7 @@ function updateItemInArray(array, itemId, updateItemCallback) {
 }
 function flattingArray(array) {
   let obj = {};
-  array.forEach((el) => (obj[el.id] = el));
+  if (typeof array !== "string") array.forEach((el) => (obj[el.id] = el));
   return obj;
 }
 function sliceKey(obj) {

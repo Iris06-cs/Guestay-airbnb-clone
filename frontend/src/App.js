@@ -27,7 +27,7 @@ function App() {
     <>
       <Navigation isLoaded={isLoaded} />
       <Spots isLoaded={isLoaded} updatedSpots={updatedSpots} />
-      <Reviews />
+      <Reviews isLoaded={isLoaded} />
       <Footer />
     </>
   );

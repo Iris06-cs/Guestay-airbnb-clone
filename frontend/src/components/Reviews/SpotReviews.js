@@ -43,7 +43,7 @@ const SpotReviews = (props) => {
           &#183;<u>{numReviews} reviews</u>
         </p>
         <div className="add-review-link">
-          <p>{user.firstName}</p>
+          {user && <p>{user.firstName}</p>}
           <ul>
             {multipleGenerator(5).map((num) => (
               <li key={num}>

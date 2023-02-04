@@ -13,10 +13,8 @@ const CurrentUserSpots = ({ isLoaded }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.session.user);
-  const spotsState = useSelector((state) => state.entities);
-  // const spots = useSelector((state) => state.spotsState.spots);
   const spots = useSelector((state) => state.entities.userSpots);
-
+  console.log("userspot in parent", spots);
   useEffect(() => {
     // dispatch(spotsActions.loadOwnerSpots())
     dispatch(entitiesActions.loadUserSpotsThunk())
@@ -57,7 +55,13 @@ const CurrentUserSpots = ({ isLoaded }) => {
           )}
         </>
       )}
-      {!user && isLoaded && <Redirect to="/" />}
+      {isLoaded && typeof spots === "string" && (
+        <>
+          <h1>You have not listed a spot yet</h1>
+        </>
+      )}
+
+      {isLoaded && !user && <Redirect to="/" />}
     </ul>
   );
 };
