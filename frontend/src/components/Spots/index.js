@@ -6,6 +6,8 @@ import AddSpotPhoto from "./SpotImages";
 import NewSpot from "./NewSpot";
 import "./Spot.css";
 import UpdateSpotForm from "./UpdateSpot/UpdateSpotForm";
+import SpotDetail from "./SpotDetail";
+import SpotReviews from "../Reviews/SpotReviews";
 const Spots = ({ isLoaded, updatedSpots }) => {
   return (
     <div className="main-spots">
@@ -24,6 +26,9 @@ const Spots = ({ isLoaded, updatedSpots }) => {
         </Route>
         <Route path="/spots/:spotId/images">
           <AddSpotPhoto isLoaded={isLoaded} />
+        </Route>
+        <Route path="/spots/:spotId">
+          <SpotDetail isLoaded={isLoaded} />
         </Route>
       </Switch>
     </div>

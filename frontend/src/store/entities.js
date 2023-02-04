@@ -21,6 +21,16 @@ const loadUserSpots = (userSpots) => ({
   userSpots,
   key: "userSpots",
 });
+const loadSpotReviews = (spotReviews) => ({
+  type: LOAD,
+  spotReviews,
+  key: "spotReviews",
+});
+const loadUserReviews = (userReviews) => ({
+  type: LOAD,
+  userReviews,
+  key: "userReviews",
+});
 const createSpot = (spot) => ({
   type: ADD,
   spot,
@@ -84,7 +94,7 @@ export const loadUserReviewsThunk = () => async (dispatch) => {
   const res = await csrfFetch("/api/reviews/current");
   const data = await res.json();
   let userReviews = flattingArray(data.Reviews);
-  dispatch(loadUserSpots(userReviews));
+  dispatch(loadUserReviews(userReviews));
   return userReviews;
 };
 //get reviews of spotID
@@ -92,7 +102,7 @@ export const loadSpotReviewsThunk = (spotId) => async (dispatch) => {
   const res = await csrfFetch(`/api/spots/${spotId}/reviews`);
   const data = await res.json();
   let spotReviews = flattingArray(data.Reviews);
-  dispatch(loadUserSpots(spotReviews));
+  dispatch(loadSpotReviews(spotReviews));
   return spotReviews;
 };
 //create spot

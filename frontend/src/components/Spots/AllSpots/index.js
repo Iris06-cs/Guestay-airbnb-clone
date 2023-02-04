@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { NavLink } from "react-router-dom";
 
 // import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
 import * as entitiesActions from "../../../store/entities";
@@ -21,25 +22,32 @@ const AllSpots = ({ updatedSpots }) => {
         {spots &&
           // updatedSpots &&
           Object.values(spots).map((spot) => (
-            <li key={spot.id} className="spot-photo-card">
-              <img
-                className="spot-photo-img"
-                src={spot.previewImage}
-                alt="spot"
-              />
-              <div className="spot-info">
-                <p className="address">{`${spot.city},${spot.state}`}</p>
-                <p className="rating">
-                  <span>
-                    <i className="fa-solid fa-star"></i>
-                  </span>
-                  {spot.avgRating === "Spot has no review yet"
-                    ? ""
-                    : spot.avgRating}
-                </p>
-                <p className="price">{`$${spot.price} night`}</p>
-              </div>
-            </li>
+            <NavLink
+              key={spot.id}
+              to={`/spots/${spot.id}`}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <li className="spot-photo-card">
+                <img
+                  className="spot-photo-img"
+                  src={spot.previewImage}
+                  alt="spot"
+                  click
+                />
+                <div className="spot-info">
+                  <p className="address">{`${spot.city},${spot.state}`}</p>
+                  <p className="rating">
+                    <span>
+                      <i className="fa-solid fa-star"></i>
+                    </span>
+                    {spot.avgRating === "Spot has no review yet"
+                      ? "New"
+                      : spot.avgRating}
+                  </p>
+                  <p className="price">{`$${spot.price} night`}</p>
+                </div>
+              </li>
+            </NavLink>
           ))}
       </ul>
     </>

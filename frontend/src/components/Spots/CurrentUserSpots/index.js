@@ -34,11 +34,12 @@ const CurrentUserSpots = ({ isLoaded }) => {
             <p>Spot</p>
             <p></p>
             <p>Spot Address</p>
+            <p>Price</p>
             <p className="align-right">Modify Spot</p>
             <p className="align-right">Delete Spot</p>
           </li>
           {Object.values(spots).map(
-            ({ id, name, address, city, state, previewImage }) => (
+            ({ id, name, price, address, city, state, previewImage }) => (
               <li className="owner-spot-list" key={id}>
                 <img
                   className="owner-spot-img"
@@ -48,6 +49,7 @@ const CurrentUserSpots = ({ isLoaded }) => {
                 />
                 <p className="owner-spot-name">{name}</p>
                 <p className="owner-spot-address">{`${address},${city},${state}`}</p>
+                <p className="owner-spot-price">{`$${price}`}</p>
                 <UpdateSpot spotId={id} />
                 <DeleteSpotButton spotId={id} />
               </li>
