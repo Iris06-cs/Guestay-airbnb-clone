@@ -5,6 +5,7 @@ import * as sessionActions from "../../store/session";
 import OpenModalMenuItem from "./OpenModalMenuItem";
 import SignupFormModal from "../SignupFormModal";
 import LoginFormModal from "../LoginFormModal";
+import { NavLink } from "react-router-dom";
 
 const ProfileButton = ({ sessionUser }) => {
   const dispatch = useDispatch();
@@ -64,7 +65,9 @@ const ProfileButton = ({ sessionUser }) => {
             <li>{sessionUser.username}</li>
             <li>{sessionUser.email}</li>
             <li>
-              <button>Reviews</button>
+              <NavLink to="/reviews/current">
+                <button>Reviews</button>
+              </NavLink>
             </li>
             <li>
               <button>Bookings</button>

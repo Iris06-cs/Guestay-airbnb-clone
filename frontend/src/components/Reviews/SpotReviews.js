@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import * as entitiesActions from "../../store/entities";
+import multipleGenerator from "../../utils/multipleGenerator";
 
 const SpotReviews = (props) => {
+  const { spotId } = useParams();
   const { avgStarRating, numReviews, reviewInfo } = props;
+  const user = useSelector((state) => state.session.user);
   const reviews = Object.values(reviewInfo);
   //2023-01-31 23:38:52
   const converData = (dateStr) => {
@@ -28,14 +31,6 @@ const SpotReviews = (props) => {
     month = months[month];
     return { year, month };
   };
-  let starIcon = [];
-  const makeStars = (num) => {
-    for (let i = 0; i < num; i++) {
-      starIcon.push(i);
-    }
-
-    return starIcon;
-  };
 
   return (
     <>
@@ -47,7 +42,28 @@ const SpotReviews = (props) => {
           {avgStarRating === "Spot has no review yet" ? "New" : avgStarRating}
           &#183;<u>{numReviews} reviews</u>
         </p>
-        <ul>
+        <div className="add-review-link">
+          <p>{user.firstName}</p>
+          <ul>
+            {multipleGenerator(5).map((num) => (
+              <li key={num}>
+                <label>
+                  <span style={{ color: "white", backgroundColor: "grey" }}>
+                    <i className="fa-solid fa-star"></i>
+                  </span>
+                </label>
+                <input
+                  style={{ WebkitAppearance: "none" }}
+                  type="radio"
+                ></input>
+              </li>
+            ))}
+          </ul>
+          <NavLink to={`/spots/${spotId}/reviews/new`}>
+            Start your review
+          </NavLink>
+        </div>
+        <ul className="spot-reviews-list">
           {reviews.map(
             ({
               id,

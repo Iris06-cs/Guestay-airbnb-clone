@@ -6,6 +6,7 @@ import Navigation from "./components/Navigation";
 import Spots from "./components/Spots";
 import * as sessionActions from "./store/session";
 import * as entitiesActions from "./store/entities";
+import Reviews from "./components/Reviews";
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -26,7 +27,7 @@ function App() {
     <>
       <Navigation isLoaded={isLoaded} />
       <Spots isLoaded={isLoaded} updatedSpots={updatedSpots} />
-
+      <Reviews />
       <Footer />
     </>
   );

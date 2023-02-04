@@ -117,7 +117,12 @@ const SpotDetail = ({ isLoaded }) => {
             avgStarRating={avgStarRating}
             numReviews={numReviews}
             reviewInfo={reviewInfo}
+            // user={user}
+            // spotId={spotId}
           />
+          {/* <div className="owner-info">
+            <p>{`Spot hosted by ${Owner.firstName}`}</p>
+          </div> */}
         </>
       )}
     </div>

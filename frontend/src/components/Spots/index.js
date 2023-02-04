@@ -24,10 +24,10 @@ const Spots = ({ isLoaded, updatedSpots }) => {
         <Route exact path="/hosting/spots/:spotId/edit">
           <UpdateSpotForm isLoaded={isLoaded} />
         </Route>
-        <Route path="/spots/:spotId/images">
+        <Route exact path="/spots/:spotId/images">
           <AddSpotPhoto isLoaded={isLoaded} />
         </Route>
-        <Route path="/spots/:spotId">
+        <Route exact path="/spots/:spotId">
           <SpotDetail isLoaded={isLoaded} />
         </Route>
       </Switch>
