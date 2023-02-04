@@ -13,10 +13,9 @@ const CurrentUserSpots = ({ isLoaded }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.session.user);
-  const spots = useSelector((state) => state.entities.userSpots);
-  console.log("userspot in parent", spots);
+  const spots = useSelector((state) => state.entities);
+
   useEffect(() => {
-    // dispatch(spotsActions.loadOwnerSpots())
     dispatch(entitiesActions.loadUserSpotsThunk())
       .then()
       .catch(async (res) => {
@@ -26,7 +25,7 @@ const CurrentUserSpots = ({ isLoaded }) => {
 
   return (
     <ul className="owner-spots">
-      {isLoaded && spots && (
+      {isLoaded && spots.userSpots && (
         <>
           <li className="owner-spot-column">
             <p>Spot</p>
@@ -36,7 +35,7 @@ const CurrentUserSpots = ({ isLoaded }) => {
             <p className="align-right">Modify Spot</p>
             <p className="align-right">Delete Spot</p>
           </li>
-          {Object.values(spots).map(
+          {Object.values(spots.userSpots).map(
             ({ id, name, price, address, city, state, previewImage }) => (
               <li className="owner-spot-list" key={id}>
                 <img

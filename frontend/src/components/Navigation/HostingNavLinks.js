@@ -23,6 +23,7 @@ const HostingNavLinks = () => {
         //   visibility: isClickedCreate ? "hidden" : "visible",
         // }}
         style={setStyle}
+        exact
         to="/hosting/spots/new"
         // onClick={(e) => setIsClickedCreate(true)}
       >

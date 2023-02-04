@@ -26,7 +26,7 @@ const DeleteSpotButton = ({ spotId }) => {
     dispatch(entitiesActions.deleteSpotThunk(targetSpotId));
     setClickedDel(false);
     console.log("click comfirm");
-    history.push("/hosting/spots");
+    // history.push("/hosting/spots");
   };
   return (
     <button

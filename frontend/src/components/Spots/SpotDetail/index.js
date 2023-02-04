@@ -30,7 +30,8 @@ const SpotDetail = ({ isLoaded }) => {
     Owner,
   } = spotInfo;
   let previewImg;
-  if (spotInfo) previewImg = SpotImages.find((img) => img.preview === true);
+  console.log(SpotImages);
+  if (spotInfo.id) previewImg = SpotImages.find((img) => img.preview === true);
   //   const otherImges = SpotImages.filter((img) => img.id !== previewImg.id);
 
   useEffect(() => {

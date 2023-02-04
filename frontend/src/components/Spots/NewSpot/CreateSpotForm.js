@@ -6,8 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import * as entitiesActions from "../../../store/entities";
 const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
   const history = useHistory();
-  // const spotState = useSelector((state) => state.spotsState);
-  // console.log(spotState);
   const spotState = useSelector((state) => state.entities.spot);
   const user = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
@@ -78,12 +76,12 @@ const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
       description,
       price,
     };
-    // dispatch(spotsActions.createSpotThunk(newSpot))
+
     dispatch(entitiesActions.createSpotThunk(newSpot))
-      // .then((data) => {
-      //   console.log("fetch", data);
-      //   setSpotId(data.id);
-      // })
+      .then((data) => {
+        console.log("fetch", data);
+        setSpotId(data.id);
+      })
       .catch(async (res) => {
         const data = await res.json();
         if (data && data.statusCode >= 400) setErrors(data.errors);

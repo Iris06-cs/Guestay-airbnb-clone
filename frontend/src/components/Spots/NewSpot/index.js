@@ -65,7 +65,7 @@ const NewSpot = ({ isLoaded }) => {
                 <p>Set a price and publish your spot</p>
               </ol>
             </ul>
-            <NavLink to="/hosting/spots/new/started">
+            <NavLink exact to="/hosting/spots/new/started">
               <button>Get started</button>
             </NavLink>
           </div>
