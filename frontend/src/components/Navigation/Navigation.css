@@ -81,3 +81,44 @@ ul.profile-dropdown.hidden {
 #login-button {
   font-weight: bold;
 }
+.hosting-button {
+  background-color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: none;
+  border-radius: 20px;
+  font-size: 15px;
+  margin-bottom: 5px;
+  margin-right: 100px;
+  padding: 8px 8px;
+  width: 150px;
+  z-index: 1;
+  color: #484848;
+}
+.hosting-button.mouseover {
+  background-color: rgb(248, 246, 246);
+}
+#hosting-nav-links {
+  text-align: center;
+  margin: 0 auto;
+  display: flex;
+  width: 50%;
+  justify-content: center;
+  column-gap: 60px;
+}
+.hosting-navs {
+  background-color: white;
+  justify-content: space-around;
+  align-items: center;
+  border: none;
+  border-radius: 20px;
+  font-size: 15px;
+  padding: 8px 8px;
+  width: 130px;
+  z-index: 1;
+  color: #484848;
+}
+.hosting-navs:hover {
+  background-color: #f8f6f6;
+}
