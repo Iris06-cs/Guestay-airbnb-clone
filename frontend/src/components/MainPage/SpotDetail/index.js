@@ -3,10 +3,12 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import SpotReviews from "../../Reviews/SpotReviews";
+import { useParams, useHistory } from "react-router-dom";
+import SpotReviews from "../Reviews/SpotReviews";
 import * as entitiesActions from "../../../store/entities";
+import PageNotFound from "../PageNotFound";
 const SpotDetail = ({ isLoaded }) => {
+  const history = useHistory();
   const { spotId } = useParams();
   const user = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.entities.spot);
@@ -14,6 +16,7 @@ const SpotDetail = ({ isLoaded }) => {
   const dispatch = useDispatch();
   const [spotInfo, setSpotInfo] = useState("");
   const [reviewInfo, setReviewInfo] = useState("");
+  const [resErrs, setResErrs] = useState([]);
   const {
     id,
     ownerId,
@@ -30,15 +33,30 @@ const SpotDetail = ({ isLoaded }) => {
     Owner,
   } = spotInfo;
   let previewImg;
-  console.log(SpotImages);
-  if (spotInfo.id) previewImg = SpotImages.find((img) => img.preview === true);
-  //   const otherImges = SpotImages.filter((img) => img.id !== previewImg.id);
 
+  if (spotInfo.id) {
+    if (typeof SpotImages !== "string")
+      previewImg = SpotImages.findLast((img) => img.preview === true);
+    if (!previewImg) previewImg = {};
+    console.log(previewImg, "preview image");
+  }
+  //   const otherImges = SpotImages.filter((img) => img.id !== previewImg.id);
+  console.log(ownerId, "parent");
   useEffect(() => {
-    dispatch(entitiesActions.loadOneSpotThunk(spotId));
+    dispatch(entitiesActions.loadOneSpotThunk(spotId))
+      .then()
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data.statusCode === 404) setResErrs([data.message]);
+      });
   }, [dispatch, spotId]);
   useEffect(() => {
-    dispatch(entitiesActions.loadSpotReviewsThunk(spotId));
+    dispatch(entitiesActions.loadSpotReviewsThunk(spotId))
+      .then()
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data.statusCode === 404) setResErrs([data.message]);
+      });
   }, [dispatch, spotId]);
   useEffect(() => {
     if (spot) {
@@ -50,6 +68,7 @@ const SpotDetail = ({ isLoaded }) => {
       setReviewInfo(reviews);
     }
   }, [reviews]);
+  if (resErrs.length > 0) return <PageNotFound />;
   return (
     <div className="spot-details">
       {spotInfo.id && (
@@ -87,7 +106,7 @@ const SpotDetail = ({ isLoaded }) => {
           <img
             className="spot-preview-img"
             style={{ width: 400 }}
-            src={previewImg.url}
+            src={previewImg.url ? previewImg.url : ""}
             alt="spot-preveiw"
           />
           <h2>Spot hosted by {Owner.firstName}</h2>
@@ -98,7 +117,10 @@ const SpotDetail = ({ isLoaded }) => {
               <span>
                 <i className="fa-solid fa-star"></i>
               </span>
-              {avgStarRating}&#183;<u>{numReviews} reviews</u>
+              {avgStarRating === "Spot has no review yet"
+                ? "New"
+                : spot.avgRating}
+              &#183;<u>{numReviews} reviews</u>
             </p>
             <form className="booking-from">
               <label htmlFor="check-in-date">CHECK-IN</label>
@@ -118,7 +140,7 @@ const SpotDetail = ({ isLoaded }) => {
             avgStarRating={avgStarRating}
             numReviews={numReviews}
             reviewInfo={reviewInfo}
-            // user={user}
+            // ownerId={ownerId}
             // spotId={spotId}
           />
           {/* <div className="owner-info">

@@ -3,10 +3,11 @@ import { useDispatch } from "react-redux";
 
 import Footer from "./components/Footer";
 import Navigation from "./components/Navigation";
-import Spots from "./components/Spots";
 import * as sessionActions from "./store/session";
 import * as entitiesActions from "./store/entities";
-import Reviews from "./components/Reviews";
+// import Reviews from "./components/Reviews";
+import MainPage from "./components/MainPage";
+
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -26,8 +27,9 @@ function App() {
   return (
     <>
       <Navigation isLoaded={isLoaded} />
-      <Spots isLoaded={isLoaded} updatedSpots={updatedSpots} />
-      <Reviews isLoaded={isLoaded} />
+      <MainPage isLoaded={isLoaded} updatedSpots={updatedSpots} />
+      {/* <Reviews isLoaded={isLoaded} /> */}
+
       <Footer />
     </>
   );

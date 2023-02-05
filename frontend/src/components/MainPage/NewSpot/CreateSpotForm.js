@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 // import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
@@ -94,6 +94,7 @@ const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
   //hasn't click next or clicked next but having input validation err
   //render form
   // otherwise form successfully submitted will render add image page
+  if (isLoaded && !user) return <Redirect to="/" />;
   if (!isSubmited || (isSubmited && errors.length > 0))
     return (
       <>
@@ -206,24 +207,22 @@ const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
               </li>
             ))}
           </ul>
-          <div className="direct-btns">
-            <button id="back-btn" onClick={(e) => setIsClicked(false)}>
-              back
-            </button>
 
-            <button type="Submit" id="next-btn">
-              Next
-            </button>
-          </div>
+          <button className="direct-btns" type="Submit" id="next-btn">
+            Next
+          </button>
         </form>
+        <button
+          id="back-btn"
+          onClick={(e) => history.push("/hosting/spots/new")}
+        >
+          back
+        </button>
       </>
     );
   else if (isLoaded && user) {
     const submitImg = (e) => {
       e.preventDefault();
-      // dispatch(
-      //   spotsActions.addSpotImgThunk(spotId, { url, preview: imgPreview })
-      // );
       dispatch(
         entitiesActions.addSpotImgThunk(spotId, { url, preview: imgPreview })
       );
@@ -245,7 +244,7 @@ const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
           checked={imgPreview}
         />
         <button onClick={submitImg}>Confirm</button>
-        <button onClick={(e) => history.push("/hosting/spots")}>
+        <button onClick={(e) => history.replace("/hosting/spots")}>
           Skip and Finish
         </button>
       </>

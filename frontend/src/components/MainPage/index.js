@@ -7,11 +7,14 @@ import NewSpot from "./NewSpot";
 import "./Spot.css";
 import UpdateSpotForm from "./UpdateSpot/UpdateSpotForm";
 import SpotDetail from "./SpotDetail";
-import SpotReviews from "../Reviews/SpotReviews";
+// import SpotReviews from "../Reviews/SpotReviews";
 import CreateSpotForm from "./NewSpot/CreateSpotForm";
-const Spots = ({ isLoaded, updatedSpots }) => {
+import PageNotFound from "./PageNotFound";
+import Reviews from "./Reviews";
+import UpdateUserReview from "./Reviews/UpdateUserReview";
+const MainPage = ({ isLoaded, updatedSpots }) => {
   return (
-    <div className="main-spots">
+    <div className="main-page">
       <Switch>
         {/* all spots no auth require */}
         <Route exact path="/">
@@ -30,14 +33,23 @@ const Spots = ({ isLoaded, updatedSpots }) => {
         <Route exact path="/hosting/spots/:spotId/edit">
           <UpdateSpotForm isLoaded={isLoaded} />
         </Route>
+        <Route exact path="/user/reviews/:reviewId/edit">
+          <UpdateUserReview isLoaded={isLoaded} />
+        </Route>
         <Route exact path="/spots/:spotId/images">
           <AddSpotPhoto isLoaded={isLoaded} />
         </Route>
         <Route exact path="/spots/:spotId">
           <SpotDetail isLoaded={isLoaded} />
         </Route>
+        <Route exact path={["/reviews/current", "/spots/:spotId/reviews/new"]}>
+          <Reviews isLoaded={isLoaded} />
+        </Route>
+        <Route>
+          <PageNotFound />
+        </Route>
       </Switch>
     </div>
   );
 };
-export default Spots;
+export default MainPage;

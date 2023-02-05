@@ -23,7 +23,7 @@ const AddSpotPhoto = ({ isLoaded }) => {
     dispatch(
       entitiesActions.addSpotImgThunk(spotId, { url, preview: imgPreview })
     );
-    history.push("/hosting/spots");
+    history.replace("/hosting/spots");
   };
   if (isLoaded && !user) return <Redirect to="/" />;
 

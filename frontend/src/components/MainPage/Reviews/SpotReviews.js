@@ -1,14 +1,24 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
-import * as entitiesActions from "../../store/entities";
-import multipleGenerator from "../../utils/multipleGenerator";
+import * as entitiesActions from "../../../store/entities";
+import multipleGenerator from "../../../utils/multipleGenerator";
 
 const SpotReviews = (props) => {
   const { spotId } = useParams();
   const { avgStarRating, numReviews, reviewInfo } = props;
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.session.user);
   const reviews = Object.values(reviewInfo);
+  const spot = useSelector((state) => state.entities.spot);
+  useEffect(() => {
+    dispatch(entitiesActions.loadOneSpotThunk(spotId))
+      .then()
+      .catch(async (res) => {
+        const data = await res.json();
+        console.log(data);
+      });
+  }, [dispatch, spotId]);
   //2023-01-31 23:38:52
   const converData = (dateStr) => {
     let year = dateStr.split("-")[0];
@@ -59,9 +69,11 @@ const SpotReviews = (props) => {
               </li>
             ))}
           </ul>
-          <NavLink to={`/spots/${spotId}/reviews/new`}>
-            Start your review
-          </NavLink>
+          {user && user.id !== spot.ownerId && (
+            <NavLink exact to={`/spots/${spotId}/reviews/new`}>
+              Start your review
+            </NavLink>
+          )}
         </div>
         <ul className="spot-reviews-list">
           {reviews.map(

@@ -23,7 +23,7 @@ const Navigation = ({ isLoaded }) => {
         </li>
 
         {sessionUser && (
-          <Route exact path="/">
+          <Route exact path={["/", "/spots/:spotId"]}>
             <SwichHostButton />
           </Route>
         )}

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams, Redirect, useHistory } from "react-router-dom";
-import multipleGenerator from "../../utils/multipleGenerator";
-import * as entitiesActions from "../../store/entities";
+import multipleGenerator from "../../../utils/multipleGenerator";
+import * as entitiesActions from "../../../store/entities";
 //api call post /api/spots/:spotId/reviews
 //cannot submit unless choose star & have review
 const CreateReviewForm = ({ isLoaded }) => {
@@ -28,17 +28,19 @@ const CreateReviewForm = ({ isLoaded }) => {
     e.preventDefault();
     const review = { review: reviewInput, stars: starRate };
     dispatch(entitiesActions.createReviewThunk(review, spotId))
-      .then()
+      .then((res) => {
+        history.replace(`/spots/${spotId}`);
+      })
       .catch(async (res) => {
         const data = await res.json();
         setResErrors(data.errors);
-        console.log(data);
       });
-    console.log("submitted");
+    // history.replace(`/spots/${spotId}`);
+    // console.log("submitted");
   };
   //if not loged in will redirect now
   //pop up sign in window
-  console.log(resErr);
+
   if (isLoaded && !user) return <Redirect to="/" />;
   return (
     <>
@@ -70,11 +72,11 @@ const CreateReviewForm = ({ isLoaded }) => {
               <li key={idx}>
                 <div>
                   <label htmlFor={`rate${idx}`} style={{ color: "grey" }}>
-                    {/* {multipleGenerator(idx + 1).map((idx) => (
+                    {multipleGenerator(idx).map((idx) => (
                       <span key={`icon${idx}`} style={{ color: "grey" }}>
                         <i className="fa-solid fa-star"></i>
-                      </span> */}
-                    {/* ))} */}
+                      </span>
+                    ))}
                     <span>
                       <i className="fa-solid fa-star"></i>
                     </span>
@@ -93,14 +95,15 @@ const CreateReviewForm = ({ isLoaded }) => {
           </ul>
         </fieldset>
         <label>Comment</label>
-        <textarea onChange={(e) => setReviewInput(e.target.value)} />
+        <textarea
+          value={reviewInput}
+          onChange={(e) => setReviewInput(e.target.value)}
+        />
         <div>
-          <button onClick={(e) => history.push(`/spots/${spotId}`)}>
-            Back
-          </button>
           <button type="submit">Submit</button>
         </div>
       </form>
+      <button onClick={(e) => history.replace(`/spots/${spotId}`)}>Back</button>
     </>
   );
 };

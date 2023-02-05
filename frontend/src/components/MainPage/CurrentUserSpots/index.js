@@ -19,10 +19,16 @@ const CurrentUserSpots = ({ isLoaded }) => {
     dispatch(entitiesActions.loadUserSpotsThunk())
       .then()
       .catch(async (res) => {
-        history.push("/");
+        // console.log(res);
+        history.replace("/");
       });
   }, [dispatch, history]);
-
+  if (isLoaded && typeof spots.userSpots === "string")
+    return (
+      <>
+        <h1>You have not listed a spot yet</h1>
+      </>
+    );
   return (
     <ul className="owner-spots">
       {isLoaded && spots.userSpots && (
@@ -52,11 +58,6 @@ const CurrentUserSpots = ({ isLoaded }) => {
               </li>
             )
           )}
-        </>
-      )}
-      {isLoaded && typeof spots === "string" && (
-        <>
-          <h1>You have not listed a spot yet</h1>
         </>
       )}
 

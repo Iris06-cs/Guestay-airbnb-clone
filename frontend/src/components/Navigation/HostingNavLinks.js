@@ -12,7 +12,7 @@ const HostingNavLinks = () => {
 
   return (
     <div id="hosting-nav-links">
-      <NavLink className={hostNavs} style={setStyle} to="/hosting/spots">
+      <NavLink exact className={hostNavs} style={setStyle} to="/hosting/spots">
         Spots
       </NavLink>
       <NavLink
@@ -29,7 +29,12 @@ const HostingNavLinks = () => {
       >
         Create a new spot
       </NavLink>
-      <NavLink className={hostNavs} style={setStyle} to="/hosting/bookings">
+      <NavLink
+        className={hostNavs}
+        style={setStyle}
+        exact
+        to="/hosting/bookings"
+      >
         Bookings
       </NavLink>
     </div>

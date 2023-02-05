@@ -6,7 +6,7 @@ const Reviews = ({ isLoaded }) => {
   return (
     <Switch>
       <Route exact path="/reviews/current">
-        <UserReviews />
+        <UserReviews isLoaded={isLoaded} />
       </Route>
       <Route exact path="/spots/:spotId/reviews/new">
         <CreateReviewForm isLoaded={isLoaded} />

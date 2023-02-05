@@ -66,7 +66,7 @@ const ProfileButton = ({ sessionUser }) => {
             <li>{sessionUser.email}</li>
             <li>
               <NavLink to="/reviews/current">
-                <button>Reviews</button>
+                <button onClick={closeDropdown}>Reviews</button>
               </NavLink>
             </li>
             <li>

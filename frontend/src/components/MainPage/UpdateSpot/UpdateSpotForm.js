@@ -25,21 +25,7 @@ const UpdateSpotForm = ({ isLoaded }) => {
   const [isSubmited, setIsSubmited] = useState(false);
   const [remainingChars, setRemainingChars] = useState(50);
   useEffect(() => {
-    // dispatch(spotsActions.getSpotThunk(spotId)).then((res) => {
-    dispatch(entitiesActions.loadOneSpotThunk(spotId))
-      .then
-      //   (res) => {
-      //   setInputStreet(res.address);
-      //   setInputCity(res.city);
-      //   setInputState(res.state);
-      //   setInputCountry(res.country);
-      //   setInputLat(res.lat);
-      //   setInputLng(res.lng);
-      //   setInputName(res.name);
-      //   setInputDescription(res.description);
-      //   setInputPrice(res.price);
-      // }
-      ();
+    dispatch(entitiesActions.loadOneSpotThunk(spotId));
   }, [dispatch, spotId]);
   useEffect(() => {
     if (spot) {
@@ -87,15 +73,21 @@ const UpdateSpotForm = ({ isLoaded }) => {
       description: inputDescription,
       price: inputPrice,
     };
-    // dispatch(spotsActions.editSpotThunk(spotId, newSpot))
-    dispatch(entitiesActions.editSpotThunk(spotId, newSpot))
-      .then()
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.statusCode >= 400) setErrors(data.errors);
-      });
-    setIsSubmited(true);
-    history.replace("/hosting/spots");
+
+    return (
+      dispatch(entitiesActions.editSpotThunk(spotId, newSpot))
+        //if successfully return response
+        .then((res) => {
+          setIsSubmited(true);
+          history.replace("/hosting/spots/");
+        })
+        //catch validation errors
+        .catch(async (res) => {
+          const data = await res.json();
+          if (data && data.errors) setErrors(data.errors);
+          console.log(errors);
+        })
+    );
   };
   //no session user after loaded-->home
   if (isLoaded && !user) return <Redirect to="/" />;
@@ -197,29 +189,30 @@ const UpdateSpotForm = ({ isLoaded }) => {
           </div>
         </div>
         <ul>
-          {errors.map((error, idx) => (
-            <li key={idx}>
-              <span style={{ color: "red", padding: "5px" }}>
-                <i className="fa-solid fa-circle-exclamation"></i>
-              </span>
-              {error}
-            </li>
-          ))}
+          {errors.length > 0 &&
+            errors.map((error, idx) => (
+              <li key={idx}>
+                <span style={{ color: "red", padding: "5px" }}>
+                  <i className="fa-solid fa-circle-exclamation"></i>
+                </span>
+                {error}
+              </li>
+            ))}
         </ul>
         <div className="direct-btns">
-          <NavLink to="/hosting/spots">
-            <button id="back-btn">back</button>
-          </NavLink>
-          <NavLink to={`/spots/${spotId}/images`}>
-            <button type="Submit" id="next-btn">
-              Add Photo
-            </button>
-          </NavLink>
           <button type="Submit" id="next-btn">
             Confirm Changes
           </button>
         </div>
       </form>
+      <NavLink to="/hosting/spots">
+        <button id="back-btn">back</button>
+      </NavLink>
+      <NavLink to={`/spots/${spotId}/images`}>
+        <button type="Submit" id="next-btn">
+          Add Photo
+        </button>
+      </NavLink>
     </>
   );
 };

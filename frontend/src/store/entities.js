@@ -2,7 +2,10 @@ import { csrfFetch } from "./csrf";
 
 const LOAD = "entities/LOAD_FIELD";
 const REMOVE_USERSPOT = "spot/REMOVE";
+const REMOVE_USERREVIEW = "review/REMOVE";
 const EDIT = "entities/EDID";
+const EDIT_REVIEW = "entities/EDID_REVIEW";
+const EDIT_SPOT = "entities/EDID_SPOT";
 const ADD = "entities/ADD";
 const ADD_IMG = "image/ADD";
 
@@ -31,6 +34,11 @@ const loadUserReviews = (userReviews) => ({
   userReviews,
   key: "userReviews",
 });
+// const loadUserReview = (userReview) => ({
+//   type: LOAD,
+//   userReview,
+//   key: "userReview",
+// });
 const createSpot = (spot) => ({
   type: ADD,
   spot,
@@ -42,19 +50,23 @@ const createReview = (spotReview) => ({
   key: "spotReview",
 });
 const editUserSpot = (userSpots, id) => ({
-  type: EDIT,
+  type: EDIT_SPOT,
   userSpots,
   key: "userSpots",
   id,
 });
-const editUserReview = (userReview, id) => ({
-  type: EDIT,
-  userReview,
-  key: "userReview",
+const editUserReview = (userReviews, id) => ({
+  type: EDIT_REVIEW,
+  userReviews,
+  key: "userReviews",
   id,
 });
 const deleteSpot = (id) => ({
   type: REMOVE_USERSPOT,
+  id,
+});
+const deleteReview = (id) => ({
+  type: REMOVE_USERREVIEW,
   id,
 });
 const addSpotImg = (image, spotId) => ({
@@ -62,6 +74,7 @@ const addSpotImg = (image, spotId) => ({
   image,
   spotId,
 });
+//thunks
 export const restoreSpots = () => async (dispatch) => {
   const res = await csrfFetch("/api/spots");
   const data = await res.json();
@@ -97,6 +110,13 @@ export const loadOneSpotThunk = (spotId) => async (dispatch) => {
   dispatch(loadSpot(spot));
   return spot;
 };
+// export const loadOneReviewThunk = (reviewId) => async (dispatch) => {
+//   const res = await csrfFetch(`/api/reviews/${reviewId}`);
+//   const review = await res.json();
+//   console.log(review);
+//   dispatch(loadUserReview(review));
+//   return review;
+// };
 // get current user reviews
 export const loadUserReviewsThunk = () => async (dispatch) => {
   const res = await csrfFetch("/api/reviews/current");
@@ -111,7 +131,7 @@ export const loadSpotReviewsThunk = (spotId) => async (dispatch) => {
   const data = await res.json();
   let spotReviews = flattingArray(data.Reviews);
   dispatch(loadSpotReviews(spotReviews));
-  return spotReviews;
+  return res;
 };
 //create spot
 export const createSpotThunk = (inputSpot) => async (dispatch) => {
@@ -130,7 +150,7 @@ export const createReviewThunk = (inputReview, spotId) => async (dispatch) => {
     body: JSON.stringify(inputReview),
   });
   const spotReview = await res.json();
-  dispatch(createSpot(spotReview));
+  dispatch(createReview(spotReview));
   return spotReview;
 };
 //edit spot reload current user spots
@@ -143,6 +163,15 @@ export const editSpotThunk = (spotId, spot) => async (dispatch) => {
   dispatch(editUserSpot(data, spotId));
   return res;
 };
+export const editReviewThunk = (reviewId, review) => async (dispatch) => {
+  const res = await csrfFetch(`/api/reviews/${reviewId}`, {
+    method: "PUT",
+    body: JSON.stringify(review),
+  });
+  const data = await res.json();
+  dispatch(editUserReview(data, reviewId));
+  return res;
+};
 //delete spot
 export const deleteSpotThunk = (spotId) => async (dispatch) => {
   const res = await csrfFetch(`/api/spots/${spotId}`, {
@@ -150,6 +179,15 @@ export const deleteSpotThunk = (spotId) => async (dispatch) => {
   });
   const data = await res.json();
   dispatch(deleteSpot(spotId));
+  return data;
+};
+//delete review
+export const deleteReviewThunk = (reviewId) => async (dispatch) => {
+  const res = await csrfFetch(`/api/reviews/${reviewId}`, {
+    method: "DELETE",
+  });
+  const data = await res.json();
+  dispatch(deleteReview(reviewId));
   return data;
 };
 //add spot image
@@ -181,12 +219,21 @@ const entitiesReducer = (state = initialSpots, action) => {
       else newState[action.key] = { ...action[action.key] };
       console.log(action, newState);
       return newState;
-    case EDIT:
+    case EDIT_SPOT:
       //edit a spot edit a review--payload spot userSpot--/review id exit
       newState = updateObject({}, state);
-      newState[action.key][action.id] = {
-        ...newState[action.key][action.id],
-        ...action[action.key],
+      newState.userSpots[action.id] = {
+        ...newState.userSpots[action.id],
+        ...action.userSpots,
+      };
+      //DO NOT MUTATE, action playload has fewer properties
+      newState.spot = { ...newState.spot, ...action.userSpots };
+      return newState;
+    case EDIT_REVIEW:
+      newState = updateObject({}, state);
+      newState.userReviews[action.id] = {
+        ...newState.userReviews[action.id],
+        ...action.userReviews,
       };
       return newState;
     case ADD:
@@ -199,6 +246,11 @@ const entitiesReducer = (state = initialSpots, action) => {
       newState = updateObject({}, state);
       console.log(action.id);
       delete newState.userSpots[action.id];
+      if (newState.spot && newState.spot.id == action.id) delete newState.spot;
+      return newState;
+    case REMOVE_USERREVIEW: //delete spot review current user id
+      newState = updateObject({}, state);
+      delete newState.userReviews[action.id];
       return newState;
     case ADD_IMG: //under one spot==>userspots update both,spotID
       newState = updateObject({}, state);

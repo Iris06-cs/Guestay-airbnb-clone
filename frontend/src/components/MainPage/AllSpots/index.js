@@ -7,8 +7,8 @@ import * as entitiesActions from "../../../store/entities";
 import "./AllSpots.css";
 // list of photo cards
 const AllSpots = ({ updatedSpots }) => {
-  const spots = useSelector((state) => state.entities.spots);
-
+  const entities = useSelector((state) => state.entities);
+  const spots = entities.spots;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,6 +23,7 @@ const AllSpots = ({ updatedSpots }) => {
           // updatedSpots &&
           Object.values(spots).map((spot) => (
             <NavLink
+              exact
               key={spot.id}
               to={`/spots/${spot.id}`}
               style={{ textDecoration: "none", color: "inherit" }}

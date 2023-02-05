@@ -17,7 +17,6 @@ const DeleteSpotButton = ({ spotId }) => {
     setClickedDel(true);
     const currentBtn = document.getElementById(e.target.id);
     currentBtn.innerText = "Confirm";
-    console.log("click delete", e.target.name);
   };
 
   //condirm delete, make delete api call,rerender page
@@ -25,7 +24,7 @@ const DeleteSpotButton = ({ spotId }) => {
     e.preventDefault();
     dispatch(entitiesActions.deleteSpotThunk(targetSpotId));
     setClickedDel(false);
-    console.log("click comfirm");
+
     // history.push("/hosting/spots");
   };
   return (
