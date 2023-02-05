@@ -38,10 +38,9 @@ const SpotDetail = ({ isLoaded }) => {
     if (typeof SpotImages !== "string")
       previewImg = SpotImages.findLast((img) => img.preview === true);
     if (!previewImg) previewImg = {};
-    console.log(previewImg, "preview image");
   }
   //   const otherImges = SpotImages.filter((img) => img.id !== previewImg.id);
-  console.log(ownerId, "parent");
+
   useEffect(() => {
     dispatch(entitiesActions.loadOneSpotThunk(spotId))
       .then()

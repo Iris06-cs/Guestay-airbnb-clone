@@ -40,7 +40,7 @@ const UpdateUserReview = ({ isLoaded }) => {
         setResErrors(data.errors);
       });
   };
-  console.log(rating);
+
   //only login user can edit
   if (isLoaded && !user) return <Redirect to="/" />;
   return (

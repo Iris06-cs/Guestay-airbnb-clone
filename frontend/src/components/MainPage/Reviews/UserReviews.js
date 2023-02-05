@@ -21,7 +21,6 @@ const UserReviews = ({ isLoaded }) => {
       .then()
       .catch(async (res) => {
         const data = await res.json();
-        console.log(data, "in UserReviews");
       });
   }, [dispatch, isDeleted]);
   useEffect(() => {

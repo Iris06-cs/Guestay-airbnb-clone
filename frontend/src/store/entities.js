@@ -98,7 +98,7 @@ export const loadUserSpotsThunk = () => async (dispatch) => {
   const res = await csrfFetch("/api/spots/current");
   const data = await res.json();
   let userSpots;
-  console.log(typeof data.Spots);
+
   if (typeof data.Spots === "string") userSpots = data.Spots;
   else userSpots = flattingArray(data.Spots);
   dispatch(loadUserSpots(userSpots));
@@ -217,7 +217,6 @@ const entitiesReducer = (state = initialSpots, action) => {
       if (typeof action[action.key] === "string")
         newState[action.key] = action[action.key];
       else newState[action.key] = { ...action[action.key] };
-      console.log(action, newState);
       return newState;
     case EDIT_SPOT:
       //edit a spot edit a review--payload spot userSpot--/review id exit
@@ -244,7 +243,7 @@ const entitiesReducer = (state = initialSpots, action) => {
       return newState;
     case REMOVE_USERSPOT: //delete spot review current user id
       newState = updateObject({}, state);
-      console.log(action.id);
+
       delete newState.userSpots[action.id];
       if (newState.spot && newState.spot.id == action.id) delete newState.spot;
       return newState;

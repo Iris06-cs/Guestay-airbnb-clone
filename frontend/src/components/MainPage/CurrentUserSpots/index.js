@@ -19,7 +19,6 @@ const CurrentUserSpots = ({ isLoaded }) => {
     dispatch(entitiesActions.loadUserSpotsThunk())
       .then()
       .catch(async (res) => {
-        // console.log(res);
         history.replace("/");
       });
   }, [dispatch, history]);

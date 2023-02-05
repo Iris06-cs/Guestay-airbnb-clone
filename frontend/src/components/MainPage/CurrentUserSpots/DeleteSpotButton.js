@@ -9,7 +9,7 @@ const DeleteSpotButton = ({ spotId }) => {
   const [clickedDel, setClickedDel] = useState(false);
   const [targetSpotId, setTargetSpotId] = useState("");
   const spots = useSelector((state) => state.entities.userSpots);
-  console.log("child", spots);
+
   //click delete button,get spotId
   const handleDelete = (e) => {
     e.preventDefault();

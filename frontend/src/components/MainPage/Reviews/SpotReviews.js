@@ -16,7 +16,6 @@ const SpotReviews = (props) => {
       .then()
       .catch(async (res) => {
         const data = await res.json();
-        console.log(data);
       });
   }, [dispatch, spotId]);
   //2023-01-31 23:38:52
