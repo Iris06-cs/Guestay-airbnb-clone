@@ -1,32 +1,35 @@
 import React, { useEffect, useState } from "react";
-// import { Switch } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import Footer from "./components/Footer";
 
+import Footer from "./components/Footer";
 import Navigation from "./components/Navigation";
 import * as sessionActions from "./store/session";
+import * as entitiesActions from "./store/entities";
+// import Reviews from "./components/Reviews";
+import MainPage from "./components/MainPage";
 
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [updatedSpots, setIsUpdatedSpots] = useState(false);
+  // const { isLogedIn, setIsLogedIn } = useIsLogedInContext();
   useEffect(() => {
-    dispatch(sessionActions.restoreSessionThunk()).then(() =>
-      setIsLoaded(true)
-    );
+    dispatch(sessionActions.restoreSessionThunk()).then((res) => {
+      setIsLoaded(true);
+      // setIsLogedIn(true);
+    });
+  }, [dispatch]);
+  useEffect(() => {
+    dispatch(entitiesActions.restoreSpots()).then((res) => {
+      setIsUpdatedSpots(true);
+    });
   }, [dispatch]);
   return (
     <>
       <Navigation isLoaded={isLoaded} />
-      {/* {isLoaded && (
-        <Switch> */}
-      {/* <Route path="/login">
-            <LoginFormPage />
-          </Route>
-          <Route path="/signup">
-            <SignupFormPage />
-          </Route> */}
-      {/* </Switch>
-      )} */}
+      <MainPage isLoaded={isLoaded} updatedSpots={updatedSpots} />
+      {/* <Reviews isLoaded={isLoaded} /> */}
+
       <Footer />
     </>
   );

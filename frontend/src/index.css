@@ -3,3 +3,6 @@ body {
   margin: auto;
   font-family: "Manrope", sans-serif;
 }
+ul {
+  list-style-type: none;
+}

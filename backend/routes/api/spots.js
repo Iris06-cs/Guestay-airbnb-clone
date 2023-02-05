@@ -49,7 +49,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
 //--------------Get all reviews by a spot id
 router.get("/:spotId/reviews", async (req, res, next) => {
   const { spotId } = req.params;
-  // console.log(spotId);
+
   const spot = await Spot.findByPk(spotId);
   //check if spot exist
   if (!spot) {
@@ -89,9 +89,9 @@ const validateReviewBody = [
     .withMessage("Review text is required"),
   check("stars")
     .exists({ checkFalsy: true })
-    .withMessage("Stars is required")
+    .withMessage("Please select a star")
     .isInt({ min: 1, max: 5 })
-    .withMessage("Stars must be an integer from 1 to 5"),
+    .withMessage("Please select start from 1 to 5"),
   handleValidationErrors,
 ];
 router.post(
@@ -118,7 +118,9 @@ router.post(
         const err = new Error("User already has a review for this spot");
         err.status = 403;
         err.title = "User already has a review for this spot";
-        err.errors = ["User already has a review for this spot"];
+        err.errors = [
+          "You've already reviewd this spot,you can edit it from your account.",
+        ];
         return next(err);
       }
     });
