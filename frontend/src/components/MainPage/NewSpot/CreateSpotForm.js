@@ -79,7 +79,7 @@ const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
 
     dispatch(entitiesActions.createSpotThunk(newSpot))
       .then((data) => {
-        console.log("fetch", data);
+        // console.log("fetch", data);
         setSpotId(data.id);
       })
       .catch(async (res) => {
