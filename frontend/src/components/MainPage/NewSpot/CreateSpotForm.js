@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Redirect, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-// import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
 import * as entitiesActions from "../../../store/entities";
-const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
+const CreateSpotForm = ({ isLoaded }) => {
   const history = useHistory();
   const spotState = useSelector((state) => state.entities.spot);
   const user = useSelector((state) => state.session.user);
@@ -79,7 +78,6 @@ const CreateSpotForm = ({ isLoaded, setIsClicked, isClicked }) => {
 
     dispatch(entitiesActions.createSpotThunk(newSpot))
       .then((data) => {
-        // console.log("fetch", data);
         setSpotId(data.id);
       })
       .catch(async (res) => {

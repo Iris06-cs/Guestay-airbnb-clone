@@ -8,7 +8,7 @@ import SpotReviews from "../Reviews/SpotReviews";
 import * as entitiesActions from "../../../store/entities";
 import PageNotFound from "../PageNotFound";
 const SpotDetail = ({ isLoaded }) => {
-  const history = useHistory();
+  // const history = useHistory();
   const { spotId } = useParams();
   const user = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.entities.spot);
@@ -18,9 +18,9 @@ const SpotDetail = ({ isLoaded }) => {
   const [reviewInfo, setReviewInfo] = useState("");
   const [resErrs, setResErrs] = useState([]);
   const {
-    id,
-    ownerId,
-    address,
+    // id,
+    // ownerId,
+    // address,
     city,
     state,
     country,

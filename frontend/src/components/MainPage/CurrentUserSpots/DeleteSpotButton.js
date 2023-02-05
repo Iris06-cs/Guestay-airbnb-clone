@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-// import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
+
 import * as entitiesActions from "../../../store/entities";
 const DeleteSpotButton = ({ spotId }) => {
   const dispatch = useDispatch();
-  const history = useHistory();
+
   const [clickedDel, setClickedDel] = useState(false);
   const [targetSpotId, setTargetSpotId] = useState("");
   const spots = useSelector((state) => state.entities.userSpots);

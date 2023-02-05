@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink, Redirect } from "react-router-dom";
-import CreateSpotForm from "./CreateSpotForm";
+
 const NewSpot = ({ isLoaded }) => {
-  const [isClicked, setIsClicked] = useState(false);
+  // const [isClicked, setIsClicked] = useState(false);
   const user = useSelector((state) => state.session.user);
   //store isClicked in localStorage avovd lost state on refresh
   // useEffect(() => {

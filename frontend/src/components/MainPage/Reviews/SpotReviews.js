@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
 import * as entitiesActions from "../../../store/entities";

@@ -6,12 +6,12 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, Redirect, useHistory } from "react-router-dom";
+import { NavLink, Redirect } from "react-router-dom";
 import * as entitiesActions from "../../../store/entities";
 //
 const UserReviews = ({ isLoaded }) => {
   const dispatch = useDispatch();
-  const history = useHistory();
+
   const user = useSelector((state) => state.session.user);
   const userReviews = useSelector((state) => state.entities.userReviews); //{1:{},2:{}}
   const [reviewList, setReviewList] = useState("");

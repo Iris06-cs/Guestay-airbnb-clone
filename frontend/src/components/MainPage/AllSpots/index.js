@@ -12,7 +12,6 @@ const AllSpots = ({ updatedSpots }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch(spotsActions.loadSpots());
     dispatch(entitiesActions.loadSpotsThunk());
   }, [dispatch]);
 

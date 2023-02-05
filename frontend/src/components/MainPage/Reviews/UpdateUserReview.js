@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useParams, Redirect, useHistory } from "react-router-dom";
+import { useParams, Redirect, useHistory } from "react-router-dom";
 import multipleGenerator from "../../../utils/multipleGenerator";
 import * as entitiesActions from "../../../store/entities";
 
@@ -33,7 +33,7 @@ const UpdateUserReview = ({ isLoaded }) => {
       entitiesActions.editReviewThunk(reviewId, { review: text, stars: rating })
     )
       .then((res) => {
-        // history.replace(`/reviews/current`);
+        history.replace(`/reviews/current`);
       })
       .catch(async (res) => {
         const data = await res.json();

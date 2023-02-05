@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useParams, Redirect, useHistory } from "react-router-dom";
+import { useParams, Redirect, useHistory } from "react-router-dom";
 import multipleGenerator from "../../../utils/multipleGenerator";
 import * as entitiesActions from "../../../store/entities";
 //api call post /api/spots/:spotId/reviews
@@ -13,7 +13,7 @@ const CreateReviewForm = ({ isLoaded }) => {
   const spot = useSelector((state) => state.entities.spot);
   const [starRate, setStarRate] = useState(0);
   const [reviewInput, setReviewInput] = useState("");
-  const [inputErr, setInputErr] = useState([]);
+  // const [inputErr, setInputErr] = useState([]);
   const [resErr, setResErrors] = useState([]);
   useEffect(() => {
     dispatch(entitiesActions.loadOneSpotThunk(spotId));
