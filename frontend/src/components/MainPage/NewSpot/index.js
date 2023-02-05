@@ -6,13 +6,13 @@ const NewSpot = ({ isLoaded }) => {
   const [isClicked, setIsClicked] = useState(false);
   const user = useSelector((state) => state.session.user);
   //store isClicked in localStorage avovd lost state on refresh
-  useEffect(() => {
-    setIsClicked(JSON.parse(window.localStorage.getItem("isClicked")));
-  }, [setIsClicked]);
+  // useEffect(() => {
+  //   setIsClicked(JSON.parse(window.localStorage.getItem("isClicked")));
+  // }, [setIsClicked]);
 
-  useEffect(() => {
-    window.localStorage.setItem("isClicked", isClicked);
-  }, [isClicked]);
+  // useEffect(() => {
+  //   window.localStorage.setItem("isClicked", isClicked);
+  // }, [isClicked]);
   // const handleBtnClick = (e) => {
   //   e.preventDefault();
   //   console.log("click");
