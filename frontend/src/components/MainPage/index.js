@@ -18,7 +18,8 @@ const MainPage = ({ isLoaded, updatedSpots }) => {
       <Switch>
         {/* all spots no auth require */}
         <Route exact path="/">
-          <AllSpots updatedSpots={updatedSpots} />
+          {/* <AllSpots updatedSpots={updatedSpots} /> */}
+          <AllSpots />
         </Route>
         {/* switch to hosting--all spots of current user */}
         <Route exact path="/hosting/spots">

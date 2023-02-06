@@ -21,9 +21,13 @@ const AddSpotPhoto = ({ isLoaded }) => {
     //   spotsActions.addSpotImgThunk(spotId, { url, preview: imgPreview })
     // );
     dispatch(
-      entitiesActions.addSpotImgThunk(spotId, { url, preview: imgPreview })
+      entitiesActions
+        .addSpotImgThunk(spotId, { url, preview: imgPreview })
+        .then((res) => history.replace("/hosting/spots"))
+        .catch(async (res) => {
+          console.log(res.json());
+        })
     );
-    history.replace("/hosting/spots");
   };
   if (isLoaded && !user) return <Redirect to="/" />;
 

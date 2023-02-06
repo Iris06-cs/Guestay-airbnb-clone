@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
-
+import demoSpotImg from "../../../images/demoSpotImg.png";
 // import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
 import * as entitiesActions from "../../../store/entities";
 import DeleteSpotButton from "./DeleteSpotButton";
@@ -19,6 +19,8 @@ const CurrentUserSpots = ({ isLoaded }) => {
     dispatch(entitiesActions.loadUserSpotsThunk())
       .then()
       .catch(async (res) => {
+        const data = res.json();
+        // console.log(data);
         history.replace("/");
       });
   }, [dispatch, history]);
@@ -43,12 +45,22 @@ const CurrentUserSpots = ({ isLoaded }) => {
           {Object.values(spots.userSpots).map(
             ({ id, name, price, address, city, state, previewImage }) => (
               <li className="owner-spot-list" key={id}>
-                <img
-                  className="owner-spot-img"
-                  style={{ width: 50, height: 50 }}
-                  src={previewImage}
-                  alt="owner-spot"
-                />
+                {previewImage === "Spot has no image yet" ? (
+                  <img
+                    src={demoSpotImg}
+                    alt="default"
+                    className="owner-spot-img"
+                    style={{ width: 50, height: 50 }}
+                  />
+                ) : (
+                  <img
+                    onError={(e) => (e.target.src = demoSpotImg)}
+                    className="owner-spot-img"
+                    style={{ width: 50, height: 50 }}
+                    src={previewImage}
+                    alt="owner-spot"
+                  />
+                )}
                 <p className="owner-spot-name">{name}</p>
                 <p className="owner-spot-address">{`${address},${city},${state}`}</p>
                 <p className="owner-spot-price">{`$${price}`}</p>

@@ -3,6 +3,7 @@ import { Redirect, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as entitiesActions from "../../../store/entities";
+import demoSpotImg from "../../../images/demoSpotImg.png";
 const CreateSpotForm = ({ isLoaded }) => {
   const history = useHistory();
   const spotState = useSelector((state) => state.entities.spot);
@@ -29,6 +30,8 @@ const CreateSpotForm = ({ isLoaded }) => {
   }, [spotState]);
   useEffect(() => {
     if (spotId) dispatch(entitiesActions.loadOneSpotThunk(spotId));
+    // .then((res) => console.log("success all spots"))
+    // .catch(async (res) => console.log(res, "all spots"));
   }, [dispatch, spotId]);
   const handleOnChange = (e, callback) => {
     callback(e.target.value);
@@ -237,6 +240,7 @@ const CreateSpotForm = ({ isLoaded }) => {
         <div>{url && <img src={url} alt="spot" />}</div>
         <label>Set As Preview Image</label>
         <input
+          onError={(e) => (e.target.src = demoSpotImg)}
           type="checkBox"
           onChange={(e) => setImgPreview((prev) => !prev)}
           checked={imgPreview}

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
 import SpotReviews from "../Reviews/SpotReviews";
+import demoSpotImg from "../../../images/demoSpotImg.png";
 import * as entitiesActions from "../../../store/entities";
 import PageNotFound from "../PageNotFound";
 const SpotDetail = ({ isLoaded }) => {
@@ -103,6 +104,7 @@ const SpotDetail = ({ isLoaded }) => {
             </p>
           </div>
           <img
+            onError={(e) => (e.target.src = demoSpotImg)}
             className="spot-preview-img"
             style={{ width: 400 }}
             src={previewImg.url ? previewImg.url : ""}

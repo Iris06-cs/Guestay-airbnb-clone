@@ -37,7 +37,7 @@ const UpdateSpotForm = ({ isLoaded }) => {
       setInputLng(spot.lng);
       setInputName(spot.name);
       setInputDescription(spot.description);
-      setInputPrice(spot.price);
+      setInputPrice(Number(spot.price));
     }
   }, [spot]);
   const handleOnChange = (e, callback) => {

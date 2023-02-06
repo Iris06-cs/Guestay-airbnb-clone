@@ -7,7 +7,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Redirect } from "react-router-dom";
+import demoSpotImg from "../../../images/demoSpotImg.png";
 import * as entitiesActions from "../../../store/entities";
+import defaultImg from "../../../utils/handleImageError";
 //
 const UserReviews = ({ isLoaded }) => {
   const dispatch = useDispatch();
@@ -48,14 +50,16 @@ const UserReviews = ({ isLoaded }) => {
                 <p className="review-date">{review.updateAt}</p>
                 <p className="review-content">{review.review}</p>
                 {review.ReviewImages.length > 0 ? (
-                  review.ReviewImages.map((img) => (
-                    <img
-                      key={img.id}
-                      className="review-image"
-                      src={img.url}
-                      alt="review"
-                    />
-                  ))
+                  review.ReviewImages.map((img) =>
+                    // <img
+                    //   onError={(e) => (e.target.src = demoSpotImg)}
+                    //   key={img.id}
+                    //   className="review-image"
+                    //   src={img.url}
+                    //   alt="review"
+                    // />
+                    defaultImg(img.url, "review-image", "review", img.id)
+                  )
                 ) : (
                   <p>no review image yet</p>
                 )}
