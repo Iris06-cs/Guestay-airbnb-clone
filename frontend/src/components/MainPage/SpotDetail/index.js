@@ -8,6 +8,7 @@ import SpotReviews from "../Reviews/SpotReviews";
 import demoSpotImg from "../../../images/demoSpotImg.png";
 import * as entitiesActions from "../../../store/entities";
 import PageNotFound from "../PageNotFound";
+import defaultImg from "../../../utils/handleImageError";
 const SpotDetail = ({ isLoaded }) => {
   // const history = useHistory();
   const { spotId } = useParams();
@@ -103,6 +104,12 @@ const SpotDetail = ({ isLoaded }) => {
               <u>Save</u>
             </p>
           </div>
+          {/* {defaultImg(
+            previewImg.url,
+            demoSpotImg,
+            "spot-preview-img",
+            "spot-preview"
+          )} */}
           <img
             onError={(e) => (e.target.src = demoSpotImg)}
             className="spot-preview-img"

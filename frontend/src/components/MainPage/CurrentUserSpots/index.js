@@ -8,6 +8,7 @@ import * as entitiesActions from "../../../store/entities";
 import DeleteSpotButton from "./DeleteSpotButton";
 import UpdateSpot from "../UpdateSpot";
 import "./CurrentUserSpots.css";
+import defaultImg from "../../../utils/handleImageError";
 
 const CurrentUserSpots = ({ isLoaded }) => {
   const history = useHistory();
@@ -45,7 +46,13 @@ const CurrentUserSpots = ({ isLoaded }) => {
           {Object.values(spots.userSpots).map(
             ({ id, name, price, address, city, state, previewImage }) => (
               <li className="owner-spot-list" key={id}>
-                {previewImage === "Spot has no image yet" ? (
+                {defaultImg(
+                  previewImage,
+                  demoSpotImg,
+                  "owner-spot-img",
+                  "owner-spot"
+                )}
+                {/* {previewImage === "Spot has no image yet" ? (
                   <img
                     src={demoSpotImg}
                     alt="default"
@@ -60,7 +67,7 @@ const CurrentUserSpots = ({ isLoaded }) => {
                     src={previewImage}
                     alt="owner-spot"
                   />
-                )}
+                )} */}
                 <p className="owner-spot-name">{name}</p>
                 <p className="owner-spot-address">{`${address},${city},${state}`}</p>
                 <p className="owner-spot-price">{`$${price}`}</p>

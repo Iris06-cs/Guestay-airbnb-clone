@@ -38,7 +38,12 @@ const AllSpots = () => {
               className="spot-photo-card"
               onClick={(e) => window.open(`/spots/${spot.id}`)}
             >
-              {defaultImg(spot.previewImage, "spot-photo-img", "spot")}
+              {defaultImg(
+                spot.previewImage,
+                demoSpotImg,
+                "spot-photo-img",
+                "spot"
+              )}
               {/* {spot.previewImage === "Spot has no image yet" ? (
                 <img
                   src={demoSpotImg}

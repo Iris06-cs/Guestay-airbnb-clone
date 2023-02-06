@@ -58,7 +58,13 @@ const UserReviews = ({ isLoaded }) => {
                     //   src={img.url}
                     //   alt="review"
                     // />
-                    defaultImg(img.url, "review-image", "review", img.id)
+                    defaultImg(
+                      img.url,
+                      demoSpotImg,
+                      "review-image",
+                      "review",
+                      img.id
+                    )
                   )
                 ) : (
                   <p>no review image yet</p>
