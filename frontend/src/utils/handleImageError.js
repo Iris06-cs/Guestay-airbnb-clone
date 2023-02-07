@@ -8,6 +8,7 @@ const defaultImg = (srcUrl, defaulSrc, className, altName, key = "") => {
   const invalidSrc = [
     "Spot has no image yet",
     "Does not have a preview image",
+    "No ReviewImages",
     "",
   ];
   if (invalidSrc.includes(srcUrl) || myFakeUrl.test(srcUrl))

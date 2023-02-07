@@ -96,8 +96,14 @@ const SpotReviews = (props) => {
                 </p>
                 <p>{review}</p>
 
-                {typeof ReviewImages !== "string" && ReviewImages.length > 0
-                  ? ReviewImages.map((img) =>
+                {typeof ReviewImages === "string"
+                  ? defaultImg(
+                      ReviewImages,
+                      demoSpotImg,
+                      "review-img-spotDetail",
+                      "review"
+                    )
+                  : ReviewImages.map((img) =>
                       defaultImg(
                         img.url,
                         demoSpotImg,
@@ -105,12 +111,6 @@ const SpotReviews = (props) => {
                         "review",
                         img.id
                       )
-                    )
-                  : defaultImg(
-                      ReviewImages,
-                      demoSpotImg,
-                      "review-img-spotDetail",
-                      "review"
                     )}
               </li>
             )
