@@ -131,6 +131,7 @@ ul.profile-dropdown.hidden {
   font-size: 15px;
   padding: 8px 8px;
   width: 130px;
+  min-width: 85px;
   z-index: 1;
   color: #484848;
 }

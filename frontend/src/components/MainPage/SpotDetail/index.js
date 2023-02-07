@@ -3,19 +3,20 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SpotReviews from "../Reviews/SpotReviews";
 import demoSpotImg from "../../../images/demoSpotImg.png";
 import * as entitiesActions from "../../../store/entities";
 import PageNotFound from "../PageNotFound";
 import defaultImg from "../../../utils/handleImageError";
 const SpotDetail = ({ isLoaded }) => {
-  // const history = useHistory();
+  const dispatch = useDispatch();
   const { spotId } = useParams();
+
   const user = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.entities.spot);
   const reviews = useSelector((state) => state.entities.spotReviews);
-  const dispatch = useDispatch();
+
   const [spotInfo, setSpotInfo] = useState("");
   const [reviewInfo, setReviewInfo] = useState("");
   const [resErrs, setResErrs] = useState([]);
@@ -41,34 +42,42 @@ const SpotDetail = ({ isLoaded }) => {
       previewImg = SpotImages.findLast((img) => img.preview === true);
     if (!previewImg) previewImg = {};
   }
-  //   const otherImges = SpotImages.filter((img) => img.id !== previewImg.id);
-
+  // const otherImges = SpotImages.filter((img) => img.id !== previewImg.id);
+  // console.log(otherImges);
+  // const fetchdata = (thunk, spotId) => {
+  //   dispatch(thunk(spotId))
+  //     .then()
+  //     .catch(async (res) => {
+  //       const data = await res.json();
+  //       if (data.statusCode === 404) setResErrs([data.message]);
+  //     });
+  // };
   useEffect(() => {
+    // fetchdata(entitiesActions.loadOneSpotThunk, spotId);
+    // fetchdata(entitiesActions.loadSpotReviewsThunk, spotId);
     dispatch(entitiesActions.loadOneSpotThunk(spotId))
       .then()
       .catch(async (res) => {
         const data = await res.json();
         if (data.statusCode === 404) setResErrs([data.message]);
       });
-  }, [dispatch, spotId]);
-  useEffect(() => {
     dispatch(entitiesActions.loadSpotReviewsThunk(spotId))
       .then()
       .catch(async (res) => {
         const data = await res.json();
         if (data.statusCode === 404) setResErrs([data.message]);
       });
-  }, [dispatch, spotId]);
+  }, [spotId, dispatch]);
+
   useEffect(() => {
     if (spot) {
-      setSpotInfo(spot);
+      setSpotInfo({ ...spot });
     }
-  }, [spot]);
-  useEffect(() => {
     if (reviews) {
-      setReviewInfo(reviews);
+      setReviewInfo({ ...reviews });
     }
-  }, [reviews]);
+  }, [spot, reviews]);
+
   if (resErrs.length > 0) return <PageNotFound />;
   return (
     <div className="spot-details">
@@ -117,6 +126,12 @@ const SpotDetail = ({ isLoaded }) => {
             src={previewImg.url ? previewImg.url : ""}
             alt="spot-preveiw"
           />
+          {SpotImages.length &&
+            SpotImages.map((img) => (
+              <div key={img.id}>
+                {defaultImg(img.url, demoSpotImg, "detail-spot-img", "spot")}
+              </div>
+            ))}
           <h2>Spot hosted by {Owner.firstName}</h2>
           <p className="spot-description">{description}</p>
           <div className="booking-side-card">

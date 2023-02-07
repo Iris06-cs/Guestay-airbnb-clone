@@ -27,7 +27,7 @@ const HostingNavLinks = () => {
         to="/hosting/spots/new"
         // onClick={(e) => setIsClickedCreate(true)}
       >
-        Create a new spot
+        Create spot
       </NavLink>
       <NavLink
         className={hostNavs}

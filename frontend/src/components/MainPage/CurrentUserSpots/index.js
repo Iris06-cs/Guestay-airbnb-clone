@@ -1,7 +1,7 @@
 //get spots by owner id
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect, useHistory } from "react-router-dom";
+import { NavLink, Redirect, useHistory } from "react-router-dom";
 import demoSpotImg from "../../../images/demoSpotImg.png";
 // import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
 import * as entitiesActions from "../../../store/entities";
@@ -31,6 +31,7 @@ const CurrentUserSpots = ({ isLoaded }) => {
         <h1>You have not listed a spot yet</h1>
       </>
     );
+
   return (
     <ul className="owner-spots">
       {isLoaded && spots.userSpots && (
@@ -52,23 +53,14 @@ const CurrentUserSpots = ({ isLoaded }) => {
                   "owner-spot-img",
                   "owner-spot"
                 )}
-                {/* {previewImage === "Spot has no image yet" ? (
-                  <img
-                    src={demoSpotImg}
-                    alt="default"
-                    className="owner-spot-img"
-                    style={{ width: 50, height: 50 }}
-                  />
-                ) : (
-                  <img
-                    onError={(e) => (e.target.src = demoSpotImg)}
-                    className="owner-spot-img"
-                    style={{ width: 50, height: 50 }}
-                    src={previewImage}
-                    alt="owner-spot"
-                  />
-                )} */}
-                <p className="owner-spot-name">{name}</p>
+                <p className="owner-spot-name">
+                  <NavLink
+                    className="spot-name-link"
+                    to={`/hosting/spots/${id}/details`}
+                  >
+                    {name}
+                  </NavLink>
+                </p>
                 <p className="owner-spot-address">{`${address},${city},${state}`}</p>
                 <p className="owner-spot-price">{`$${price}`}</p>
                 <UpdateSpot spotId={id} />

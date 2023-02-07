@@ -100,14 +100,14 @@ const SpotReviews = (props) => {
                   ? defaultImg(
                       ReviewImages,
                       demoSpotImg,
-                      "review-img-spotDetail",
+                      "review-image",
                       "review"
                     )
                   : ReviewImages.map((img) =>
                       defaultImg(
                         img.url,
                         demoSpotImg,
-                        "review-img-spotDetail",
+                        "review-image",
                         "review",
                         img.id
                       )

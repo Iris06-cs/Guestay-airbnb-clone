@@ -12,6 +12,7 @@ import CreateSpotForm from "./NewSpot/CreateSpotForm";
 import PageNotFound from "./PageNotFound";
 import Reviews from "./Reviews";
 import UpdateUserReview from "./Reviews/UpdateUserReview";
+import UserSpot from "./CurrentUserSpots/UserSpot";
 const MainPage = ({ isLoaded, updatedSpots }) => {
   return (
     <div className="main-page">
@@ -33,6 +34,9 @@ const MainPage = ({ isLoaded, updatedSpots }) => {
         </Route>
         <Route exact path="/hosting/spots/:spotId/edit">
           <UpdateSpotForm isLoaded={isLoaded} />
+        </Route>
+        <Route exact path="/hosting/spots/:spotId/details">
+          <UserSpot isLoaded={isLoaded} />
         </Route>
         <Route exact path="/user/reviews/:reviewId/edit">
           <UpdateUserReview isLoaded={isLoaded} />

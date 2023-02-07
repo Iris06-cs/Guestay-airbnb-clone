@@ -36,3 +36,19 @@
   margin: 0 auto;
   padding-top: 90px;
 }
+
+.spot-imges {
+  width: 70%;
+}
+img.spot-img {
+  width: 200px;
+  aspect-ratio: 4/3;
+}
+img.detail-spot-img {
+  width: 300px;
+  aspect-ratio: 4/3;
+}
+img.detail-preview-img {
+  width: 450px;
+  aspect-ratio: 4/3;
+}

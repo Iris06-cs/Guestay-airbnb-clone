@@ -3,6 +3,8 @@ import { csrfFetch } from "./csrf";
 const LOAD = "entities/LOAD_FIELD";
 const REMOVE_USERSPOT = "spot/REMOVE";
 const REMOVE_USERREVIEW = "review/REMOVE";
+const REMOVE_IMAGE = "image/REMOVE";
+const REMOVE_REVIEWIMG = "reviewImg/REMOVE";
 const EDIT = "entities/EDID";
 const EDIT_REVIEW = "entities/EDID_REVIEW";
 const EDIT_SPOT = "entities/EDID_SPOT";
@@ -73,6 +75,14 @@ const addSpotImg = (image, spotId) => ({
   type: ADD_IMG,
   image,
   spotId,
+});
+const removeSpotImg = (imgId) => ({
+  type: REMOVE_IMAGE,
+  imgId,
+});
+const removeReviewImg = (imgId) => ({
+  type: REMOVE_REVIEWIMG,
+  imgId,
 });
 //thunks
 export const restoreSpots = () => async (dispatch) => {
@@ -200,6 +210,22 @@ export const addSpotImgThunk = (spotId, img) => async (dispatch) => {
   dispatch(addSpotImg(image, spotId));
   return image;
 };
+export const deleteSpotImg = (imgId) => async (dispatch) => {
+  const res = await csrfFetch(`/api/spot-images/${imgId}`, {
+    method: "DELETE",
+  });
+  const msg = await res.json();
+  dispatch(removeSpotImg(imgId));
+  return msg;
+};
+export const deleteReviewImg = (reviewImg) => async (dispatch) => {
+  const res = await csrfFetch(`/api/review-images/${reviewImg}`, {
+    method: "DELETE",
+  });
+  const msg = await res.json();
+  dispatch(removeReviewImg(reviewImg));
+  return msg;
+};
 const initialSpots = {};
 const entitiesReducer = (state = initialSpots, action) => {
   let newState;
@@ -251,14 +277,33 @@ const entitiesReducer = (state = initialSpots, action) => {
       newState = updateObject({}, state);
       delete newState.userReviews[action.id];
       return newState;
+    case REMOVE_IMAGE:
+      newState = updateObject({}, state);
+      const imges = newState.spot.SpotImages.filter(
+        (img) => img.id === action.imgId
+      );
+      newState.spot.SpotImages = [...imges];
+      return newState;
+    case REMOVE_REVIEWIMG:
+      newState = updateObject({}, state);
+      const reviewImg = newState.userReviews.ReviewImages.filter(
+        (img) => img.id === action.imgId
+      );
+      newState.userReviews.ReviewImages = [...imges];
+      return newState;
     case ADD_IMG: //under one spot==>userspots update both,spotID
       newState = updateObject({}, state);
       let targetSpot = newState.spot;
       if (targetSpot.SpotImages === "Spot has no image yet")
         targetSpot.SpotImages = [action.image];
       else targetSpot.SpotImages.push(action.image);
-      if (action.image.preview && newState.userSpots[targetSpot.id])
+      if (
+        action.image.preview &&
+        newState.userSpots &&
+        newState.userSpots[targetSpot.id]
+      )
         newState.userSpots[targetSpot.id].previewImage = action.image.url;
+      newState.spot = { ...targetSpot };
       return newState; //{spots:{1:{id...images}}}
     default:
       return state;
