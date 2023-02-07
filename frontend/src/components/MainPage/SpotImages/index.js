@@ -58,11 +58,11 @@ const AddSpotPhoto = ({ isLoaded }) => {
     )
       .then()
       .catch(async (res) => {
-        // const data = await res.json();
-        // if (data && data.errors) {
-        //   setValidate(data.errors);
-        // }
-        // console.log(typeof data.message);
+        const data = await res.json();
+        if (data && data.errors) {
+          setValidate(data.errors);
+        }
+        // console.log(data);
       });
     setUrl("");
     setIsPreview(false);
