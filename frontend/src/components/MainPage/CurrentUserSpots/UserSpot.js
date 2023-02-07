@@ -27,9 +27,7 @@ const UserSpot = ({ isLoaded }) => {
   const spotProps = {};
   const [spotDetail, setSpotDetail] = useState("");
   useEffect(() => {
-    dispatch(entitiesActions.loadOneSpotThunk(spotId))
-      .then((res) => console.log("success", res))
-      .catch(async (res) => console.log(res));
+    dispatch(entitiesActions.loadOneSpotThunk(spotId)).then().catch();
   }, [dispatch, spotId]);
   useEffect(() => {
     if (spot) {
@@ -110,7 +108,7 @@ const UserSpot = ({ isLoaded }) => {
   };
   //no session user after loaded-->home
   if (isLoaded && !user) return <Redirect to="/" />;
-  console.log(spotDetail);
+
   return (
     <>
       <h1>{inputName}</h1>

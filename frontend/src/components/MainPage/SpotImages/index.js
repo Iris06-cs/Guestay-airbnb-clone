@@ -33,7 +33,7 @@ const AddSpotPhoto = ({ isLoaded }) => {
       setImges([...spot.SpotImages]);
       const preview = spot.SpotImages.findLast((img) => img.preview === true);
       setSpotName(spot.name);
-      console.log(preview);
+
       if (preview) setPreviewImg(preview.url);
     }
   }, [spot]);
@@ -45,9 +45,7 @@ const AddSpotPhoto = ({ isLoaded }) => {
     e.preventDefault();
     dispatch(entitiesActions.deleteSpotImg(imgId))
       .then((res) => setIsDeleted((prev) => !prev))
-      .catch(async (res) => {
-        console.log(res);
-      });
+      .catch();
   };
   const submitImg = (e) => {
     e.preventDefault();
@@ -61,12 +59,10 @@ const AddSpotPhoto = ({ isLoaded }) => {
       .then()
       .catch(async (res) => {
         // const data = await res.json();
-
         // if (data && data.errors) {
         //   setValidate(data.errors);
         // }
         // console.log(typeof data.message);
-        console.log(res);
       });
     setUrl("");
     setIsPreview(false);
