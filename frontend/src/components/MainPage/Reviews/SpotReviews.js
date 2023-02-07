@@ -41,7 +41,7 @@ const SpotReviews = (props) => {
     month = months[month];
     return { year, month };
   };
-  console.log(reviews);
+  // console.log(reviews);
   return (
     <>
       <div className="spot-reviews">
