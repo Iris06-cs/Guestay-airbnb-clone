@@ -1,6 +1,13 @@
+#navigation-header {
+  background-color: white;
+  margin: 0 auto;
+  width: 100%;
+  position: fixed;
+}
 ul {
   list-style-type: none;
 }
+
 .navigation {
   display: flex;
   justify-content: space-between;
@@ -9,6 +16,8 @@ ul {
   border-top: solid rgb(219, 216, 216) 1px;
   border-bottom: solid rgb(219, 216, 216) 1px;
   height: 40px;
+
+  background-color: white;
 }
 #home-logo {
   margin: 0;
@@ -85,6 +94,9 @@ ul.profile-dropdown.hidden {
   background-color: white;
   display: flex;
   justify-content: space-around;
+  position: fixed;
+  right: 70px;
+  top: 27px;
   align-items: center;
   border: none;
   border-radius: 20px;
@@ -101,6 +113,9 @@ ul.profile-dropdown.hidden {
 }
 #hosting-nav-links {
   text-align: center;
+  position: fixed;
+  top: 27px;
+  right: 25%;
   margin: 0 auto;
   display: flex;
   width: 50%;

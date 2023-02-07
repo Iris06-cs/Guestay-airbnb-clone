@@ -4,7 +4,7 @@ import AllSpots from "./AllSpots";
 import CurrentUserSpots from "./CurrentUserSpots";
 import AddSpotPhoto from "./SpotImages";
 import NewSpot from "./NewSpot";
-import "./Spot.css";
+import "./MainPage.css";
 import UpdateSpotForm from "./UpdateSpot/UpdateSpotForm";
 import SpotDetail from "./SpotDetail";
 // import SpotReviews from "../Reviews/SpotReviews";

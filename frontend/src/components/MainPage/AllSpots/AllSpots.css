@@ -1,7 +1,7 @@
 /* ul */
 .spots-cards {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   flex-wrap: wrap;
   max-width: 90%;
   margin: 0 auto;
