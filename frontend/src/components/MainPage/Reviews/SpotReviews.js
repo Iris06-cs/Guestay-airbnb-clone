@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
 import * as entitiesActions from "../../../store/entities";
+import defaultImg from "../../../utils/handleImageError";
 import multipleGenerator from "../../../utils/multipleGenerator";
-
+import demoSpotImg from "../../../images/demoSpotImg.png";
 const SpotReviews = (props) => {
   const { spotId } = useParams();
   const { avgStarRating, numReviews, reviewInfo } = props;
@@ -40,7 +41,7 @@ const SpotReviews = (props) => {
     month = months[month];
     return { year, month };
   };
-
+  console.log(reviews);
   return (
     <>
       <div className="spot-reviews">
@@ -94,7 +95,23 @@ const SpotReviews = (props) => {
                   {converData(updatedAt).year}
                 </p>
                 <p>{review}</p>
-                {/* modal show review  */}
+
+                {typeof ReviewImages !== "string" && ReviewImages.length > 0
+                  ? ReviewImages.map((img) =>
+                      defaultImg(
+                        img.url,
+                        demoSpotImg,
+                        "review-img-spotDetail",
+                        "review",
+                        img.id
+                      )
+                    )
+                  : defaultImg(
+                      ReviewImages,
+                      demoSpotImg,
+                      "review-img-spotDetail",
+                      "review"
+                    )}
               </li>
             )
           )}
