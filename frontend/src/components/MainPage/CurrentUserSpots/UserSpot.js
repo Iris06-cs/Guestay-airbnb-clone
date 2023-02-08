@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, Redirect, NavLink } from "react-router-dom";
+import { Redirect, NavLink } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
 import * as entitiesActions from "../../../store/entities";
 import defaultImg from "../../../utils/handleImageError";
 import demoSpotImg from "../../../images/demoSpotImg.png";
-import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
 import LoginFormModal from "../../LoginFormModal";
+import "./UserSpot.css";
 
 const UserSpot = ({ isLoaded }) => {
-  const history = useHistory();
   const dispatch = useDispatch();
-
   const { spotId } = useParams();
   const user = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.entities.spot);
@@ -31,24 +30,16 @@ const UserSpot = ({ isLoaded }) => {
   const [spotDetail, setSpotDetail] = useState("");
   const [ownerId, setOwnerId] = useState("");
   const [userId, setIsUserId] = useState("");
+  const [photoes, setPhotoes] = useState("");
+  //load spot data and reload update when edit submited
   useEffect(() => {
     dispatch(entitiesActions.loadOneSpotThunk(spotId))
       .then()
       .catch(async (res) => console.log(res));
-  }, [dispatch, spotId]);
+  }, [dispatch, spotId, isSubmited]);
 
   useEffect(() => {
     if (spot) {
-      //   setInputStreet(spot.address);
-      //   setInputCity(spot.city);
-      //   setInputState(spot.state);
-      //   setInputCountry(spot.country);
-      //   setInputLat(spot.lat);
-      //   setInputLng(spot.lng);
-      //   setInputName(spot.name);
-      //   setInputDescription(spot.description);
-      //   setInputPrice(Number(spot.price));
-
       setSpotDetail({ ...spot });
     }
     if (user) setIsUserId(user.id);
@@ -57,7 +48,6 @@ const UserSpot = ({ isLoaded }) => {
   useEffect(() => {
     if (spotDetail) {
       const {
-        id,
         ownerId,
         address,
         city,
@@ -82,6 +72,9 @@ const UserSpot = ({ isLoaded }) => {
       setInputDescription(description);
       setInputPrice(Number(price));
       setOwnerId(ownerId);
+      if (typeof SpotImages === "string") {
+        setPhotoes(SpotImages);
+      } else setPhotoes([...SpotImages]);
     }
   }, [spotDetail]);
 
@@ -121,10 +114,8 @@ const UserSpot = ({ isLoaded }) => {
 
     return (
       dispatch(entitiesActions.editSpotThunk(spotId, newSpot))
-        //if successfully return response
         .then((res) => {
           setIsSubmited(true);
-          history.replace("/hosting/spots/");
         })
         //catch validation errors
         .catch(async (res) => {
@@ -141,26 +132,32 @@ const UserSpot = ({ isLoaded }) => {
         <LoginFormModal />
       </>
     );
-  // user logged in but not owner==>home page
-  //   if (isLoaded && user && user.id !== ownerId) return <Redirect to="/" />;
 
   return (
-    <>
-      <h1>{inputName}</h1>
+    <div className="user-spot-page">
+      <div className="user-spot-title">
+        <h1>{inputName}</h1>
+      </div>
       {ownerId && userId === ownerId && (
         <>
-          <div>
-            <h2>Photos</h2>
-            <NavLink to={`/spots/${spotId}/images`}>
-              <button type="Submit" id="next-btn">
-                Edit
-              </button>
-            </NavLink>
+          <div className="photo-section">
+            <div className="photo-title">
+              <h2>Photos</h2>
+            </div>
+            <div className="edit-phtot-btn">
+              <NavLink to={`/spots/${spotId}/images`}>
+                <button type="Submit" id="next-btn">
+                  Edit
+                </button>
+              </NavLink>
+            </div>
             {spotDetail && (
               <div className="spot-imges">
-                {typeof spotDetail.SpotImages === "string"
+                {/* {typeof spotDetail.SpotImages === "string" */}{" "}
+                {typeof photoes === "string"
                   ? defaultImg("", demoSpotImg, "spot-img", "spot")
-                  : spotDetail.SpotImages.map((img) =>
+                  : //   : spotDetail.SpotImages.map((img) =>
+                    photoes.map((img) =>
                       defaultImg(
                         img.url,
                         demoSpotImg,
@@ -175,7 +172,7 @@ const UserSpot = ({ isLoaded }) => {
 
           <form className="Create-spot-form" onSubmit={handleFormSubmit}>
             <div className="userSpo-detail">
-              <h2>Where's your place located?</h2>
+              <h2>Spot basics</h2>
               <div>
                 <label htmlFor="street">Street</label>
                 <input
@@ -289,7 +286,7 @@ const UserSpot = ({ isLoaded }) => {
         </>
       )}
       {ownerId && userId !== ownerId && <Redirect to="/" />}
-    </>
+    </div>
   );
 };
 export default UserSpot;

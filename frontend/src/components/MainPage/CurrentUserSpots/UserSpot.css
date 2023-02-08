@@ -1,0 +1,22 @@
+.user-spot-page {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  padding: 0 5%;
+  margin-left: 20%;
+}
+.photo-section {
+  display: flex;
+  flex-wrap: wrap;
+}
+.photo-title {
+  flex-basis: 50%;
+}
+.edit-photo-btn {
+  flex-basis: 50%;
+  display: block;
+}
+.spot-images {
+  flex-basis: 100%;
+  flex-grow: 1;
+}

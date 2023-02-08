@@ -1,30 +1,41 @@
-//get spots by owner id
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Redirect, useHistory } from "react-router-dom";
 import demoSpotImg from "../../../images/demoSpotImg.png";
-// import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
+
 import * as entitiesActions from "../../../store/entities";
 import DeleteSpotButton from "./DeleteSpotButton";
 import UpdateSpot from "../UpdateSpot";
-import "./CurrentUserSpots.css";
 import defaultImg from "../../../utils/handleImageError";
-
+import "./CurrentUserSpots.css";
+import LoginFormModal from "../../LoginFormModal";
+import authErr from "../../../utils/authErr";
 const CurrentUserSpots = ({ isLoaded }) => {
-  const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.session.user);
   const spots = useSelector((state) => state.entities);
-
+  const [ischanged, setIsChanged] = useState(false);
+  const [reqLogin, setReqLogin] = useState(false);
   useEffect(() => {
     dispatch(entitiesActions.loadUserSpotsThunk())
       .then()
       .catch(async (res) => {
-        const data = res.json();
-        // console.log(data);
-        history.replace("/");
+        const data = await res.json();
+        authErr(data, setReqLogin);
       });
-  }, [dispatch, history]);
+  }, [dispatch, ischanged]);
+  useEffect(() => {
+    if (user) setReqLogin(false);
+  }, [user]);
+  //if no user logged in ==>login page, if logout-->home
+  if (isLoaded && reqLogin)
+    return (
+      <>
+        <LoginFormModal />
+      </>
+    );
+
+  //if user does not have any spot
   if (isLoaded && typeof spots.userSpots === "string")
     return (
       <>
@@ -41,11 +52,20 @@ const CurrentUserSpots = ({ isLoaded }) => {
             <p></p>
             <p>Spot Address</p>
             <p>Price</p>
-            <p className="align-right">Modify Spot</p>
+            <p>Rating</p>
             <p className="align-right">Delete Spot</p>
           </li>
           {Object.values(spots.userSpots).map(
-            ({ id, name, price, address, city, state, previewImage }) => (
+            ({
+              id,
+              name,
+              price,
+              address,
+              city,
+              state,
+              avgRating,
+              previewImage,
+            }) => (
               <li className="owner-spot-list" key={id}>
                 {defaultImg(
                   previewImage,
@@ -63,15 +83,21 @@ const CurrentUserSpots = ({ isLoaded }) => {
                 </p>
                 <p className="owner-spot-address">{`${address},${city},${state}`}</p>
                 <p className="owner-spot-price">{`$${price}`}</p>
-                <UpdateSpot spotId={id} />
+                {/* <UpdateSpot spotId={id} /> */}
+                <p className="owner-spot-rating">
+                  <span>
+                    <i className="fa-solid fa-star"></i>
+                  </span>
+                  {avgRating === "Spot has no review yet"
+                    ? "New"
+                    : `${avgRating}`}
+                </p>
                 <DeleteSpotButton spotId={id} />
               </li>
             )
           )}
         </>
       )}
-
-      {isLoaded && !user && <Redirect to="/" />}
     </ul>
   );
 };

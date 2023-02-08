@@ -23,7 +23,7 @@
   background-color: #f8f6f6;
 }
 
-.edit-spot-btn,
+/* .edit-spot-btn, */
 .delete-spot-btn {
   box-sizing: border-box;
   color: black;
@@ -36,6 +36,21 @@
   background-color: white;
   border: 1px solid black;
   border-radius: 10px;
+}
+.cancel-btn {
+  box-sizing: border-box;
+  position: absolute;
+  color: black;
+  text-align: center;
+  width: 85px;
+  height: 45px;
+  padding: 5px 10px 5px 10px;
+  font-size: 15px;
+  justify-self: end;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 10px;
+  margin-right: 100px;
 }
 .edit-spot-link {
   box-sizing: border-box;
