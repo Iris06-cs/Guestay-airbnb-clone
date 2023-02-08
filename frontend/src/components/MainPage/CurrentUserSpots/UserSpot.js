@@ -30,7 +30,7 @@ const UserSpot = ({ isLoaded }) => {
   const [remainingChars, setRemainingChars] = useState(50);
   const [spotDetail, setSpotDetail] = useState("");
   const [ownerId, setOwnerId] = useState("");
-  const [isOwner, setIsOwner] = useState(false);
+  const [userId, setIsUserId] = useState("");
   useEffect(() => {
     dispatch(entitiesActions.loadOneSpotThunk(spotId))
       .then()
@@ -51,8 +51,8 @@ const UserSpot = ({ isLoaded }) => {
 
       setSpotDetail({ ...spot });
     }
-    if (user) set;
-  }, [spot]);
+    if (user) setIsUserId(user.id);
+  }, [spot, user]);
 
   useEffect(() => {
     if (spotDetail) {
@@ -143,141 +143,152 @@ const UserSpot = ({ isLoaded }) => {
     );
   // user logged in but not owner==>home page
   //   if (isLoaded && user && user.id !== ownerId) return <Redirect to="/" />;
-  console.log(user.id === ownerId);
+
   return (
     <>
       <h1>{inputName}</h1>
-      <div>
-        <h2>Photos</h2>
-        <NavLink to={`/spots/${spotId}/images`}>
-          <button type="Submit" id="next-btn">
-            Edit
-          </button>
-        </NavLink>
-        {spotDetail && (
-          <div className="spot-imges">
-            {typeof spotDetail.SpotImages === "string"
-              ? defaultImg("", demoSpotImg, "spot-img", "spot")
-              : spotDetail.SpotImages.map((img) =>
-                  defaultImg(img.url, demoSpotImg, "spot-img", "spot", img.id)
-                )}
-          </div>
-        )}
-      </div>
-
-      <form className="Create-spot-form" onSubmit={handleFormSubmit}>
-        <div className="userSpo-detail">
-          <h2>Where's your place located?</h2>
+      {ownerId && userId === ownerId && (
+        <>
           <div>
-            <label htmlFor="street">Street</label>
-            <input
-              id="street"
-              type="text"
-              value={street}
-              onChange={(e) => handleOnChange(e, setInputStreet)}
-            />
-          </div>
-          <div>
-            <label htmlFor="city">City</label>
-            <input
-              id="city"
-              type="text"
-              value={inputCity}
-              onChange={(e) => handleOnChange(e, setInputCity)}
-            />
-          </div>
-          <div>
-            <label htmlFor="state">State</label>
-            <input
-              id="state"
-              type="text"
-              value={inputState}
-              onChange={(e) => handleOnChange(e, setInputState)}
-            />
-          </div>
-          <div>
-            <label htmlFor="country">Country</label>
-            <input
-              id="country"
-              type="text"
-              value={inputCity}
-              onChange={(e) => handleOnChange(e, setInputCountry)}
-            />
-          </div>
-          <div>
-            <label htmlFor="latitude">Latitude</label>
-            <input
-              id="latitude"
-              type="text"
-              value={inputLat}
-              onChange={(e) => handleOnChange(e, setInputLat)}
-            />
-          </div>
-          <div>
-            <label htmlFor="longitude">Longitude</label>
-            <input
-              id="longitude"
-              type="text"
-              value={inputLng}
-              onChange={(e) => handleOnChange(e, setInputLng)}
-            />
-          </div>
-        </div>
-        <div className="intro-form">
-          <div>
-            <h2>Give your spot a name</h2>
-            <textarea
-              value={inputName}
-              onChange={(e) => handleOnChange(e, setInputName)}
-            />
-            <p>{remainingChars}/50</p>
-          </div>
-          <div>
-            <h2>Create your description</h2>
-            <p>Share some special points make your spot unique</p>
-            <textarea
-              value={inputDescription}
-              onChange={(e) => handleOnChange(e, setInputDescription)}
-            />
-          </div>
-          <div>
-            <h2>Set your price</h2>
-            <p>You can change it at anytime</p>
-            <div>
-              <button onClick={decreasePrice}>
-                <span>
-                  <i className="fa-solid fa-minus"></i>
-                </span>
+            <h2>Photos</h2>
+            <NavLink to={`/spots/${spotId}/images`}>
+              <button type="Submit" id="next-btn">
+                Edit
               </button>
-              <span>{`$${inputPrice}`}</span>
-              <button onClick={increasePrice}>
-                <span>
-                  <i className="fa-solid fa-plus"></i>
-                </span>
+            </NavLink>
+            {spotDetail && (
+              <div className="spot-imges">
+                {typeof spotDetail.SpotImages === "string"
+                  ? defaultImg("", demoSpotImg, "spot-img", "spot")
+                  : spotDetail.SpotImages.map((img) =>
+                      defaultImg(
+                        img.url,
+                        demoSpotImg,
+                        "spot-img",
+                        "spot",
+                        img.id
+                      )
+                    )}
+              </div>
+            )}
+          </div>
+
+          <form className="Create-spot-form" onSubmit={handleFormSubmit}>
+            <div className="userSpo-detail">
+              <h2>Where's your place located?</h2>
+              <div>
+                <label htmlFor="street">Street</label>
+                <input
+                  id="street"
+                  type="text"
+                  value={street}
+                  onChange={(e) => handleOnChange(e, setInputStreet)}
+                />
+              </div>
+              <div>
+                <label htmlFor="city">City</label>
+                <input
+                  id="city"
+                  type="text"
+                  value={inputCity}
+                  onChange={(e) => handleOnChange(e, setInputCity)}
+                />
+              </div>
+              <div>
+                <label htmlFor="state">State</label>
+                <input
+                  id="state"
+                  type="text"
+                  value={inputState}
+                  onChange={(e) => handleOnChange(e, setInputState)}
+                />
+              </div>
+              <div>
+                <label htmlFor="country">Country</label>
+                <input
+                  id="country"
+                  type="text"
+                  value={inputCity}
+                  onChange={(e) => handleOnChange(e, setInputCountry)}
+                />
+              </div>
+              <div>
+                <label htmlFor="latitude">Latitude</label>
+                <input
+                  id="latitude"
+                  type="text"
+                  value={inputLat}
+                  onChange={(e) => handleOnChange(e, setInputLat)}
+                />
+              </div>
+              <div>
+                <label htmlFor="longitude">Longitude</label>
+                <input
+                  id="longitude"
+                  type="text"
+                  value={inputLng}
+                  onChange={(e) => handleOnChange(e, setInputLng)}
+                />
+              </div>
+            </div>
+            <div className="intro-form">
+              <div>
+                <h2>Give your spot a name</h2>
+                <textarea
+                  value={inputName}
+                  onChange={(e) => handleOnChange(e, setInputName)}
+                />
+                <p>{remainingChars}/50</p>
+              </div>
+              <div>
+                <h2>Create your description</h2>
+                <p>Share some special points make your spot unique</p>
+                <textarea
+                  value={inputDescription}
+                  onChange={(e) => handleOnChange(e, setInputDescription)}
+                />
+              </div>
+              <div>
+                <h2>Set your price</h2>
+                <p>You can change it at anytime</p>
+                <div>
+                  <button onClick={decreasePrice}>
+                    <span>
+                      <i className="fa-solid fa-minus"></i>
+                    </span>
+                  </button>
+                  <span>{`$${inputPrice}`}</span>
+                  <button onClick={increasePrice}>
+                    <span>
+                      <i className="fa-solid fa-plus"></i>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <ul>
+              {errors.length > 0 &&
+                errors.map((error, idx) => (
+                  <li key={idx}>
+                    <span style={{ color: "red", padding: "5px" }}>
+                      <i className="fa-solid fa-circle-exclamation"></i>
+                    </span>
+                    {error}
+                  </li>
+                ))}
+            </ul>
+            <div className="direct-btns">
+              <button type="Submit" id="next-btn">
+                Confirm Changes
               </button>
             </div>
-          </div>
-        </div>
-        <ul>
-          {errors.length > 0 &&
-            errors.map((error, idx) => (
-              <li key={idx}>
-                <span style={{ color: "red", padding: "5px" }}>
-                  <i className="fa-solid fa-circle-exclamation"></i>
-                </span>
-                {error}
-              </li>
-            ))}
-        </ul>
-        <div className="direct-btns">
-          <button type="Submit" id="next-btn">
-            Confirm Changes
-          </button>
-        </div>
-      </form>
-      <NavLink to="/hosting/spots">
-        <button id="back-btn">back</button>
-      </NavLink>
+          </form>
+          <NavLink to="/hosting/spots">
+            <button id="back-btn">back</button>
+          </NavLink>
+        </>
+      )}
+      {ownerId && userId !== ownerId && <Redirect to="/" />}
     </>
   );
 };
