@@ -13,7 +13,6 @@ const CreateReviewForm = ({ isLoaded }) => {
   const spot = useSelector((state) => state.entities.spot);
   const [starRate, setStarRate] = useState(0);
   const [reviewInput, setReviewInput] = useState("");
-  // const [inputErr, setInputErr] = useState([]);
   const [resErr, setResErrors] = useState([]);
   useEffect(() => {
     dispatch(entitiesActions.loadOneSpotThunk(spotId));
@@ -38,6 +37,7 @@ const CreateReviewForm = ({ isLoaded }) => {
     // history.replace(`/spots/${spotId}`);
     // console.log("submitted");
   };
+
   //if not loged in will redirect now
   //pop up sign in window
 

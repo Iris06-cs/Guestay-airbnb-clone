@@ -10,7 +10,7 @@ const EDIT_REVIEW = "entities/EDID_REVIEW";
 const EDIT_SPOT = "entities/EDID_SPOT";
 const ADD = "entities/ADD";
 const ADD_IMG = "image/ADD";
-
+const ADD_REVIEWIMG = "reviewImage/ADD";
 const loadSpots = (spots) => ({
   type: LOAD,
   spots,
@@ -76,13 +76,19 @@ const addSpotImg = (image, spotId) => ({
   image,
   spotId,
 });
+const addReviewImg = (url, reviewId) => ({
+  type: ADD_REVIEWIMG,
+  url,
+  reviewId,
+});
 const removeSpotImg = (imgId) => ({
   type: REMOVE_IMAGE,
   imgId,
 });
-const removeReviewImg = (imgId) => ({
+const removeReviewImg = (imgId, reviewId) => ({
   type: REMOVE_REVIEWIMG,
   imgId,
+  reviewId,
 });
 //thunks
 export const restoreSpots = () => async (dispatch) => {
@@ -118,7 +124,7 @@ export const loadOneSpotThunk = (spotId) => async (dispatch) => {
   const res = await csrfFetch(`/api/spots/${spotId}`);
   const spot = await res.json();
   dispatch(loadSpot(spot));
-  return spot;
+  return res;
 };
 // export const loadOneReviewThunk = (reviewId) => async (dispatch) => {
 //   const res = await csrfFetch(`/api/reviews/${reviewId}`);
@@ -218,12 +224,21 @@ export const deleteSpotImg = (imgId) => async (dispatch) => {
   dispatch(removeSpotImg(imgId));
   return msg;
 };
-export const deleteReviewImg = (reviewImg) => async (dispatch) => {
-  const res = await csrfFetch(`/api/review-images/${reviewImg}`, {
+export const addReviewImgThunk = (reviewId, image) => async (dispatch) => {
+  const res = await csrfFetch(`/api/reviews/${reviewId}/images`, {
+    method: "POST",
+    body: JSON.stringify(image),
+  });
+  const data = await res.json();
+  dispatch(addReviewImg(data, reviewId));
+  return data;
+};
+export const deleteReviewImg = (imgId, reviewId) => async (dispatch) => {
+  const res = await csrfFetch(`/api/review-images/${imgId}`, {
     method: "DELETE",
   });
   const msg = await res.json();
-  dispatch(removeReviewImg(reviewImg));
+  dispatch(removeReviewImg(imgId, reviewId));
   return msg;
 };
 const initialSpots = {};
@@ -286,10 +301,22 @@ const entitiesReducer = (state = initialSpots, action) => {
       return newState;
     case REMOVE_REVIEWIMG:
       newState = updateObject({}, state);
-      const reviewImg = newState.userReviews.ReviewImages.filter(
-        (img) => img.id === action.imgId
-      );
-      newState.userReviews.ReviewImages = [...imges];
+
+      const reviewImg = newState.userReviews[
+        Number(action.reviewId)
+      ].ReviewImages.filter((img) => img.id === action.imgId);
+      newState.userReviews[Number(action.reviewId)].ReviewImages = [
+        ...reviewImg,
+      ];
+      return newState;
+    case ADD_REVIEWIMG:
+      newState = updateObject({}, state);
+      if (
+        newState.userReviews.ReviewImages === "Does not have any review images"
+      )
+        newState.userReviews.ReviewImages = [action.image];
+      console.log(newState.userReviews.ReviewImages);
+      //  else newState.userReviews.ReviewImages.push(action.image);
       return newState;
     case ADD_IMG: //under one spot==>userspots update both,spotID
       newState = updateObject({}, state);

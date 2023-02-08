@@ -6,9 +6,10 @@ import { useHistory, Redirect, NavLink } from "react-router-dom";
 import * as entitiesActions from "../../../store/entities";
 import defaultImg from "../../../utils/handleImageError";
 import demoSpotImg from "../../../images/demoSpotImg.png";
+import LoginFormModal from "../../LoginFormModal";
 const AddSpotPhoto = ({ isLoaded }) => {
   const dispatch = useDispatch();
-  const history = useHistory();
+
   const { spotId } = useParams();
   const user = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.entities.spot);
@@ -21,11 +22,12 @@ const AddSpotPhoto = ({ isLoaded }) => {
   const [validate, setValidate] = useState([]);
   const [isadded, setIsAdded] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [owner, setOwner] = useState("");
+  const [userId, setUserId] = useState("");
+  const [reqLogin, setReqLogin] = useState(true);
   //fetch spot image
   useEffect(() => {
-    dispatch(entitiesActions.loadOneSpotThunk(spotId))
-      .then(() => {})
-      .catch(async (res) => {});
+    dispatch(entitiesActions.loadOneSpotThunk(spotId)).then().catch();
   }, [dispatch, spotId, isadded, isDeleted]);
   //update
   useEffect(() => {
@@ -33,10 +35,11 @@ const AddSpotPhoto = ({ isLoaded }) => {
       setImges([...spot.SpotImages]);
       const preview = spot.SpotImages.findLast((img) => img.preview === true);
       setSpotName(spot.name);
-
+      setOwner(spot.ownerId);
       if (preview) setPreviewImg(preview.url);
     }
-  }, [spot]);
+    if (user) setUserId(user.id);
+  }, [spot, user]);
 
   const handleOnChange = (e, callback) => {
     callback(e.target.value);
@@ -45,7 +48,10 @@ const AddSpotPhoto = ({ isLoaded }) => {
     e.preventDefault();
     dispatch(entitiesActions.deleteSpotImg(imgId))
       .then((res) => setIsDeleted((prev) => !prev))
-      .catch();
+      .catch(async (res) => {
+        const data = await res.json();
+        console.log(data);
+      });
   };
   const submitImg = (e) => {
     e.preventDefault();
@@ -62,14 +68,17 @@ const AddSpotPhoto = ({ isLoaded }) => {
         if (data && data.errors) {
           setValidate(data.errors);
         }
-        // console.log(data);
       });
     setUrl("");
     setIsPreview(false);
     setIsAdded((prev) => !prev);
   };
-  if (isLoaded && !user) return <Redirect to="/" />;
 
+  if (isLoaded && !user) {
+    return <LoginFormModal />;
+  }
+  //stay on the page after login???
+  // if (isLoaded && owner && owner !== userId) return <Redirect to="/" />;
   return (
     <>
       {/* preview img section */}
