@@ -5,10 +5,11 @@ import * as sessionActions from "../../store/session";
 import OpenModalMenuItem from "./OpenModalMenuItem";
 import SignupFormModal from "../SignupFormModal";
 import LoginFormModal from "../LoginFormModal";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 const ProfileButton = ({ sessionUser }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const dropdownRef = useRef();
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -35,6 +36,7 @@ const ProfileButton = ({ sessionUser }) => {
     e.preventDefault();
     dispatch(sessionActions.logoutThunk());
     closeDropdown();
+    history.push("/");
   };
   const demoUserLogin = () => {
     const credential = {

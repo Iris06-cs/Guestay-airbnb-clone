@@ -5,9 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import * as entitiesActions from "../../../store/entities";
 import defaultImg from "../../../utils/handleImageError";
 import demoSpotImg from "../../../images/demoSpotImg.png";
+import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
+import LoginFormModal from "../../LoginFormModal";
+
 const UserSpot = ({ isLoaded }) => {
   const history = useHistory();
   const dispatch = useDispatch();
+
   const { spotId } = useParams();
   const user = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.entities.spot);
@@ -24,11 +28,15 @@ const UserSpot = ({ isLoaded }) => {
   const [errors, setErrors] = useState([]);
   const [isSubmited, setIsSubmited] = useState(false);
   const [remainingChars, setRemainingChars] = useState(50);
-  const spotProps = {};
   const [spotDetail, setSpotDetail] = useState("");
+  const [ownerId, setOwnerId] = useState("");
+  const [isOwner, setIsOwner] = useState(false);
   useEffect(() => {
-    dispatch(entitiesActions.loadOneSpotThunk(spotId)).then().catch();
+    dispatch(entitiesActions.loadOneSpotThunk(spotId))
+      .then()
+      .catch(async (res) => console.log(res));
   }, [dispatch, spotId]);
+
   useEffect(() => {
     if (spot) {
       //   setInputStreet(spot.address);
@@ -40,21 +48,40 @@ const UserSpot = ({ isLoaded }) => {
       //   setInputName(spot.name);
       //   setInputDescription(spot.description);
       //   setInputPrice(Number(spot.price));
+
       setSpotDetail({ ...spot });
     }
+    if (user) set;
   }, [spot]);
 
   useEffect(() => {
     if (spotDetail) {
-      setInputStreet(spotDetail.address);
-      setInputCity(spotDetail.city);
-      setInputState(spotDetail.state);
-      setInputCountry(spotDetail.country);
-      setInputLat(spotDetail.lat);
-      setInputLng(spotDetail.lng);
-      setInputName(spotDetail.name);
-      setInputDescription(spotDetail.description);
-      setInputPrice(Number(spotDetail.price));
+      const {
+        id,
+        ownerId,
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price,
+        numReviews,
+        avgStarRating,
+        SpotImages,
+      } = spotDetail;
+      setInputStreet(address);
+      setInputCity(city);
+      setInputState(state);
+      setInputCountry(country);
+      setInputLat(lat);
+      setInputLng(lng);
+      setInputName(name);
+      setInputDescription(description);
+      setInputPrice(Number(price));
+      setOwnerId(ownerId);
     }
   }, [spotDetail]);
 
@@ -106,9 +133,17 @@ const UserSpot = ({ isLoaded }) => {
         })
     );
   };
-  //no session user after loaded-->home
-  if (isLoaded && !user) return <Redirect to="/" />;
-
+  //if no user logged in ==>login page
+  if (isLoaded && !user)
+    return (
+      <>
+        <h1>Please Login</h1>
+        <LoginFormModal />
+      </>
+    );
+  // user logged in but not owner==>home page
+  //   if (isLoaded && user && user.id !== ownerId) return <Redirect to="/" />;
+  console.log(user.id === ownerId);
   return (
     <>
       <h1>{inputName}</h1>
@@ -119,15 +154,15 @@ const UserSpot = ({ isLoaded }) => {
             Edit
           </button>
         </NavLink>
-        <div className="spot-imges">
-          {!spotDetail &&
-            typeof spotDetail.SpotImages === "string" &&
-            defaultImg("", demoSpotImg, "spot-img", "spot")}
-          {spotDetail &&
-            spotDetail.SpotImages.map((img) =>
-              defaultImg(img.url, demoSpotImg, "spot-img", "spot", img.id)
-            )}
-        </div>
+        {spotDetail && (
+          <div className="spot-imges">
+            {typeof spotDetail.SpotImages === "string"
+              ? defaultImg("", demoSpotImg, "spot-img", "spot")
+              : spotDetail.SpotImages.map((img) =>
+                  defaultImg(img.url, demoSpotImg, "spot-img", "spot", img.id)
+                )}
+          </div>
+        )}
       </div>
 
       <form className="Create-spot-form" onSubmit={handleFormSubmit}>
