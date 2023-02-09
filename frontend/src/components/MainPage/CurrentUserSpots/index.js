@@ -21,14 +21,14 @@ const CurrentUserSpots = ({ isLoaded }) => {
       .then()
       .catch(async (res) => {
         const data = await res.json();
-        authErr(data, setReqLogin);
+        // authErr(data, setReqLogin);
       });
-  }, [dispatch, ischanged]);
-  useEffect(() => {
-    if (user) setReqLogin(false);
-  }, [user]);
+  }, [dispatch, ischanged, user]);
+  // useEffect(() => {
+  //   if (user) setReqLogin(false);
+  // }, [user]);
   //if no user logged in ==>login page, if logout-->home
-  if (isLoaded && reqLogin)
+  if (isLoaded && !user)
     return (
       <>
         <LoginFormModal />

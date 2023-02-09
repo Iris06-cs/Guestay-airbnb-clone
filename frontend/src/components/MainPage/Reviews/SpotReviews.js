@@ -6,12 +6,14 @@ import defaultImg from "../../../utils/handleImageError";
 import multipleGenerator from "../../../utils/multipleGenerator";
 import demoSpotImg from "../../../images/demoSpotImg.png";
 const SpotReviews = (props) => {
+  const dispatch = useDispatch();
   const { spotId } = useParams();
   const { avgStarRating, numReviews, reviewInfo } = props;
-  const dispatch = useDispatch();
+
   const user = useSelector((state) => state.session.user);
   const reviews = Object.values(reviewInfo);
   const spot = useSelector((state) => state.entities.spot);
+
   useEffect(() => {
     dispatch(entitiesActions.loadOneSpotThunk(spotId))
       .then()
@@ -45,7 +47,7 @@ const SpotReviews = (props) => {
   return (
     <>
       <div className="spot-reviews">
-        <p>
+        <p id="review-title">
           <span>
             <i className="fa-solid fa-star"></i>
           </span>
@@ -56,7 +58,7 @@ const SpotReviews = (props) => {
           {user && <p>{user.firstName}</p>}
           <ul>
             {multipleGenerator(5).map((num) => (
-              <li key={num}>
+              <li key={num} style={{ display: "inline" }}>
                 <label>
                   <span style={{ color: "white", backgroundColor: "grey" }}>
                     <i className="fa-solid fa-star"></i>
@@ -69,7 +71,7 @@ const SpotReviews = (props) => {
               </li>
             ))}
           </ul>
-          {user && user.id !== spot.ownerId && (
+          {user && spot && user.id !== spot.ownerId && (
             <NavLink exact to={`/spots/${spotId}/reviews/new`}>
               Start your review
             </NavLink>
@@ -88,7 +90,7 @@ const SpotReviews = (props) => {
               User,
               ReviewImages,
             }) => (
-              <li key={id}>
+              <li key={id} className="reviews-list">
                 <p>{User.firstName}</p>
                 <p>
                   {converData(updatedAt).month} &nbsp;&nbsp;

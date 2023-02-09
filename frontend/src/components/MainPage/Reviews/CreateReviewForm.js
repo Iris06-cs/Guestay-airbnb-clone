@@ -44,17 +44,6 @@ const CreateReviewForm = ({ isLoaded }) => {
   if (isLoaded && !user) return <Redirect to="/" />;
   return (
     <>
-      <ul className="validate-errs">
-        {resErr.length > 0 &&
-          resErr.map((err) => (
-            <li key={err}>
-              <span style={{ color: "red", padding: "5px" }}>
-                <i className="fa-solid fa-circle-exclamation"></i>
-              </span>
-              {err}
-            </li>
-          ))}
-      </ul>
       {spot && <h1>{spot.name}</h1>}
       {user && <p>{user.firstName}</p>}
       <form className="add-spot-review" onSubmit={handleRateSubmit}>
@@ -99,6 +88,17 @@ const CreateReviewForm = ({ isLoaded }) => {
           value={reviewInput}
           onChange={(e) => setReviewInput(e.target.value)}
         />
+        <ul className="validate-errs">
+          {resErr.length > 0 &&
+            resErr.map((err) => (
+              <li key={err}>
+                <span style={{ color: "red", padding: "5px" }}>
+                  <i className="fa-solid fa-circle-exclamation"></i>
+                </span>
+                {err}
+              </li>
+            ))}
+        </ul>
         <div>
           <button type="submit">Submit</button>
         </div>

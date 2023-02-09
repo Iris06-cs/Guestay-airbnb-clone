@@ -315,7 +315,7 @@ const entitiesReducer = (state = initialSpots, action) => {
         newState.userReviews.ReviewImages === "Does not have any review images"
       )
         newState.userReviews.ReviewImages = [action.image];
-      console.log(newState.userReviews.ReviewImages);
+
       //  else newState.userReviews.ReviewImages.push(action.image);
       return newState;
     case ADD_IMG: //under one spot==>userspots update both,spotID

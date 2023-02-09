@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { useHistory, Redirect, NavLink } from "react-router-dom";
-// import * as spotsActions from "../../../store/spotsSlice/spotsReducer";
+
 import * as entitiesActions from "../../../store/entities";
 import defaultImg from "../../../utils/handleImageError";
 import demoSpotImg from "../../../images/demoSpotImg.png";
 import LoginFormModal from "../../LoginFormModal";
+// import "./SpotImages.css";
 const AddSpotPhoto = ({ isLoaded }) => {
   const dispatch = useDispatch();
 
@@ -20,15 +20,15 @@ const AddSpotPhoto = ({ isLoaded }) => {
   const [imges, setImges] = useState("");
   const [spotName, setSpotName] = useState("");
   const [validate, setValidate] = useState([]);
-  const [isadded, setIsAdded] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
+  const [isChanged, setIsChanged] = useState(0);
+
   const [owner, setOwner] = useState("");
   const [userId, setUserId] = useState("");
   const [reqLogin, setReqLogin] = useState(true);
   //fetch spot image
   useEffect(() => {
     dispatch(entitiesActions.loadOneSpotThunk(spotId)).then().catch();
-  }, [dispatch, spotId, isadded, isDeleted]);
+  }, [dispatch, spotId, isChanged, user]);
   //update
   useEffect(() => {
     if (spot && typeof spot.SpotImages !== "string") {
@@ -39,7 +39,7 @@ const AddSpotPhoto = ({ isLoaded }) => {
       if (preview) setPreviewImg(preview.url);
     }
     if (user) setUserId(user.id);
-  }, [spot, user]);
+  }, [spot, user, isChanged]);
 
   const handleOnChange = (e, callback) => {
     callback(e.target.value);
@@ -47,7 +47,7 @@ const AddSpotPhoto = ({ isLoaded }) => {
   const handleDelImg = (e, imgId) => {
     e.preventDefault();
     dispatch(entitiesActions.deleteSpotImg(imgId))
-      .then((res) => setIsDeleted((prev) => !prev))
+      .then((res) => setIsChanged((prev) => prev + 1))
       .catch(async (res) => {
         const data = await res.json();
         console.log(data);
@@ -69,9 +69,9 @@ const AddSpotPhoto = ({ isLoaded }) => {
           setValidate(data.errors);
         }
       });
+    setIsChanged((prev) => prev + 1);
     setUrl("");
     setIsPreview(false);
-    setIsAdded((prev) => !prev);
   };
 
   if (isLoaded && !user) {

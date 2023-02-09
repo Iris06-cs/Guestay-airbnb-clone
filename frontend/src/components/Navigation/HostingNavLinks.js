@@ -29,14 +29,14 @@ const HostingNavLinks = () => {
       >
         Create spot
       </NavLink>
-      <NavLink
+      {/* <NavLink
         className={hostNavs}
         style={setStyle}
         exact
         to="/hosting/bookings"
       >
         Bookings
-      </NavLink>
+      </NavLink> */}
     </div>
   );
 };

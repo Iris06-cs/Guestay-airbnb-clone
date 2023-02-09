@@ -33,10 +33,8 @@ const UserSpot = ({ isLoaded }) => {
   const [photoes, setPhotoes] = useState("");
   //load spot data and reload update when edit submited
   useEffect(() => {
-    dispatch(entitiesActions.loadOneSpotThunk(spotId))
-      .then()
-      .catch(async (res) => console.log(res));
-  }, [dispatch, spotId, isSubmited]);
+    dispatch(entitiesActions.loadOneSpotThunk(spotId));
+  }, [dispatch, spotId, isSubmited, user]);
 
   useEffect(() => {
     if (spot) {
@@ -132,6 +130,8 @@ const UserSpot = ({ isLoaded }) => {
         <LoginFormModal />
       </>
     );
+  //if login user is not owner==>home
+  if (ownerId && userId && userId !== ownerId) return <Redirect to="/" />;
 
   return (
     <div className="user-spot-page">
@@ -285,7 +285,6 @@ const UserSpot = ({ isLoaded }) => {
           </NavLink>
         </>
       )}
-      {ownerId && userId !== ownerId && <Redirect to="/" />}
     </div>
   );
 };

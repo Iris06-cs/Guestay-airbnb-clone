@@ -2,19 +2,24 @@
 .spots-cards {
   display: flex;
   justify-content: flex-start;
+  align-items: center;
   flex-wrap: wrap;
-  max-width: 90%;
+  width: 90%;
   margin: 0 auto;
   padding: 0;
-  column-gap: 20px;
+  /* column-gap: 20px; */
 }
 /* li photo card */
 .spot-photo-card {
   display: grid;
   /* border: solid rgb(72, 0, 255) 2px; */
-  width: 268px;
+  width: 260px;
+  /* flex-basis: 268px; */
+  flex-grow: 0;
   border-radius: 10px;
-  margin: 1em auto;
+  margin: 1em calc(9% / 12);
+  /* justify-self: start; */
+  flex-shrink: 1;
 }
 .spot-photo-img {
   /* border: solid red 2px; */
