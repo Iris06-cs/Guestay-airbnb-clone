@@ -7,6 +7,7 @@ import * as entitiesActions from "../../../store/entities";
 import PageNotFound from "../PageNotFound";
 import defaultImg from "../../../utils/handleImageError";
 import "./SpotDetail.css";
+import multipleGenerator from "../../../utils/multipleGenerator";
 const SpotDetail = ({ isLoaded }) => {
   const dispatch = useDispatch();
   const { spotId } = useParams();
@@ -35,13 +36,20 @@ const SpotDetail = ({ isLoaded }) => {
   } = spotInfo;
 
   let previewImg;
-  let otherImges;
+  let otherImges = [];
   if (spotInfo.id) {
-    if (typeof SpotImages !== "string")
+    //Spot has img
+    if (typeof SpotImages !== "string") {
+      //preview the last added preview==true
       previewImg = SpotImages.findLast((img) => img.preview === true);
+      if (previewImg)
+        otherImges = SpotImages.filter((img) => img.id !== previewImg.id);
+    }
+
     if (!previewImg) previewImg = {};
-    if (SpotImages.length && previewImg)
-      otherImges = SpotImages.filter((img) => img.id !== previewImg.id);
+    console.log(typeof SpotImages, "SpotImg");
+    // if (SpotImages.length && previewImg)
+    //   otherImges = SpotImages.filter((img) => img.id !== previewImg.id);
   }
 
   useEffect(() => {
@@ -86,14 +94,14 @@ const SpotDetail = ({ isLoaded }) => {
                   {avgStarRating === "Spot has no review yet"
                     ? "New"
                     : spot.avgRating}
-                  &#183;<u>{numReviews} reviews</u>.
+                  &#183;{numReviews} reviews.
                   <span>
                     <i className="fa-solid fa-medal"></i>
                   </span>
-                  .<u>{`${city},${state},${country}`}</u>
+                  &#183;{`${city},${state},${country}`}
                 </p>
               </div>
-              <div className="top-right">
+              {/* <div className="top-right">
                 <p>
                   <span>
                     <i className="fa-solid fa-arrow-up-from-bracket"></i>
@@ -108,7 +116,7 @@ const SpotDetail = ({ isLoaded }) => {
                   &nbsp;&nbsp;
                   <u>Save</u>
                 </p>
-              </div>
+              </div> */}
             </div>
             <div className="photo-section-main">
               {/* {defaultImg(
@@ -127,7 +135,7 @@ const SpotDetail = ({ isLoaded }) => {
                 />
               </div>
               <div className="other-img">
-                {SpotImages.length &&
+                {/* {SpotImages.length &&
                   otherImges.map((img) => (
                     <div key={img.id}>
                       {defaultImg(
@@ -137,7 +145,23 @@ const SpotDetail = ({ isLoaded }) => {
                         "spot"
                       )}
                     </div>
-                  ))}
+                  ))} */}
+                {multipleGenerator(4).map((idx) =>
+                  otherImges[idx] && otherImges[idx].url !== previewImg.url ? (
+                    <div key={otherImges[idx].id}>
+                      {defaultImg(
+                        otherImges[idx].url,
+                        demoSpotImg,
+                        "detail-spot-img",
+                        "spot"
+                      )}
+                    </div>
+                  ) : (
+                    <div>
+                      {defaultImg("", demoSpotImg, "detail-spot-img", "spot")}
+                    </div>
+                  )
+                )}
               </div>
             </div>
             <div className="middle-section">
@@ -145,7 +169,12 @@ const SpotDetail = ({ isLoaded }) => {
                 <h2>Spot hosted by {Owner.firstName}</h2>
               </div>
               <div id="description">
-                <p>Self Checkin</p>
+                <p>
+                  <span>
+                    <i className="fa-regular fa-square-check"></i>
+                  </span>
+                  &nbsp;Self Checkin
+                </p>
                 <p>Greate Location</p>
                 <p>
                   <i className="fa-solid fa-clock-rotate-left"></i> &nbsp;Free
@@ -159,13 +188,20 @@ const SpotDetail = ({ isLoaded }) => {
             <div className="booking-side-card">
               <h3>${price} night</h3>
               <p>
+                {/* <span> */}
+                {/* <i className="fa-solid fa-star"></i>
+                </span>
+                {avgStarRating === "Spot has no review yet"
+                  ? "New"
+                  : spot.avgRating}
+                &#183;<u>{numReviews} reviews</u> */}
                 <span>
                   <i className="fa-solid fa-star"></i>
                 </span>
                 {avgStarRating === "Spot has no review yet"
                   ? "New"
-                  : spot.avgRating}
-                &#183;<u>{numReviews} reviews</u>
+                  : avgStarRating}
+                &#183;{numReviews} reviews
               </p>
               {/* <form className="booking-from">
                 <label htmlFor="check-in-date">CHECK-IN</label>

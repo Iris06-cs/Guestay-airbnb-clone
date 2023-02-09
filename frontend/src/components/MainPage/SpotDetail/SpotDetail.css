@@ -72,7 +72,6 @@
 .detail-spot-img {
   width: 276px;
   height: 280px;
-  border: none;
 }
 .middle-section {
   width: 60%;
@@ -89,7 +88,7 @@
   position: absolute;
   right: 20.6%;
   top: 820px;
-  width: 17%;
+  width: 22%;
   font-size: 25px;
 }
 #host-info {

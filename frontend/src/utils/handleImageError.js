@@ -1,4 +1,4 @@
-const defaultImg = (srcUrl, defaulSrc, className, altName, key = "") => {
+const defaultImg = (srcUrl = "", defaulSrc, className, altName, key = "") => {
   const handleImgOnError = (e) => {
     e.target.src = defaulSrc;
     e.target.onerror = null;
@@ -9,7 +9,6 @@ const defaultImg = (srcUrl, defaulSrc, className, altName, key = "") => {
     "Spot has no image yet",
     "Does not have a preview image",
     "No ReviewImages",
-    "",
   ];
   if (invalidSrc.includes(srcUrl) || myFakeUrl.test(srcUrl))
     return (

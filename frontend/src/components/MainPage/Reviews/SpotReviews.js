@@ -52,7 +52,8 @@ const SpotReviews = (props) => {
             <i className="fa-solid fa-star"></i>
           </span>
           {avgStarRating === "Spot has no review yet" ? "New" : avgStarRating}
-          &#183;<u>{numReviews} reviews</u>
+          &#183;{numReviews} reviews
+          {/* <u>{numReviews} reviews</u> */}
         </p>
         <div className="add-review-link">
           {user && <p>{user.firstName}</p>}
@@ -60,7 +61,7 @@ const SpotReviews = (props) => {
             {multipleGenerator(5).map((num) => (
               <li key={num} style={{ display: "inline" }}>
                 <label>
-                  <span style={{ color: "white", backgroundColor: "grey" }}>
+                  <span style={{ color: "black", backgroundColor: "white" }}>
                     <i className="fa-solid fa-star"></i>
                   </span>
                 </label>
