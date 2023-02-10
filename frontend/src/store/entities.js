@@ -299,8 +299,11 @@ const entitiesReducer = (state = initialSpots, action) => {
       return newState;
     case REMOVE_USERREVIEW: //delete spot review current user id
       newState = updateObject({}, state);
-      delete newState.userReviews[action.id];
-      return newState;
+      if (newState.userReviews) delete newState.userReviews[action.id];
+      if (newState.spotReviews) delete newState.spotReviews[action.id];
+      if (newState.spotReview && newState.spotReview.id === Number(action.id))
+        delete newState.spotReview;
+      return { ...newState };
     case REMOVE_IMAGE:
       newState = updateObject({}, state);
       const imges = newState.spot.SpotImages.filter(

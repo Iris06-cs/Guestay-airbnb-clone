@@ -9,7 +9,7 @@ import demoSpotImg from "../../../images/demoSpotImg.png";
 const SpotReviews = (props) => {
   const dispatch = useDispatch();
   const { spotId } = useParams();
-  const { avgStarRating, numReviews, reviewInfo } = props;
+  const { avgStarRating, numReviews, reviewInfo, setIsChanged } = props;
 
   const user = useSelector((state) => state.session.user);
   const reviews = Object.values(reviewInfo);
@@ -19,13 +19,16 @@ const SpotReviews = (props) => {
   const [clickEdit, setClickEdit] = useState(false);
   const [editBtn, setEditBtn] = useState("Edit");
   const [isFocus, setIsFocus] = useState(false);
-  const [isSubmited, setIsSubmited] = useState(false);
+  // const [isDeleted, setIsDeleted] = useState(false);
+  const [targetReviewId, setTargetReviewId] = useState("");
+  const [cancel, setCancel] = useState(false);
+  const [btnText, setBtnText] = useState("Delete");
   // useEffect(() => {
   //   dispatch(entitiesActions.loadOneSpotThunk(spotId))
   //     .then()
   //     .catch(async (res) => {});
   //   dispatch(entitiesActions.loadSpotReviewsThunk(spotId));
-  // }, [dispatch, spotId, isSubmited]);
+  // }, [dispatch, spotId, isDeleted]);
   //2023-01-31 23:38:52
   const converData = (dateStr) => {
     let year = dateStr.split("-")[0];
@@ -49,7 +52,7 @@ const SpotReviews = (props) => {
     return { year, month };
   };
   let reviewName = "userRate " + (clickEdit ? "" : "hidden");
-  console.log(rateStar);
+
   const handleClickEdit = (e) => {
     e.preventDefault();
     if (editBtn === "Edit") {
@@ -69,15 +72,26 @@ const SpotReviews = (props) => {
       dispatch(entitiesActions.editReviewThunk(reviewId, newReview));
       setClickEdit(false);
       setEditBtn("Edit");
-      setIsSubmited(true);
+      // setIsSubmited(true);
+      setIsChanged((prev) => prev + 1);
     }
   };
+
   const handleDeleteReview = (e) => {
     e.preventDefault();
-    const reviewId = e.target.name;
-    dispatch(entitiesActions.deleteReviewThunk(reviewId));
+    setTargetReviewId(e.target.name);
+
+    if (btnText === "Delete") {
+      setBtnText("Confirm");
+      setCancel(true);
+    }
+    if (btnText === "Confirm") {
+      dispatch(entitiesActions.deleteReviewThunk(targetReviewId));
+      setCancel(false);
+      // setIsDeleted(true);
+      setIsChanged((prev) => prev + 1);
+    }
   };
-  console.log(rateStar);
   return (
     <>
       <div className="spot-reviews">
@@ -248,12 +262,30 @@ const SpotReviews = (props) => {
                       >
                         {editBtn}
                       </button>
-                      <button name={id} onClick={(e) => handleDeleteReview(e)}>
-                        Delete
+                      <button
+                        name={id}
+                        className="delete-review-btn"
+                        onClick={(e) => handleDeleteReview(e)}
+                      >
+                        {btnText}
                       </button>
+                      {cancel && (
+                        <button
+                          name={id}
+                          onClick={(e) => {
+                            setCancel(false);
+                            setBtnText("Delete");
+                            // setIsDeleted(false);
+                          }}
+                          className="cancel-delete-review"
+                        >
+                          Cancel
+                        </button>
+                      )}
                     </>
                   )}
                 </form>
+
                 {/* <EditReviewSpotPage
                   userId={user.id}
                   stars={stars}

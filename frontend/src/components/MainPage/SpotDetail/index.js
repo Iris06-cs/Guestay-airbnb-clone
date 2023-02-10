@@ -15,10 +15,12 @@ const SpotDetail = ({ isLoaded }) => {
   const user = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.entities.spot);
   const reviews = useSelector((state) => state.entities.spotReviews);
-
+  console.log(reviews, "not change");
   const [spotInfo, setSpotInfo] = useState("");
   const [reviewInfo, setReviewInfo] = useState("");
   const [resErrs, setResErrs] = useState([]);
+  // const [isDeleted, setIsDeleted] = useState(false);
+  const [isChanged, setIsChanged] = useState(0);
   const {
     // id,
     // ownerId,
@@ -62,13 +64,14 @@ const SpotDetail = ({ isLoaded }) => {
         if (data.statusCode === 404) setResErrs([data.message]);
       });
     dispatch(entitiesActions.loadSpotReviewsThunk(spotId))
-      .then()
+      // .then((res) => setIsDeleted(false))
+      .then((res) => setIsChanged(0))
       .catch(async (res) => {
         const data = await res.json();
         if (data.statusCode === 404) setResErrs([data.message]);
       });
-  }, [spotId, dispatch]);
-
+  }, [spotId, dispatch, isChanged]);
+  console.log(isChanged, "delete state");
   useEffect(() => {
     if (spot) {
       setSpotInfo({ ...spot });
@@ -223,6 +226,8 @@ const SpotDetail = ({ isLoaded }) => {
         avgStarRating={avgStarRating}
         numReviews={numReviews}
         reviewInfo={reviewInfo}
+        // setIsDeleted={setIsDeleted}
+        setIsChanged={setIsChanged}
         // ownerId={ownerId}
         // spotId={spotId}
       />
