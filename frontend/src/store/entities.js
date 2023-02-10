@@ -76,9 +76,9 @@ const addSpotImg = (image, spotId) => ({
   image,
   spotId,
 });
-const addReviewImg = (url, reviewId) => ({
+const addReviewImg = (image, reviewId) => ({
   type: ADD_REVIEWIMG,
-  url,
+  image,
   reviewId,
 });
 const removeSpotImg = (imgId) => ({
@@ -313,21 +313,42 @@ const entitiesReducer = (state = initialSpots, action) => {
       return newState;
     case REMOVE_REVIEWIMG:
       newState = updateObject({}, state);
-
-      const reviewImg = newState.userReviews[
-        Number(action.reviewId)
-      ].ReviewImages.filter((img) => img.id === action.imgId);
-      newState.userReviews[Number(action.reviewId)].ReviewImages = [
-        ...reviewImg,
-      ];
+      if (newState.userReviews) {
+        const reviewImg = newState.userReviews[
+          Number(action.reviewId)
+        ].ReviewImages.filter((img) => img.id === action.imgId);
+        newState.userReviews[Number(action.reviewId)].ReviewImages = [
+          ...reviewImg,
+        ];
+      }
+      if (newState.spotReviews) {
+        const reviewImg = newState.spotReviews[
+          Number(action.reviewId)
+        ].ReviewImages.filter((img) => img.id === action.imgId);
+        newState.spotReviews[Number(action.reviewId)].ReviewImages = [
+          ...reviewImg,
+        ];
+      }
       return newState;
     case ADD_REVIEWIMG:
       newState = updateObject({}, state);
       if (
-        newState.userReviews.ReviewImages === "Does not have any review images"
+        newState.userReviews &&
+        typeof newState.userReviews[action.reviewId].ReviewImages === "string"
       )
         newState.userReviews.ReviewImages = [action.image];
+      else if (newState.userReviews)
+        newState.userReviews[action.reviewId].ReviewImages.push(action.image);
 
+      if (
+        newState.spotReviews &&
+        typeof newState.spotReviews[action.reviewId].ReviewImages === "string"
+      )
+        newState.spotReviews[action.reviewId].ReviewImages = [action.image];
+      else if (newState.spotReviews) {
+        // console.log(newState.spotReviews);
+        newState.spotReviews[action.reviewId].ReviewImages.push(action.image);
+      }
       //  else newState.userReviews.ReviewImages.push(action.image);
       return newState;
     case ADD_IMG: //under one spot==>userspots update both,spotID

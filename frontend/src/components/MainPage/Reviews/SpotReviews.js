@@ -5,6 +5,8 @@ import * as entitiesActions from "../../../store/entities";
 import defaultImg from "../../../utils/handleImageError";
 import multipleGenerator from "../../../utils/multipleGenerator";
 import demoSpotImg from "../../../images/demoSpotImg.png";
+import AddReviewImg from "./AddReviewImg";
+import DeleteReviewImg from "./DeleteReviewImg";
 // import EditReviewSpotPage from "./EditReviewSpotPage";
 const SpotReviews = (props) => {
   const dispatch = useDispatch();
@@ -23,6 +25,7 @@ const SpotReviews = (props) => {
   const [targetReviewId, setTargetReviewId] = useState("");
   const [cancel, setCancel] = useState(false);
   const [btnText, setBtnText] = useState("Delete");
+  const [isClicked, setIsClicked] = useState(false);
   // useEffect(() => {
   //   dispatch(entitiesActions.loadOneSpotThunk(spotId))
   //     .then()
@@ -30,6 +33,7 @@ const SpotReviews = (props) => {
   //   dispatch(entitiesActions.loadSpotReviewsThunk(spotId));
   // }, [dispatch, spotId, isDeleted]);
   //2023-01-31 23:38:52
+
   const converData = (dateStr) => {
     let year = dateStr.split("-")[0];
     let month = dateStr.split("-")[1];
@@ -74,6 +78,12 @@ const SpotReviews = (props) => {
       setEditBtn("Edit");
       // setIsSubmited(true);
       setIsChanged((prev) => prev + 1);
+    }
+  };
+  const handleOnClick = (e, stars) => {
+    if (!isClicked) {
+      setRateStar(stars);
+      setIsClicked(true);
     }
   };
 
@@ -215,8 +225,8 @@ const SpotReviews = (props) => {
                           // }}
                           type="radio"
                           value={num + 1}
-                          checked={rateStar === num + 1}
-                          // value={stars}
+                          checked={rateStar === num + 1 || stars === num + 1}
+                          onClick={(e) => handleOnClick(e, stars)}
                         ></input>
                       )}
                       {/* <input
@@ -293,26 +303,37 @@ const SpotReviews = (props) => {
                   user={user}
                 /> */}
                 {/* no photo defaut img */}
-                {typeof ReviewImages === "string"
-                  ? defaultImg(
+                {typeof ReviewImages === "string" ? (
+                  <>
+                    {defaultImg(
                       ReviewImages,
                       demoSpotImg,
                       "review-image",
                       "review"
-                    )
-                  : ReviewImages.map((img) =>
-                      defaultImg(
+                    )}
+                    {/* <button>Add Photo</button> */}
+                  </>
+                ) : (
+                  ReviewImages.map((img) => (
+                    <div key={img}>
+                      {defaultImg(
                         img.url,
                         demoSpotImg,
                         "review-image",
-                        "review",
-                        img.id
-                      )
-                    )}
+                        "review"
+                        // img.id
+                      )}
+                      <DeleteReviewImg
+                        id={id}
+                        imgId={img.id}
+                        setIsChanged={setIsChanged}
+                      />
+                    </div>
+                  ))
+                )}
                 {user && user.id === userId && (
                   <div>
-                    <button>Add Photo</button>
-                    <button>Delete Photo</button>
+                    <AddReviewImg id={id} setIsChanged={setIsChanged} />
                   </div>
                 )}
               </li>
