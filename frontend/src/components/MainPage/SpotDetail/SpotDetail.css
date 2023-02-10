@@ -94,8 +94,17 @@
 #host-info {
   border-bottom: solid rgb(219, 216, 216) 1px;
 }
-#description {
+#feature {
   border-bottom: solid rgb(219, 216, 216) 1px;
+}
+#description {
+}
+.spot-description {
+  display: flex;
+  justify-content: center;
+  border-bottom: solid rgb(219, 216, 216) 1px;
+  flex-direction: column;
+  min-height: 100px;
 }
 .spot-reviews {
   width: 1120px;
@@ -124,4 +133,40 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+}
+.star-option {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+.userRate {
+  align-self: flex-start;
+  margin: 0 auto 5px auto;
+  appearance: none;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  border: 3px solid #e4e3da;
+  transition: 0.2s all linear;
+  position: relative;
+  top: 2px;
+  visibility: visible;
+}
+.userRate:checked {
+  border: 5px solid #e4e3da;
+}
+.userRate.hidden {
+  visibility: hidden;
+}
+.starRate {
+  margin: 0 auto 5px auto;
+  appearance: none;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  border: 3px solid white;
+
+  position: relative;
+  top: 2px;
 }

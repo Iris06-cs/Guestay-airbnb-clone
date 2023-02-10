@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
 import * as entitiesActions from "../../../store/entities";
 import defaultImg from "../../../utils/handleImageError";
 import multipleGenerator from "../../../utils/multipleGenerator";
 import demoSpotImg from "../../../images/demoSpotImg.png";
+// import EditReviewSpotPage from "./EditReviewSpotPage";
 const SpotReviews = (props) => {
   const dispatch = useDispatch();
   const { spotId } = useParams();
@@ -13,14 +14,18 @@ const SpotReviews = (props) => {
   const user = useSelector((state) => state.session.user);
   const reviews = Object.values(reviewInfo);
   const spot = useSelector((state) => state.entities.spot);
-
-  useEffect(() => {
-    dispatch(entitiesActions.loadOneSpotThunk(spotId))
-      .then()
-      .catch(async (res) => {
-        const data = await res.json();
-      });
-  }, [dispatch, spotId]);
+  const [reviewText, setReviewText] = useState("");
+  const [rateStar, setRateStar] = useState(0);
+  const [clickEdit, setClickEdit] = useState(false);
+  const [editBtn, setEditBtn] = useState("Edit");
+  const [isFocus, setIsFocus] = useState(false);
+  const [isSubmited, setIsSubmited] = useState(false);
+  // useEffect(() => {
+  //   dispatch(entitiesActions.loadOneSpotThunk(spotId))
+  //     .then()
+  //     .catch(async (res) => {});
+  //   dispatch(entitiesActions.loadSpotReviewsThunk(spotId));
+  // }, [dispatch, spotId, isSubmited]);
   //2023-01-31 23:38:52
   const converData = (dateStr) => {
     let year = dateStr.split("-")[0];
@@ -43,7 +48,36 @@ const SpotReviews = (props) => {
     month = months[month];
     return { year, month };
   };
-  // console.log(reviews);
+  let reviewName = "userRate " + (clickEdit ? "" : "hidden");
+  console.log(rateStar);
+  const handleClickEdit = (e) => {
+    e.preventDefault();
+    if (editBtn === "Edit") {
+      setClickEdit(true);
+      setEditBtn("Submit");
+    }
+  };
+  const handleIsFocus = (e, review) => {
+    setIsFocus(true);
+    setReviewText(review);
+  };
+  const submitEdit = (e) => {
+    e.preventDefault();
+    if (editBtn === "Submit") {
+      const newReview = { review: reviewText, stars: rateStar };
+      const reviewId = String(e.target.name);
+      dispatch(entitiesActions.editReviewThunk(reviewId, newReview));
+      setClickEdit(false);
+      setEditBtn("Edit");
+      setIsSubmited(true);
+    }
+  };
+  const handleDeleteReview = (e) => {
+    e.preventDefault();
+    const reviewId = e.target.name;
+    dispatch(entitiesActions.deleteReviewThunk(reviewId));
+  };
+  console.log(rateStar);
   return (
     <>
       <div className="spot-reviews">
@@ -72,6 +106,7 @@ const SpotReviews = (props) => {
               </li>
             ))}
           </ul>
+          {/* restric owner to review their own spot&& if user already has a review */}
           {user && spot && user.id !== spot.ownerId && (
             <NavLink exact to={`/spots/${spotId}/reviews/new`}>
               Start your review
@@ -80,25 +115,152 @@ const SpotReviews = (props) => {
         </div>
         <ul className="spot-reviews-list">
           {reviews.map(
-            ({
-              id,
-              userId,
-              spotId,
-              review,
-              stars,
-              createdAt,
-              updatedAt,
-              User,
-              ReviewImages,
-            }) => (
+            (
+              {
+                id,
+                userId,
+                spotId,
+                review,
+                stars,
+                createdAt,
+                updatedAt,
+                User,
+                ReviewImages,
+              },
+              idx
+            ) => (
               <li key={id} className="reviews-list">
                 <p>{User.firstName}</p>
                 <p>
                   {converData(updatedAt).month} &nbsp;&nbsp;
                   {converData(updatedAt).year}
                 </p>
-                <p>{review}</p>
-
+                <form onSubmit={(e) => submitEdit(e)}>
+                  {multipleGenerator(5).map((num) => (
+                    <span
+                      className="star-option"
+                      key={num}
+                      // style={{ display: "inline" }}
+                    >
+                      <label>
+                        {user && user.id !== userId ? (
+                          <span
+                            style={{
+                              color: num + 1 <= stars ? "black" : "#E4E3DA",
+                              backgroundColor: "white",
+                            }}
+                          >
+                            <i
+                              // name={num + 1}
+                              // onClick={(e) => setRateStar(e.target.name)}
+                              className="fa-solid fa-star"
+                            ></i>
+                          </span>
+                        ) : (
+                          <span
+                            style={{
+                              color:
+                                num + 1 <= (rateStar === 0 ? stars : rateStar)
+                                  ? "black"
+                                  : "#E4E3DA",
+                              backgroundColor: "white",
+                            }}
+                          >
+                            <i
+                              // name={num + 1}
+                              // onClick={(e) => setRateStar(e.target.name)}
+                              className="fa-solid fa-star"
+                            ></i>
+                          </span>
+                        )}
+                      </label>
+                      {user && user.id !== userId ? (
+                        <input
+                          className="starRate"
+                          // onChange={(e) => setRateStar(e.target.value)}
+                          name="rating-star"
+                          // style={{
+                          //   appearance: user && user.id === userId ? "" : "none",
+                          // }}
+                          type="radio"
+                          value={num + 1}
+                          // checked={rateStar === num + 1}
+                          // value={stars}
+                        ></input>
+                      ) : (
+                        <input
+                          className={
+                            user && user.id === userId
+                              ? `${reviewName}`
+                              : "starRate"
+                          }
+                          onChange={(e) => setRateStar(e.target.value)}
+                          name="rating-star"
+                          // style={{
+                          //   appearance: user && user.id === userId ? "" : "none",
+                          // }}
+                          type="radio"
+                          value={num + 1}
+                          checked={rateStar === num + 1}
+                          // value={stars}
+                        ></input>
+                      )}
+                      {/* <input
+                        className={
+                          user && user.id === userId
+                            ? `${reviewName}`
+                            : "starRate"
+                        }
+                        onChange={(e) => setRateStar(e.target.value)}
+                        name="rating-star"
+                        // style={{
+                        //   appearance: user && user.id === userId ? "" : "none",
+                        // }}
+                        type="radio"
+                        value={num + 1}
+                        checked={rateStar === num + 1}
+                        // value={stars}
+                      ></input> */}
+                    </span>
+                  ))}
+                  {/* <p>{review}</p> */}
+                  {clickEdit && user && user.id === userId ? (
+                    <textarea
+                      autoFocus
+                      value={isFocus ? reviewText : review}
+                      onChange={(e) => setReviewText(e.target.value)}
+                      onFocus={(e) => handleIsFocus(e, review)}
+                    />
+                  ) : (
+                    <p>{review}</p>
+                  )}
+                  {/* <textarea value={review} onChange={editReviewText} /> */}
+                  {user && user.id === userId && (
+                    <>
+                      <button
+                        name={id}
+                        type="submit"
+                        onClick={(e) =>
+                          editBtn === "Edit"
+                            ? handleClickEdit(e)
+                            : submitEdit(e)
+                        }
+                      >
+                        {editBtn}
+                      </button>
+                      <button name={id} onClick={(e) => handleDeleteReview(e)}>
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </form>
+                {/* <EditReviewSpotPage
+                  userId={user.id}
+                  stars={stars}
+                  review={review}
+                  user={user}
+                /> */}
+                {/* no photo defaut img */}
                 {typeof ReviewImages === "string"
                   ? defaultImg(
                       ReviewImages,
@@ -115,6 +277,12 @@ const SpotReviews = (props) => {
                         img.id
                       )
                     )}
+                {user && user.id === userId && (
+                  <div>
+                    <button>Add Photo</button>
+                    <button>Delete Photo</button>
+                  </div>
+                )}
               </li>
             )
           )}

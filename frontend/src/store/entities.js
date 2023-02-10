@@ -271,10 +271,19 @@ const entitiesReducer = (state = initialSpots, action) => {
       return newState;
     case EDIT_REVIEW:
       newState = updateObject({}, state);
-      newState.userReviews[action.id] = {
-        ...newState.userReviews[action.id],
-        ...action.userReviews,
-      };
+      console.log(action, newState.userReviews);
+      if (newState.userReviews) {
+        newState.userReviews[action.id] = {
+          ...newState.userReviews[action.id],
+          ...action.userReviews,
+        };
+      }
+      if (newState.spotsReviews) {
+        newState.spotReviews[action.id] = {
+          ...newState.spotReviews[action.id],
+          ...action.spotReviews,
+        };
+      }
       return newState;
     case ADD:
       //add a spot--userSpots(edit button) or single spot(in detail page) detail add a review--userReview--current user(not owner)
