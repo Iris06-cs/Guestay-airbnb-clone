@@ -25,7 +25,7 @@ const SpotReviews = (props) => {
   const [targetReviewId, setTargetReviewId] = useState("");
   const [cancel, setCancel] = useState(false);
   const [btnText, setBtnText] = useState("Delete");
-  const [isClicked, setIsClicked] = useState(false);
+  // const [isClicked, setIsClicked] = useState(false);
   // useEffect(() => {
   //   dispatch(entitiesActions.loadOneSpotThunk(spotId))
   //     .then()
@@ -56,7 +56,8 @@ const SpotReviews = (props) => {
     return { year, month };
   };
   let reviewName = "userRate " + (clickEdit ? "" : "hidden");
-
+  let reviewUsers;
+  if (reviews) reviewUsers = reviews.map((review) => review.userId);
   const handleClickEdit = (e) => {
     e.preventDefault();
     if (editBtn === "Edit") {
@@ -71,8 +72,13 @@ const SpotReviews = (props) => {
   const submitEdit = (e) => {
     e.preventDefault();
     if (editBtn === "Submit") {
-      const newReview = { review: reviewText, stars: rateStar };
-      const reviewId = String(e.target.name);
+      const reviewId = e.target.name.split("-")[0];
+      const reviewStar = e.target.name.split("-")[1];
+      const newReview = {
+        review: reviewText,
+        stars: rateStar ? rateStar : reviewStar,
+      };
+
       dispatch(entitiesActions.editReviewThunk(reviewId, newReview));
       setClickEdit(false);
       setEditBtn("Edit");
@@ -80,12 +86,12 @@ const SpotReviews = (props) => {
       setIsChanged((prev) => prev + 1);
     }
   };
-  const handleOnClick = (e, stars) => {
-    if (!isClicked) {
-      setRateStar(stars);
-      setIsClicked(true);
-    }
-  };
+  // const handleOnClick = (e, stars) => {
+  //   if (!isClicked) {
+  //     setRateStar(stars);
+  //     setIsClicked(true);
+  //   }
+  // };
 
   const handleDeleteReview = (e) => {
     e.preventDefault();
@@ -131,11 +137,14 @@ const SpotReviews = (props) => {
             ))}
           </ul>
           {/* restric owner to review their own spot&& if user already has a review */}
-          {user && spot && user.id !== spot.ownerId && (
-            <NavLink exact to={`/spots/${spotId}/reviews/new`}>
-              Start your review
-            </NavLink>
-          )}
+          {user &&
+            spot &&
+            user.id !== spot.ownerId &&
+            !reviewUsers.includes(user.id) && (
+              <NavLink exact to={`/spots/${spotId}/reviews/new`}>
+                Start your review
+              </NavLink>
+            )}
         </div>
         <ul className="spot-reviews-list">
           {reviews.map(
@@ -226,7 +235,6 @@ const SpotReviews = (props) => {
                           type="radio"
                           value={num + 1}
                           checked={rateStar === num + 1 || stars === num + 1}
-                          onClick={(e) => handleOnClick(e, stars)}
                         ></input>
                       )}
                       {/* <input
@@ -262,7 +270,7 @@ const SpotReviews = (props) => {
                   {user && user.id === userId && (
                     <>
                       <button
-                        name={id}
+                        name={id - stars}
                         type="submit"
                         onClick={(e) =>
                           editBtn === "Edit"
