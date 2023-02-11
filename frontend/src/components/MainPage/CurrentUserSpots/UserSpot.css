@@ -1,13 +1,19 @@
 .user-spot-page {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  width: 70%;
+  width: 55%;
   padding: 0 5%;
-  margin-left: 20%;
+  /* margin-left: 20%; */
+  margin: 0 auto;
 }
 .photo-section {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid rgb(219, 216, 216) 1px;
+  padding-bottom: 10px;
 }
 .photo-title {
   flex-basis: 50%;
@@ -16,7 +22,33 @@
   flex-basis: 50%;
   display: block;
 }
-.spot-images {
+div.spot-images {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  column-gap: 8px;
   flex-basis: 100%;
   flex-grow: 1;
+}
+.spot-images .spot-img {
+  border-radius: 10px;
+}
+#edit-btn-usersport {
+  background-color: white;
+  border: solid rgb(219, 216, 216) 1px;
+  border-radius: 20px;
+  width: 120px;
+  height: 25px;
+  margin: 5px;
+}
+.create-spot-form {
+  flex-basis: 100%;
+  width: 100%;
+  margin: 0;
+}
+.userSpo-detail {
+  border-bottom: solid rgb(219, 216, 216) 1px;
+}
+.intro-form {
+  border-bottom: solid rgb(219, 216, 216) 1px;
 }

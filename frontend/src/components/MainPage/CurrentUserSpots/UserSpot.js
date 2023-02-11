@@ -8,6 +8,7 @@ import defaultImg from "../../../utils/handleImageError";
 import demoSpotImg from "../../../images/demoSpotImg.png";
 import LoginFormModal from "../../LoginFormModal";
 import "./UserSpot.css";
+import multipleGenerator from "../../../utils/multipleGenerator";
 
 const UserSpot = ({ isLoaded }) => {
   const dispatch = useDispatch();
@@ -131,12 +132,12 @@ const UserSpot = ({ isLoaded }) => {
       </>
     );
   //if login user is not owner==>home
-  if (ownerId && userId && userId !== ownerId) return <Redirect to="/" />;
+  // if (ownerId && userId && userId !== ownerId) return <Redirect to="/" />;
 
   return (
     <div className="user-spot-page">
       <div className="user-spot-title">
-        <h1>{inputName}</h1>
+        <h1>Spot:{inputName}</h1>
       </div>
       {ownerId && userId === ownerId && (
         <>
@@ -146,18 +147,16 @@ const UserSpot = ({ isLoaded }) => {
             </div>
             <div className="edit-phtot-btn">
               <NavLink to={`/spots/${spotId}/images`}>
-                <button type="Submit" id="next-btn">
-                  Edit
+                <button type="Submit" id="edit-btn-usersport">
+                  Manage Photos
                 </button>
               </NavLink>
             </div>
-            {spotDetail && (
-              <div className="spot-imges">
-                {/* {typeof spotDetail.SpotImages === "string" */}{" "}
+            {/* {spotDetail && (
+              <div className="spot-images">
                 {typeof photoes === "string"
                   ? defaultImg("", demoSpotImg, "spot-img", "spot")
-                  : //   : spotDetail.SpotImages.map((img) =>
-                    photoes.map((img) =>
+                  : photoes.map((img) =>
                       defaultImg(
                         img.url,
                         demoSpotImg,
@@ -167,10 +166,35 @@ const UserSpot = ({ isLoaded }) => {
                       )
                     )}
               </div>
+            )} */}
+            {spotDetail && (
+              <div className="spot-images">
+                {multipleGenerator(4).map((idx) =>
+                  typeof photoes === "string" ? (
+                    <div key={`img${idx}`}>
+                      {defaultImg("", demoSpotImg, "spot-img", "spot")}
+                    </div>
+                  ) : photoes[idx] ? (
+                    <div key={`img${idx}`}>
+                      {defaultImg(
+                        photoes[idx].url,
+                        demoSpotImg,
+                        "spot-img",
+                        "spot",
+                        photoes[idx].id
+                      )}
+                    </div>
+                  ) : (
+                    <div key={`img${idx}`}>
+                      {defaultImg("", demoSpotImg, "spot-img", "spot")}
+                    </div>
+                  )
+                )}{" "}
+              </div>
             )}
           </div>
 
-          <form className="Create-spot-form" onSubmit={handleFormSubmit}>
+          <form className="create-spot-form" onSubmit={handleFormSubmit}>
             <div className="userSpo-detail">
               <h2>Spot basics</h2>
               <div>
