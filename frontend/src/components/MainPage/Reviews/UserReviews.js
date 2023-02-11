@@ -4,6 +4,7 @@ import { NavLink, Redirect } from "react-router-dom";
 
 import demoSpotImg from "../../../images/demoSpotImg.png";
 import * as entitiesActions from "../../../store/entities";
+import converDate from "../../../utils/convertDate";
 import defaultImg from "../../../utils/handleImageError";
 import LoginFormModal from "../../LoginFormModal";
 //
@@ -67,17 +68,20 @@ const UserReviews = ({ isLoaded }) => {
 
   return (
     <div className="user-reviews">
-      <h1>Reviews by you</h1>
-      <h2>Past reviews you've written</h2>
+      <h1 id="userReview-title">Reviews by you</h1>
+
       {reviewList.length > 0 && (
         <ul className="user-review-list">
           {reviewList.length > 0 &&
             reviewList.map((item) => (
               <li className="review-details" key={item.id}>
                 <p className="spot-name">Spot:{item.Spot.name}</p>
-                <p className="review-date">{item.updatedAt}</p>
+                <p className="review-date">
+                  {converDate(item.updatedAt).month} &nbsp;&nbsp;
+                  {converDate(item.updatedAt).year}
+                </p>
                 <p className="review-content">{item.review}</p>
-                <NavLink to={`/spots/${item.Spot.id}`}>Go to Spot</NavLink>
+
                 {/* <NavLink exact to={`/user/reviews/${item.id}/edit`}>
                   <button>Edit Review</button>
                 </NavLink>
@@ -151,6 +155,7 @@ const UserReviews = ({ isLoaded }) => {
                       /> */}
                     </div>
                   ))}
+                <NavLink to={`/spots/${item.Spot.id}`}>Go to Spot</NavLink>
               </li>
             ))}
         </ul>

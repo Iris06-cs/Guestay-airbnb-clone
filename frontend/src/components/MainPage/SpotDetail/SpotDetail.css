@@ -217,13 +217,13 @@
 
   display: flex;
 }
-#review-date {
+.review-date {
   color: grey;
   font-size: 12px;
   margin-top: 0;
   padding-top: 0;
 }
-#review-username {
+.review-username {
   margin-bottom: 5px;
 }
 ul.validate-errs {

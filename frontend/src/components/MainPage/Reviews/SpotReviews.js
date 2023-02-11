@@ -7,6 +7,7 @@ import multipleGenerator from "../../../utils/multipleGenerator";
 import demoSpotImg from "../../../images/demoSpotImg.png";
 import AddReviewImg from "./AddReviewImg";
 import DeleteReviewImg from "./DeleteReviewImg";
+import converDate from "../../../utils/convertDate";
 // import EditReviewSpotPage from "./EditReviewSpotPage";
 const SpotReviews = (props) => {
   const dispatch = useDispatch();
@@ -40,27 +41,27 @@ const SpotReviews = (props) => {
     if (reviewText.length > 255) err.push("You can only have 255 characters");
     setInputValidate(err);
   }, [reviewText.length]);
-  const converData = (dateStr) => {
-    let year = dateStr.split("-")[0];
-    let month = dateStr.split("-")[1];
-    const months = {
-      "01": "January",
-      "02": "February",
-      "03": "March",
-      "04": "April",
-      "05": "May",
-      "06": "June",
-      "07": "July",
-      "08": "August",
-      "09": "September",
-      10: "October",
-      11: "November",
-      12: "December",
-    };
+  // const converData = (dateStr) => {
+  //   let year = dateStr.split("-")[0];
+  //   let month = dateStr.split("-")[1];
+  //   const months = {
+  //     "01": "January",
+  //     "02": "February",
+  //     "03": "March",
+  //     "04": "April",
+  //     "05": "May",
+  //     "06": "June",
+  //     "07": "July",
+  //     "08": "August",
+  //     "09": "September",
+  //     10: "October",
+  //     11: "November",
+  //     12: "December",
+  //   };
 
-    month = months[month];
-    return { year, month };
-  };
+  //   month = months[month];
+  //   return { year, month };
+  // };
   let reviewName = "userRate " + (clickEdit ? "" : "hidden");
   let reviewUsers;
   if (reviews) reviewUsers = reviews.map((review) => review.userId);
@@ -134,7 +135,7 @@ const SpotReviews = (props) => {
       setIsChanged((prev) => prev + 1);
     }
   };
-  console.log(reviewText, "textarea");
+
   return (
     <>
       <div className="spot-reviews">
@@ -190,10 +191,10 @@ const SpotReviews = (props) => {
               idx
             ) => (
               <li key={id} className="reviews-list">
-                <p id="review-username">{User.firstName}</p>
-                <p id="review-date">
-                  {converData(updatedAt).month} &nbsp;&nbsp;
-                  {converData(updatedAt).year}
+                <p className="review-username">{User.firstName}</p>
+                <p className="review-date">
+                  {converDate(updatedAt).month} &nbsp;&nbsp;
+                  {converDate(updatedAt).year}
                 </p>
                 <form
                   className="edit-review-form"
