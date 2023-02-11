@@ -11,6 +11,7 @@ const UserReviews = ({ isLoaded }) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.session.user);
+  console.log(user);
   const userReviews = useSelector((state) => state.entities.userReviews); //{1:{},2:{}}
 
   const [reviewList, setReviewList] = useState([]);
@@ -30,37 +31,37 @@ const UserReviews = ({ isLoaded }) => {
     if (userReviews) setReviewList([...Object.values(userReviews)]);
   }, [userReviews]);
 
-  const handleDeleteReview = (e) => {
-    e.preventDefault();
-    const reviewId = e.target.name;
-    dispatch(entitiesActions.deleteReviewThunk(reviewId)).then((res) =>
-      setIsChanged((prev) => prev + 1)
-    );
-  };
-  const handleDeleteImg = (e) => {
-    e.preventDefault();
-    const imgId = e.target.name.split("-")[0];
-    const reviewId = e.target.name.split("-")[1];
+  // const handleDeleteReview = (e) => {
+  //   e.preventDefault();
+  //   const reviewId = e.target.name;
+  //   dispatch(entitiesActions.deleteReviewThunk(reviewId)).then((res) =>
+  //     setIsChanged((prev) => prev + 1)
+  //   );
+  // };
+  // const handleDeleteImg = (e) => {
+  //   e.preventDefault();
+  //   const imgId = e.target.name.split("-")[0];
+  //   const reviewId = e.target.name.split("-")[1];
 
-    dispatch(entitiesActions.deleteReviewImg(imgId, reviewId)).then((res) =>
-      setIsChanged((prev) => prev + 1)
-    );
-  };
-  const handleAddImg = (e) => {
-    e.preventDefault();
-    const reviewId = e.target.name;
-    const image = { url: reviewUrl };
-    setErrs([]);
-    dispatch(entitiesActions.addReviewImgThunk(reviewId, image))
-      .then((res) => setIsChanged((prev) => prev + 1))
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrs([...data.errors]);
-        }
-      });
-    setReviewUrl("");
-  };
+  //   dispatch(entitiesActions.deleteReviewImg(imgId, reviewId)).then((res) =>
+  //     setIsChanged((prev) => prev + 1)
+  //   );
+  // };
+  // const handleAddImg = (e) => {
+  //   e.preventDefault();
+  //   const reviewId = e.target.name;
+  //   const image = { url: reviewUrl };
+  //   setErrs([]);
+  //   dispatch(entitiesActions.addReviewImgThunk(reviewId, image))
+  //     .then((res) => setIsChanged((prev) => prev + 1))
+  //     .catch(async (res) => {
+  //       const data = await res.json();
+  //       if (data && data.errors) {
+  //         setErrs([...data.errors]);
+  //       }
+  //     });
+  //   setReviewUrl("");
+  // };
 
   if (isLoaded && !user) return <LoginFormModal />;
 
@@ -73,10 +74,11 @@ const UserReviews = ({ isLoaded }) => {
           {reviewList.length > 0 &&
             reviewList.map((item) => (
               <li className="review-details" key={item.id}>
-                <p className="spot-name">{item.Spot.name}</p>
-                <p className="review-date">{item.updateAt}</p>
+                <p className="spot-name">Spot:{item.Spot.name}</p>
+                <p className="review-date">{item.updatedAt}</p>
                 <p className="review-content">{item.review}</p>
-                <NavLink exact to={`/user/reviews/${item.id}/edit`}>
+                <NavLink to={`/spots/${item.Spot.id}`}>Go to Spot</NavLink>
+                {/* <NavLink exact to={`/user/reviews/${item.id}/edit`}>
                   <button>Edit Review</button>
                 </NavLink>
                 <button name={item.id} onClick={handleDeleteReview}>
@@ -88,8 +90,8 @@ const UserReviews = ({ isLoaded }) => {
                   type="text"
                   value={reviewUrl}
                   onChange={(e) => setReviewUrl(e.target.value)}
-                />
-                <ul>
+                /> */}
+                {/* <ul>
                   {errs.length > 0 &&
                     errs.map((err) => (
                       <li key={err}>
@@ -100,10 +102,10 @@ const UserReviews = ({ isLoaded }) => {
                         {err}
                       </li>
                     ))}
-                </ul>
-                <button name={item.id} onClick={(e) => handleAddImg(e)}>
+                </ul> */}
+                {/* <button name={item.id} onClick={(e) => handleAddImg(e)}>
                   Add Image
-                </button>
+                </button> */}
                 {typeof item.ReviewImages === "string" && (
                   <div>
                     {defaultImg("", demoSpotImg, "review-image")}
@@ -127,12 +129,12 @@ const UserReviews = ({ isLoaded }) => {
                         "review",
                         img.id
                       )}
-                      <button
+                      {/* <button
                         name={`${img.id} - ${item.id}`}
                         onClick={(e) => handleDeleteImg(e)}
                       >
                         Delete Image
-                      </button>
+                      </button> */}
 
                       {/* <button
                         name={item.id}

@@ -25,6 +25,8 @@ const SpotReviews = (props) => {
   const [targetReviewId, setTargetReviewId] = useState("");
   const [cancel, setCancel] = useState(false);
   const [btnText, setBtnText] = useState("Delete");
+  const [resErr, setResErrors] = useState([]);
+  const [inputValidate, setInputValidate] = useState([]);
   // const [isClicked, setIsClicked] = useState(false);
   // useEffect(() => {
   //   dispatch(entitiesActions.loadOneSpotThunk(spotId))
@@ -33,7 +35,11 @@ const SpotReviews = (props) => {
   //   dispatch(entitiesActions.loadSpotReviewsThunk(spotId));
   // }, [dispatch, spotId, isDeleted]);
   //2023-01-31 23:38:52
-
+  useEffect(() => {
+    let err = [];
+    if (reviewText.length > 255) err.push("You can only have 255 characters");
+    setInputValidate(err);
+  }, [reviewText.length]);
   const converData = (dateStr) => {
     let year = dateStr.split("-")[0];
     let month = dateStr.split("-")[1];
@@ -71,19 +77,39 @@ const SpotReviews = (props) => {
   };
   const submitEdit = (e) => {
     e.preventDefault();
+    setResErrors([]);
     if (editBtn === "Submit") {
       const reviewId = e.target.name.split("-")[0];
       const reviewStar = e.target.name.split("-")[1];
+      console.log("submit", reviewId, reviewStar, reviewText);
       const newReview = {
         review: reviewText,
         stars: rateStar ? rateStar : reviewStar,
       };
 
-      dispatch(entitiesActions.editReviewThunk(reviewId, newReview));
+      dispatch(entitiesActions.editReviewThunk(reviewId, newReview))
+        .then()
+        .catch(async (res) => {
+          const data = await res.json();
+          if (data && data.errors) {
+            const errors = data.errors.map((err) => {
+              if (err === "Please select star from 1 to 5") {
+                return "Please select a star above.";
+              } else if (err === "Validation len on review failed") {
+                return "You can only have 255 characters";
+              } else {
+                return err;
+              }
+            });
+            setResErrors(errors);
+          }
+        });
       setClickEdit(false);
       setEditBtn("Edit");
       // setIsSubmited(true);
       setIsChanged((prev) => prev + 1);
+      setReviewText("");
+      setRateStar(0);
     }
   };
   // const handleOnClick = (e, stars) => {
@@ -108,6 +134,7 @@ const SpotReviews = (props) => {
       setIsChanged((prev) => prev + 1);
     }
   };
+  console.log(reviewText, "textarea");
   return (
     <>
       <div className="spot-reviews">
@@ -163,81 +190,85 @@ const SpotReviews = (props) => {
               idx
             ) => (
               <li key={id} className="reviews-list">
-                <p>{User.firstName}</p>
-                <p>
+                <p id="review-username">{User.firstName}</p>
+                <p id="review-date">
                   {converData(updatedAt).month} &nbsp;&nbsp;
                   {converData(updatedAt).year}
                 </p>
-                <form onSubmit={(e) => submitEdit(e)}>
-                  {multipleGenerator(5).map((num) => (
-                    <span
-                      className="star-option"
-                      key={num}
-                      // style={{ display: "inline" }}
-                    >
-                      <label>
+                <form
+                  className="edit-review-form"
+                  onSubmit={(e) => submitEdit(e)}
+                >
+                  <div>
+                    {multipleGenerator(5).map((num) => (
+                      <span
+                        className="star-option"
+                        key={num}
+                        // style={{ display: "inline" }}
+                      >
+                        <label>
+                          {user && user.id !== userId ? (
+                            <span
+                              style={{
+                                color: num + 1 <= stars ? "black" : "#E4E3DA",
+                                backgroundColor: "white",
+                              }}
+                            >
+                              <i
+                                // name={num + 1}
+                                // onClick={(e) => setRateStar(e.target.name)}
+                                className="fa-solid fa-star"
+                              ></i>
+                            </span>
+                          ) : (
+                            <span
+                              style={{
+                                color:
+                                  num + 1 <= (rateStar === 0 ? stars : rateStar)
+                                    ? "black"
+                                    : "#E4E3DA",
+                                backgroundColor: "white",
+                              }}
+                            >
+                              <i
+                                // name={num + 1}
+                                // onClick={(e) => setRateStar(e.target.name)}
+                                className="fa-solid fa-star"
+                              ></i>
+                            </span>
+                          )}
+                        </label>
                         {user && user.id !== userId ? (
-                          <span
-                            style={{
-                              color: num + 1 <= stars ? "black" : "#E4E3DA",
-                              backgroundColor: "white",
-                            }}
-                          >
-                            <i
-                              // name={num + 1}
-                              // onClick={(e) => setRateStar(e.target.name)}
-                              className="fa-solid fa-star"
-                            ></i>
-                          </span>
+                          <input
+                            className="starRate"
+                            // onChange={(e) => setRateStar(e.target.value)}
+                            name="rating-star"
+                            // style={{
+                            //   appearance: user && user.id === userId ? "" : "none",
+                            // }}
+                            type="radio"
+                            value={num + 1}
+                            // checked={rateStar === num + 1}
+                            // value={stars}
+                          ></input>
                         ) : (
-                          <span
-                            style={{
-                              color:
-                                num + 1 <= (rateStar === 0 ? stars : rateStar)
-                                  ? "black"
-                                  : "#E4E3DA",
-                              backgroundColor: "white",
-                            }}
-                          >
-                            <i
-                              // name={num + 1}
-                              // onClick={(e) => setRateStar(e.target.name)}
-                              className="fa-solid fa-star"
-                            ></i>
-                          </span>
+                          <input
+                            className={
+                              user && user.id === userId
+                                ? `${reviewName}`
+                                : "starRate"
+                            }
+                            onChange={(e) => setRateStar(e.target.value)}
+                            name="rating-star"
+                            // style={{
+                            //   appearance: user && user.id === userId ? "" : "none",
+                            // }}
+                            type="radio"
+                            value={num + 1}
+                            checked={rateStar === num + 1 || stars === num + 1}
+                          ></input>
                         )}
-                      </label>
-                      {user && user.id !== userId ? (
-                        <input
-                          className="starRate"
-                          // onChange={(e) => setRateStar(e.target.value)}
-                          name="rating-star"
-                          // style={{
-                          //   appearance: user && user.id === userId ? "" : "none",
-                          // }}
-                          type="radio"
-                          value={num + 1}
-                          // checked={rateStar === num + 1}
-                          // value={stars}
-                        ></input>
-                      ) : (
-                        <input
-                          className={
-                            user && user.id === userId
-                              ? `${reviewName}`
-                              : "starRate"
-                          }
-                          onChange={(e) => setRateStar(e.target.value)}
-                          name="rating-star"
-                          // style={{
-                          //   appearance: user && user.id === userId ? "" : "none",
-                          // }}
-                          type="radio"
-                          value={num + 1}
-                          checked={rateStar === num + 1 || stars === num + 1}
-                        ></input>
-                      )}
-                      {/* <input
+                        {/* <input
                         className={
                           user && user.id === userId
                             ? `${reviewName}`
@@ -253,24 +284,41 @@ const SpotReviews = (props) => {
                         checked={rateStar === num + 1}
                         // value={stars}
                       ></input> */}
-                    </span>
-                  ))}
+                      </span>
+                    ))}
+                  </div>
                   {/* <p>{review}</p> */}
                   {clickEdit && user && user.id === userId ? (
-                    <textarea
-                      autoFocus
-                      value={isFocus ? reviewText : review}
-                      onChange={(e) => setReviewText(e.target.value)}
-                      onFocus={(e) => handleIsFocus(e, review)}
-                    />
+                    <>
+                      <textarea
+                        className="edit-textarea"
+                        autoFocus
+                        value={reviewText}
+                        onChange={(e) => setReviewText(e.target.value)}
+                        // defaultValue={review}
+                        onFocus={(e) => handleIsFocus(e, review)}
+                      />
+                      <ul className="validate-errs">
+                        {inputValidate.length > 0 &&
+                          inputValidate.map((err) => (
+                            <li key={err} className="edit-err-msg">
+                              <span style={{ color: "red", padding: "5px" }}>
+                                <i className="fa-solid fa-circle-exclamation"></i>
+                              </span>
+                              {err}
+                            </li>
+                          ))}
+                      </ul>
+                    </>
                   ) : (
                     <p>{review}</p>
                   )}
                   {/* <textarea value={review} onChange={editReviewText} /> */}
                   {user && user.id === userId && (
-                    <>
+                    <div className="edit-btns">
                       <button
-                        name={id - stars}
+                        className="edit-review-btn"
+                        name={`${id}-${stars}`}
                         type="submit"
                         onClick={(e) =>
                           editBtn === "Edit"
@@ -280,6 +328,7 @@ const SpotReviews = (props) => {
                       >
                         {editBtn}
                       </button>
+
                       <button
                         name={id}
                         className="delete-review-btn"
@@ -300,7 +349,7 @@ const SpotReviews = (props) => {
                           Cancel
                         </button>
                       )}
-                    </>
+                    </div>
                   )}
                 </form>
 

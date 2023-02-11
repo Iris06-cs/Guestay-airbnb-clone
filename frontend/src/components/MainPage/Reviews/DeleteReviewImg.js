@@ -16,6 +16,10 @@ const DeleteReviewImg = (props) => {
       setIsChanged((prev) => prev + 1)
     );
   };
-  return <button onClick={(e) => handleDeleteImg(e)}>Delete Photo</button>;
+  return (
+    <button className="del-review-img-btn" onClick={(e) => handleDeleteImg(e)}>
+      Delete Photo
+    </button>
+  );
 };
 export default DeleteReviewImg;

@@ -34,7 +34,11 @@ const AddReviewImg = (props) => {
         value={reviewUrl}
         onChange={(e) => setReviewUrl(e.target.value)}
       />
-      <button name={id} onClick={(e) => handleAddImg(e)}>
+      <button
+        className="add-review-img-btn"
+        name={id}
+        onClick={(e) => handleAddImg(e)}
+      >
         Add Photo
       </button>
       <ul>
