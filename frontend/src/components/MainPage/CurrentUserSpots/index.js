@@ -23,7 +23,7 @@ const CurrentUserSpots = ({ isLoaded }) => {
         const data = await res.json();
         // authErr(data, setReqLogin);
       });
-  }, [dispatch, ischanged, user]);
+  }, [dispatch, ischanged, user, isLoaded]);
   // useEffect(() => {
   //   if (user) setReqLogin(false);
   // }, [user]);

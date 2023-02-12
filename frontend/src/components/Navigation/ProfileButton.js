@@ -71,9 +71,9 @@ const ProfileButton = ({ sessionUser }) => {
                 <button onClick={closeDropdown}>Reviews</button>
               </NavLink>
             </li>
-            <li>
+            {/* <li>
               <button>Bookings</button>
-            </li>
+            </li> */}
             <li>
               <button onClick={logout}>Log out</button>
             </li>

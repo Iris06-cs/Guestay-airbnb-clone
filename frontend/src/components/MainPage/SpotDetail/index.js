@@ -15,10 +15,12 @@ const SpotDetail = ({ isLoaded }) => {
   const user = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.entities.spot);
   const reviews = useSelector((state) => state.entities.spotReviews);
-
+  // console.log(reviews, "not change");
   const [spotInfo, setSpotInfo] = useState("");
   const [reviewInfo, setReviewInfo] = useState("");
   const [resErrs, setResErrs] = useState([]);
+  // const [isDeleted, setIsDeleted] = useState(false);
+  const [isChanged, setIsChanged] = useState(0);
   const {
     // id,
     // ownerId,
@@ -47,7 +49,7 @@ const SpotDetail = ({ isLoaded }) => {
     }
 
     if (!previewImg) previewImg = {};
-    console.log(typeof SpotImages, "SpotImg");
+    // console.log(typeof SpotImages, "SpotImg");
     // if (SpotImages.length && previewImg)
     //   otherImges = SpotImages.filter((img) => img.id !== previewImg.id);
   }
@@ -62,13 +64,14 @@ const SpotDetail = ({ isLoaded }) => {
         if (data.statusCode === 404) setResErrs([data.message]);
       });
     dispatch(entitiesActions.loadSpotReviewsThunk(spotId))
-      .then()
+      // .then((res) => setIsDeleted(false))
+      .then((res) => setIsChanged(0))
       .catch(async (res) => {
         const data = await res.json();
         if (data.statusCode === 404) setResErrs([data.message]);
       });
-  }, [spotId, dispatch]);
-
+  }, [spotId, dispatch, isChanged]);
+  // console.log(isChanged, "delete state");
   useEffect(() => {
     if (spot) {
       setSpotInfo({ ...spot });
@@ -157,7 +160,7 @@ const SpotDetail = ({ isLoaded }) => {
                       )}
                     </div>
                   ) : (
-                    <div>
+                    <div key={idx}>
                       {defaultImg("", demoSpotImg, "detail-spot-img", "spot")}
                     </div>
                   )
@@ -168,7 +171,7 @@ const SpotDetail = ({ isLoaded }) => {
               <div id="host-info">
                 <h2>Spot hosted by {Owner.firstName}</h2>
               </div>
-              <div id="description">
+              <div id="feature">
                 <p>
                   <span>
                     <i className="fa-regular fa-square-check"></i>
@@ -181,8 +184,8 @@ const SpotDetail = ({ isLoaded }) => {
                   cancellation for 48 hours
                 </p>
               </div>
-              <div>
-                <p className="spot-description">{description}</p>
+              <div className="spot-description">
+                <p id="description">{description}</p>
               </div>
             </div>
             <div className="booking-side-card">
@@ -223,6 +226,8 @@ const SpotDetail = ({ isLoaded }) => {
         avgStarRating={avgStarRating}
         numReviews={numReviews}
         reviewInfo={reviewInfo}
+        // setIsDeleted={setIsDeleted}
+        setIsChanged={setIsChanged}
         // ownerId={ownerId}
         // spotId={spotId}
       />

@@ -5,7 +5,7 @@ const REMOVE_USERSPOT = "spot/REMOVE";
 const REMOVE_USERREVIEW = "review/REMOVE";
 const REMOVE_IMAGE = "image/REMOVE";
 const REMOVE_REVIEWIMG = "reviewImg/REMOVE";
-const EDIT = "entities/EDID";
+// const EDIT = "entities/EDID";
 const EDIT_REVIEW = "entities/EDID_REVIEW";
 const EDIT_SPOT = "entities/EDID_SPOT";
 const ADD = "entities/ADD";
@@ -76,9 +76,9 @@ const addSpotImg = (image, spotId) => ({
   image,
   spotId,
 });
-const addReviewImg = (url, reviewId) => ({
+const addReviewImg = (image, reviewId) => ({
   type: ADD_REVIEWIMG,
-  url,
+  image,
   reviewId,
 });
 const removeSpotImg = (imgId) => ({
@@ -262,19 +262,31 @@ const entitiesReducer = (state = initialSpots, action) => {
     case EDIT_SPOT:
       //edit a spot edit a review--payload spot userSpot--/review id exit
       newState = updateObject({}, state);
-      newState.userSpots[action.id] = {
-        ...newState.userSpots[action.id],
-        ...action.userSpots,
-      };
+      if (newState.userSpots) {
+        newState.userSpots[action.id] = {
+          ...newState.userSpots[action.id],
+          ...action.userSpots,
+        };
+      }
+
       //DO NOT MUTATE, action playload has fewer properties
       newState.spot = { ...newState.spot, ...action.userSpots };
       return newState;
     case EDIT_REVIEW:
       newState = updateObject({}, state);
-      newState.userReviews[action.id] = {
-        ...newState.userReviews[action.id],
-        ...action.userReviews,
-      };
+      // console.log(action, newState.userReviews);
+      if (newState.userReviews) {
+        newState.userReviews[action.id] = {
+          ...newState.userReviews[action.id],
+          ...action.userReviews,
+        };
+      }
+      if (newState.spotsReviews) {
+        newState.spotReviews[action.id] = {
+          ...newState.spotReviews[action.id],
+          ...action.spotReviews,
+        };
+      }
       return newState;
     case ADD:
       //add a spot--userSpots(edit button) or single spot(in detail page) detail add a review--userReview--current user(not owner)
@@ -290,8 +302,11 @@ const entitiesReducer = (state = initialSpots, action) => {
       return newState;
     case REMOVE_USERREVIEW: //delete spot review current user id
       newState = updateObject({}, state);
-      delete newState.userReviews[action.id];
-      return newState;
+      if (newState.userReviews) delete newState.userReviews[action.id];
+      if (newState.spotReviews) delete newState.spotReviews[action.id];
+      if (newState.spotReview && newState.spotReview.id === Number(action.id))
+        delete newState.spotReview;
+      return { ...newState };
     case REMOVE_IMAGE:
       newState = updateObject({}, state);
       const imges = newState.spot.SpotImages.filter(
@@ -301,21 +316,42 @@ const entitiesReducer = (state = initialSpots, action) => {
       return newState;
     case REMOVE_REVIEWIMG:
       newState = updateObject({}, state);
-
-      const reviewImg = newState.userReviews[
-        Number(action.reviewId)
-      ].ReviewImages.filter((img) => img.id === action.imgId);
-      newState.userReviews[Number(action.reviewId)].ReviewImages = [
-        ...reviewImg,
-      ];
+      if (newState.userReviews) {
+        const reviewImg = newState.userReviews[
+          Number(action.reviewId)
+        ].ReviewImages.filter((img) => img.id === action.imgId);
+        newState.userReviews[Number(action.reviewId)].ReviewImages = [
+          ...reviewImg,
+        ];
+      }
+      if (newState.spotReviews) {
+        const reviewImg = newState.spotReviews[
+          Number(action.reviewId)
+        ].ReviewImages.filter((img) => img.id === action.imgId);
+        newState.spotReviews[Number(action.reviewId)].ReviewImages = [
+          ...reviewImg,
+        ];
+      }
       return newState;
     case ADD_REVIEWIMG:
       newState = updateObject({}, state);
       if (
-        newState.userReviews.ReviewImages === "Does not have any review images"
+        newState.userReviews &&
+        typeof newState.userReviews[action.reviewId].ReviewImages === "string"
       )
         newState.userReviews.ReviewImages = [action.image];
+      else if (newState.userReviews)
+        newState.userReviews[action.reviewId].ReviewImages.push(action.image);
 
+      if (
+        newState.spotReviews &&
+        typeof newState.spotReviews[action.reviewId].ReviewImages === "string"
+      )
+        newState.spotReviews[action.reviewId].ReviewImages = [action.image];
+      else if (newState.spotReviews) {
+        // console.log(newState.spotReviews);
+        newState.spotReviews[action.reviewId].ReviewImages.push(action.image);
+      }
       //  else newState.userReviews.ReviewImages.push(action.image);
       return newState;
     case ADD_IMG: //under one spot==>userspots update both,spotID

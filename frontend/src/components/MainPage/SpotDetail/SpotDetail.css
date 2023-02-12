@@ -90,12 +90,21 @@
   top: 820px;
   width: 22%;
   font-size: 25px;
+  z-index: -1;
 }
 #host-info {
   border-bottom: solid rgb(219, 216, 216) 1px;
 }
-#description {
+#feature {
   border-bottom: solid rgb(219, 216, 216) 1px;
+}
+
+.spot-description {
+  display: flex;
+  justify-content: center;
+  border-bottom: solid rgb(219, 216, 216) 1px;
+  flex-direction: column;
+  min-height: 100px;
 }
 .spot-reviews {
   width: 1120px;
@@ -124,4 +133,102 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+}
+.star-option {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+.userRate {
+  align-self: flex-start;
+  margin: 0 auto 5px auto;
+  appearance: none;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  border: 3px solid #e4e3da;
+  transition: 0.2s all linear;
+  position: relative;
+  top: 3px;
+  visibility: visible;
+}
+.userRate:checked {
+  border: 5px solid #e4e3da;
+}
+.userRate.hidden {
+  visibility: hidden;
+}
+.starRate {
+  margin: 0 auto 5px auto;
+  appearance: none;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  border: 3px solid white;
+
+  position: relative;
+  top: 3px;
+}
+.edit-review-btn,
+.delete-review-btn,
+.cancel-delete-review {
+  background-color: white;
+  border: solid rgb(219, 216, 216) 1px;
+  border-radius: 20px;
+  width: 65px;
+  height: 25px;
+  margin: 5px;
+}
+
+.del-review-img-btn,
+.add-review-img-btn {
+  background-color: white;
+  border: solid rgb(219, 216, 216) 1px;
+  border-radius: 20px;
+  width: 100px;
+  height: 25px;
+  margin: 5px;
+}
+#imgUrl-review {
+  background-color: white;
+  border: solid rgb(219, 216, 216) 1px;
+  border-radius: 20px;
+  margin: 5px;
+}
+.edit-review-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* height: 150px; */
+  text-align: start;
+}
+.edit-textarea {
+  width: 50%;
+  max-height: 60px;
+  border: solid rgb(219, 216, 216) 1px;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 16px;
+  resize: none;
+}
+.edit-btns {
+  /* align-self: flex-end; */
+
+  display: flex;
+}
+.review-date {
+  color: grey;
+  font-size: 12px;
+  margin-top: 0;
+  padding-top: 0;
+}
+.review-username {
+  margin-bottom: 5px;
+}
+ul.validate-errs {
+  padding: 0;
+}
+.edit-err-msg {
+  text-align: left;
 }
