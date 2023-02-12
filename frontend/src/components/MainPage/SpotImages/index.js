@@ -22,23 +22,31 @@ const AddSpotPhoto = ({ isLoaded }) => {
   const [validate, setValidate] = useState([]);
   const [isChanged, setIsChanged] = useState(0);
 
-  const [owner, setOwner] = useState("");
-  const [userId, setUserId] = useState("");
-  const [reqLogin, setReqLogin] = useState(true);
+  // const [owner, setOwner] = useState("");
+  // const [userId, setUserId] = useState("");
+  // const [reqLogin, setReqLogin] = useState(true);
   //fetch spot image
+  console.log(imges, isChanged);
   useEffect(() => {
     dispatch(entitiesActions.loadOneSpotThunk(spotId)).then().catch();
-  }, [dispatch, spotId, isChanged, user]);
+    console.log("loading");
+  }, [dispatch, spotId, user, isChanged]);
   //update
   useEffect(() => {
     if (spot && typeof spot.SpotImages !== "string") {
-      setImges([...spot.SpotImages]);
+      console.log("render", spot.SpotImages);
+      setImges(spot.SpotImages);
+
       const preview = spot.SpotImages.findLast((img) => img.preview === true);
       setSpotName(spot.name);
-      setOwner(spot.ownerId);
+      // setOwner(spot.ownerId);
       if (preview) setPreviewImg(preview.url);
     }
-    if (user) setUserId(user.id);
+    if (spot && typeof spot.SpotImages === "string") {
+      setImges([]);
+      setPreviewImg("");
+    }
+    // if (user) setUserId(user.id);
   }, [spot, user, isChanged]);
 
   const handleOnChange = (e, callback) => {
@@ -46,6 +54,7 @@ const AddSpotPhoto = ({ isLoaded }) => {
   };
   const handleDelImg = (e, imgId) => {
     e.preventDefault();
+    console.log("submit");
     dispatch(entitiesActions.deleteSpotImg(imgId))
       .then((res) => setIsChanged((prev) => prev + 1))
       .catch(async (res) => {
@@ -55,6 +64,7 @@ const AddSpotPhoto = ({ isLoaded }) => {
   };
   const submitImg = (e) => {
     e.preventDefault();
+
     setValidate([]);
     dispatch(
       entitiesActions.addSpotImgThunk(spotId, {
@@ -62,14 +72,14 @@ const AddSpotPhoto = ({ isLoaded }) => {
         preview: isPreview,
       })
     )
-      .then()
+      .then((res) => setIsChanged((prev) => prev + 1))
       .catch(async (res) => {
         const data = await res.json();
         if (data && data.errors) {
           setValidate(data.errors);
         }
       });
-    setIsChanged((prev) => prev + 1);
+    // setIsChanged((prev) => prev + 1);
     setUrl("");
     setIsPreview(false);
   };
@@ -89,7 +99,7 @@ const AddSpotPhoto = ({ isLoaded }) => {
 
       <h2>All Images</h2>
       <div id="spot-img-display">
-        {imges.length &&
+        {imges.length > 0 &&
           imges.map((img) => (
             <div key={img.id} className="spot-img-container">
               {defaultImg(img.url, demoSpotImg, "del-spot-img", "spot")}
@@ -109,7 +119,7 @@ const AddSpotPhoto = ({ isLoaded }) => {
         />
         <div>{url && <img id="new-img" src={url} alt="spot" />}</div>
         <ul className="validation-err">
-          {validate &&
+          {validate.length > 0 &&
             validate.map((err) => (
               <li key={err}>
                 <span style={{ color: "red", padding: "5px" }}>

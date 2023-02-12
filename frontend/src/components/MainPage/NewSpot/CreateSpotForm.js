@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import * as entitiesActions from "../../../store/entities";
 import demoSpotImg from "../../../images/demoSpotImg.png";
+import "./NewSpot.css";
 const CreateSpotForm = ({ isLoaded }) => {
   const history = useHistory();
   const spotState = useSelector((state) => state.entities.spot);

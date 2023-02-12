@@ -11,7 +11,7 @@ const DeleteReviewImg = (props) => {
     e.preventDefault();
     // const imgId = e.target.name.split("-")[0];
     // const reviewId = e.target.name.split("-")[1];
-    console.log(imgId, id);
+    // console.log(imgId, id);
     dispatch(entitiesActions.deleteReviewImg(imgId, id)).then((res) =>
       setIsChanged((prev) => prev + 1)
     );

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, Redirect } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import demoSpotImg from "../../../images/demoSpotImg.png";
 import * as entitiesActions from "../../../store/entities";
@@ -18,8 +18,8 @@ const UserReviews = ({ isLoaded }) => {
   const [reviewList, setReviewList] = useState([]);
   const [isChanged, setIsChanged] = useState(0);
 
-  const [reviewUrl, setReviewUrl] = useState("");
-  const [errs, setErrs] = useState([]);
+  // const [reviewUrl, setReviewUrl] = useState("");
+  // const [errs, setErrs] = useState([]);
   useEffect(() => {
     dispatch(entitiesActions.loadUserReviewsThunk())
       .then()
