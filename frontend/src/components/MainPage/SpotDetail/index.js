@@ -15,7 +15,7 @@ const SpotDetail = ({ isLoaded }) => {
   const user = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.entities.spot);
   const reviews = useSelector((state) => state.entities.spotReviews);
-  console.log(reviews, "not change");
+  // console.log(reviews, "not change");
   const [spotInfo, setSpotInfo] = useState("");
   const [reviewInfo, setReviewInfo] = useState("");
   const [resErrs, setResErrs] = useState([]);
@@ -71,7 +71,7 @@ const SpotDetail = ({ isLoaded }) => {
         if (data.statusCode === 404) setResErrs([data.message]);
       });
   }, [spotId, dispatch, isChanged]);
-  console.log(isChanged, "delete state");
+  // console.log(isChanged, "delete state");
   useEffect(() => {
     if (spot) {
       setSpotInfo({ ...spot });

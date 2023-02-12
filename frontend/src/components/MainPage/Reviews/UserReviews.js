@@ -12,7 +12,7 @@ const UserReviews = ({ isLoaded }) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.session.user);
-  console.log(user);
+  // console.log(user);
   const userReviews = useSelector((state) => state.entities.userReviews); //{1:{},2:{}}
 
   const [reviewList, setReviewList] = useState([]);

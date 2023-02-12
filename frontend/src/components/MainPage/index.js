@@ -5,7 +5,7 @@ import CurrentUserSpots from "./CurrentUserSpots";
 import AddSpotPhoto from "./SpotImages";
 import NewSpot from "./NewSpot";
 import "./MainPage.css";
-import UpdateSpotForm from "./UpdateSpot/UpdateSpotForm";
+// import UpdateSpotForm from "./UpdateSpot/UpdateSpotForm";
 import SpotDetail from "./SpotDetail";
 // import SpotReviews from "../Reviews/SpotReviews";
 import CreateSpotForm from "./NewSpot/CreateSpotForm";
@@ -32,9 +32,9 @@ const MainPage = ({ isLoaded, updatedSpots }) => {
         <Route exact path="/hosting/spots/new/started">
           <CreateSpotForm isLoaded={isLoaded} />
         </Route>
-        <Route exact path="/hosting/spots/:spotId/edit">
+        {/* <Route exact path="/hosting/spots/:spotId/edit">
           <UpdateSpotForm isLoaded={isLoaded} />
-        </Route>
+        </Route> */}
         <Route exact path="/hosting/spots/:spotId/details">
           <UserSpot isLoaded={isLoaded} />
         </Route>

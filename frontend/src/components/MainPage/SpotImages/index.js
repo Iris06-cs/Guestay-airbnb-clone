@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 import * as entitiesActions from "../../../store/entities";
 import defaultImg from "../../../utils/handleImageError";
@@ -9,7 +9,7 @@ import LoginFormModal from "../../LoginFormModal";
 // import "./SpotImages.css";
 const AddSpotPhoto = ({ isLoaded }) => {
   const dispatch = useDispatch();
-
+  const history = useHistory();
   const { spotId } = useParams();
   const user = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.entities.spot);
@@ -50,7 +50,7 @@ const AddSpotPhoto = ({ isLoaded }) => {
       .then((res) => setIsChanged((prev) => prev + 1))
       .catch(async (res) => {
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
       });
   };
   const submitImg = (e) => {
@@ -80,20 +80,23 @@ const AddSpotPhoto = ({ isLoaded }) => {
   //stay on the page after login???
   // if (isLoaded && owner && owner !== userId) return <Redirect to="/" />;
   return (
-    <>
+    <div id="edit-spot-img">
       {/* preview img section */}
-      <h1>{spotName}</h1>
+      <h1>Spot:{spotName}</h1>
       <h2>Preview Image</h2>
       {defaultImg(previewImg, demoSpotImg, "detail-preview-img", "spot")}
       {/* all imges */}
+
       <h2>All Images</h2>
-      {imges.length &&
-        imges.map((img) => (
-          <div key={img.id}>
-            {defaultImg(img.url, demoSpotImg, "detail-spot-img", "spot")}
-            <button onClick={(e) => handleDelImg(e, img.id)}>Delete</button>
-          </div>
-        ))}
+      <div id="spot-img-display">
+        {imges.length &&
+          imges.map((img) => (
+            <div key={img.id} className="spot-img-container">
+              {defaultImg(img.url, demoSpotImg, "del-spot-img", "spot")}
+              <button onClick={(e) => handleDelImg(e, img.id)}>Delete</button>
+            </div>
+          ))}
+      </div>
       {/* add img base on id */}
       <h2>Add more images</h2>
       <form onSubmit={submitImg}>
@@ -104,7 +107,7 @@ const AddSpotPhoto = ({ isLoaded }) => {
           value={url}
           onChange={(e) => handleOnChange(e, setUrl)}
         />
-        <div>{url && <img src={url} alt="spot" />}</div>
+        <div>{url && <img id="new-img" src={url} alt="spot" />}</div>
         <ul className="validation-err">
           {validate &&
             validate.map((err) => (
@@ -119,15 +122,23 @@ const AddSpotPhoto = ({ isLoaded }) => {
             ))}
         </ul>
 
-        <label>Set As Preview Image</label>
-        <input
-          type="checkBox"
-          onChange={(e) => setIsPreview((prev) => !prev)}
-          checked={isPreview}
-        />
-        <button type="submit">Confirm</button>
+        <div id="lower-section">
+          <label>Set As Preview Image</label>
+          <input
+            type="checkBox"
+            onChange={(e) => setIsPreview((prev) => !prev)}
+            checked={isPreview}
+          />
+          <button type="submit">Confirm</button>
+        </div>
       </form>
-    </>
+      <button
+        id="back-spot-btn"
+        onClick={(e) => history.push(`/hosting/spots/${spotId}/details`)}
+      >
+        Back
+      </button>
+    </div>
   );
 };
 export default AddSpotPhoto;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
 import * as entitiesActions from "../../../store/entities";
@@ -11,6 +11,7 @@ import converDate from "../../../utils/convertDate";
 // import EditReviewSpotPage from "./EditReviewSpotPage";
 const SpotReviews = (props) => {
   const dispatch = useDispatch();
+  // let inputRef = useRef(null);
   const { spotId } = useParams();
   const { avgStarRating, numReviews, reviewInfo, setIsChanged } = props;
 
@@ -82,7 +83,7 @@ const SpotReviews = (props) => {
     if (editBtn === "Submit") {
       const reviewId = e.target.name.split("-")[0];
       const reviewStar = e.target.name.split("-")[1];
-      console.log("submit", reviewId, reviewStar, reviewText);
+      // console.log(inputRef.current.value);
       const newReview = {
         review: reviewText,
         stars: rateStar ? rateStar : reviewStar,
@@ -292,6 +293,7 @@ const SpotReviews = (props) => {
                   {clickEdit && user && user.id === userId ? (
                     <>
                       <textarea
+                        // ref={inputRef}
                         className="edit-textarea"
                         autoFocus
                         value={reviewText}

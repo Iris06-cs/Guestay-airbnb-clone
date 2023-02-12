@@ -89,11 +89,11 @@ const UserSpot = ({ isLoaded }) => {
   //set price
   const increasePrice = (e) => {
     e.preventDefault();
-    setInputPrice((prev) => prev + 1);
+    setInputPrice((prev) => Number(prev) + 1);
   };
   const decreasePrice = (e) => {
     e.preventDefault();
-    setInputPrice((prev) => prev - 1);
+    setInputPrice((prev) => Number(prev) - 1);
   };
   //click next button submit form, go to add image page
   const handleFormSubmit = (e) => {
@@ -194,7 +194,7 @@ const UserSpot = ({ isLoaded }) => {
             )}
           </div>
 
-          <form className="create-spot-form" onSubmit={handleFormSubmit}>
+          <form className="edit-spot-form" onSubmit={handleFormSubmit}>
             <div className="userSpo-detail">
               <h2>Spot basics</h2>
               <div>
@@ -253,32 +253,44 @@ const UserSpot = ({ isLoaded }) => {
               </div>
             </div>
             <div className="intro-form">
-              <div>
+              <div id="edit-name-part">
                 <h2>Give your spot a name</h2>
                 <textarea
+                  id="edit-spot-name"
                   value={inputName}
                   onChange={(e) => handleOnChange(e, setInputName)}
                 />
-                <p>{remainingChars}/50</p>
+                <p style={{ color: remainingChars < 0 ? "red" : "" }}>
+                  {remainingChars}/50
+                </p>
               </div>
-              <div>
+              <div id="edit-spot-des">
                 <h2>Create your description</h2>
                 <p>Share some special points make your spot unique</p>
                 <textarea
+                  id="edit-spot-description"
                   value={inputDescription}
                   onChange={(e) => handleOnChange(e, setInputDescription)}
                 />
               </div>
-              <div>
+              <div id="edit-spot-price">
                 <h2>Set your price</h2>
                 <p>You can change it at anytime</p>
-                <div>
+                <div id="price-controller">
                   <button onClick={decreasePrice}>
                     <span>
                       <i className="fa-solid fa-minus"></i>
                     </span>
                   </button>
-                  <span>{`$${inputPrice}`}</span>
+                  <div className="input-group">
+                    <span>$</span>
+                    <input
+                      id="edit-price-input"
+                      type="text"
+                      value={Number(inputPrice)}
+                      onChange={(e) => setInputPrice(e.target.value)}
+                    />
+                  </div>
                   <button onClick={increasePrice}>
                     <span>
                       <i className="fa-solid fa-plus"></i>

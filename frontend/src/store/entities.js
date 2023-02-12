@@ -5,7 +5,7 @@ const REMOVE_USERSPOT = "spot/REMOVE";
 const REMOVE_USERREVIEW = "review/REMOVE";
 const REMOVE_IMAGE = "image/REMOVE";
 const REMOVE_REVIEWIMG = "reviewImg/REMOVE";
-const EDIT = "entities/EDID";
+// const EDIT = "entities/EDID";
 const EDIT_REVIEW = "entities/EDID_REVIEW";
 const EDIT_SPOT = "entities/EDID_SPOT";
 const ADD = "entities/ADD";
@@ -262,16 +262,19 @@ const entitiesReducer = (state = initialSpots, action) => {
     case EDIT_SPOT:
       //edit a spot edit a review--payload spot userSpot--/review id exit
       newState = updateObject({}, state);
-      newState.userSpots[action.id] = {
-        ...newState.userSpots[action.id],
-        ...action.userSpots,
-      };
+      if (newState.userSpots) {
+        newState.userSpots[action.id] = {
+          ...newState.userSpots[action.id],
+          ...action.userSpots,
+        };
+      }
+
       //DO NOT MUTATE, action playload has fewer properties
       newState.spot = { ...newState.spot, ...action.userSpots };
       return newState;
     case EDIT_REVIEW:
       newState = updateObject({}, state);
-      console.log(action, newState.userReviews);
+      // console.log(action, newState.userReviews);
       if (newState.userReviews) {
         newState.userReviews[action.id] = {
           ...newState.userReviews[action.id],

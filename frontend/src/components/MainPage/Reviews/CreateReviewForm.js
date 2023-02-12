@@ -59,7 +59,7 @@ const CreateReviewForm = ({ isLoaded }) => {
 
   if (isLoaded && !user) return <Redirect to="/" />;
   return (
-    <div className="create-spot-form">
+    <div className="create-review-form">
       {spot && <h1>Spot:{spot.name}</h1>}
       {user && <p>User:{user.firstName}</p>}
       <form className="add-spot-review" onSubmit={handleRateSubmit}>
@@ -149,11 +149,9 @@ const CreateReviewForm = ({ isLoaded }) => {
           </ul>
         </fieldset>
 
-        <div>
-          <button id="create-review-btn" type="submit">
-            Submit
-          </button>
-        </div>
+        <button id="create-review-btn" type="submit">
+          Submit
+        </button>
       </form>
       <button
         id="back-spotpage-btn"
