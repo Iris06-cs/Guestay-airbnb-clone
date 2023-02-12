@@ -14,7 +14,7 @@ const Navigation = ({ isLoaded }) => {
   const sessionUser = useSelector((state) => state.session.user);
 
   return (
-    <>
+    <div id="navigation-header">
       <ul className="navigation">
         <li>
           <NavLink exact to="/">
@@ -22,24 +22,30 @@ const Navigation = ({ isLoaded }) => {
           </NavLink>
         </li>
 
+        <li>
+          {sessionUser && (
+            <Route exact path={["/", "/spots/:spotId"]}>
+              <SwichHostButton />
+            </Route>
+          )}
+        </li>
         {sessionUser && (
-          <Route exact path={["/", "/spots/:spotId"]}>
-            <SwichHostButton />
-          </Route>
-        )}
-        {sessionUser && (
-          <Route
-            exact
-            path={[
-              "/hosting/",
-              "/hosting/bookings",
-              "/hosting/spots",
-              "/hosting/spots/new",
-              "/hosting/spots/:spotId/edit",
-            ]}
-          >
-            <HostingNavLinks sessionUser={sessionUser} />
-          </Route>
+          <li>
+            <Route
+              exact
+              path={[
+                "/hosting/",
+                "/hosting/bookings",
+                "/hosting/spots",
+                "/hosting/spots/new",
+                "/hosting/spots/:spotId/details",
+                "/spots/:spotId/images",
+                // "/hosting/spots/:spotId/edit",
+              ]}
+            >
+              <HostingNavLinks sessionUser={sessionUser} />
+            </Route>
+          </li>
         )}
 
         {isLoaded && (
@@ -48,7 +54,7 @@ const Navigation = ({ isLoaded }) => {
           </li>
         )}
       </ul>
-    </>
+    </div>
   );
 };
 export default Navigation;

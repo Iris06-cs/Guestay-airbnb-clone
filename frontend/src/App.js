@@ -11,23 +11,23 @@ import MainPage from "./components/MainPage";
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [updatedSpots, setIsUpdatedSpots] = useState(false);
+  // const [updatedSpots, setIsUpdatedSpots] = useState(false);
   // const { isLogedIn, setIsLogedIn } = useIsLogedInContext();
   useEffect(() => {
     dispatch(sessionActions.restoreSessionThunk()).then((res) => {
       setIsLoaded(true);
-      // setIsLogedIn(true);
     });
   }, [dispatch]);
-  useEffect(() => {
-    dispatch(entitiesActions.restoreSpots()).then((res) => {
-      setIsUpdatedSpots(true);
-    });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(entitiesActions.restoreSpots()).then((res) => {
+  //     setIsUpdatedSpots(true);
+  //   });
+  // }, [dispatch]);
   return (
     <>
       <Navigation isLoaded={isLoaded} />
-      <MainPage isLoaded={isLoaded} updatedSpots={updatedSpots} />
+      <MainPage isLoaded={isLoaded} />
+      {/* <MainPage isLoaded={isLoaded} updatedSpots={updatedSpots} /> */}
       {/* <Reviews isLoaded={isLoaded} /> */}
 
       <Footer />

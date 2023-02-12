@@ -1,7 +1,7 @@
 import { Switch, Route } from "react-router-dom";
 import CreateReviewForm from "./CreateReviewForm";
 import UserReviews from "./UserReviews";
-
+import "./Reviews.css";
 const Reviews = ({ isLoaded }) => {
   return (
     <Switch>

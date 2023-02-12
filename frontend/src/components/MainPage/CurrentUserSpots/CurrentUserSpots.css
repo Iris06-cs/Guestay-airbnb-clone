@@ -23,7 +23,7 @@
   background-color: #f8f6f6;
 }
 
-.edit-spot-btn,
+/* .edit-spot-btn, */
 .delete-spot-btn {
   box-sizing: border-box;
   color: black;
@@ -36,6 +36,21 @@
   background-color: white;
   border: 1px solid black;
   border-radius: 10px;
+}
+.cancel-btn {
+  box-sizing: border-box;
+  position: absolute;
+  color: black;
+  text-align: center;
+  width: 85px;
+  height: 45px;
+  padding: 5px 10px 5px 10px;
+  font-size: 15px;
+  justify-self: end;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 10px;
+  margin-right: 100px;
 }
 .edit-spot-link {
   box-sizing: border-box;
@@ -50,6 +65,7 @@
 
 .owner-spot-name {
   justify-self: start;
+  text-align: center;
 }
 .owner-spot-column {
   box-sizing: border-box;
@@ -66,4 +82,17 @@
 }
 .align-right {
   justify-self: end;
+}
+.owner-spot-img {
+  width: 50px;
+  height: 50px;
+}
+.spot-name-link {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+}
+.spot-name-link:hover {
+  color: rgb(230, 8, 8);
+  font-weight: bolder;
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useParams, Redirect, useHistory } from "react-router-dom";
+import { useParams, Redirect, useHistory } from "react-router-dom";
 import multipleGenerator from "../../../utils/multipleGenerator";
 import * as entitiesActions from "../../../store/entities";
 
@@ -14,7 +14,9 @@ const UpdateUserReview = ({ isLoaded }) => {
   const [resErr, setResErrors] = useState([]);
   const [rating, setRating] = useState(0);
   const [text, setText] = useState("");
+  const [textNum, setTextNum] = useState(255);
   const [spot, setSpot] = useState("");
+  const [inputValidate, setInputValidate] = useState([]);
   useEffect(() => {
     dispatch(entitiesActions.loadUserReviewsThunk());
   }, [dispatch]);
@@ -26,21 +28,35 @@ const UpdateUserReview = ({ isLoaded }) => {
       setRating(stars);
     }
   }, [reviews, reviewId]);
+  const currentLength = text.length;
+  useEffect(() => {
+    const maxName = 255;
+    setTextNum(maxName - currentLength);
+    let err = [];
+    if (textNum < 0) {
+      err.push("Exceeds the maximum number of words allowed");
+      setInputValidate([...err]);
+    }
+    if (textNum >= 0) {
+      setInputValidate([]);
+    }
+  }, [currentLength, textNum]);
   const rateScale = ["Poor", "Fail", "OK", "Good", "Great"];
   const handelEditReview = (e) => {
     e.preventDefault();
+    setInputValidate([]);
     dispatch(
       entitiesActions.editReviewThunk(reviewId, { review: text, stars: rating })
     )
       .then((res) => {
-        // history.replace(`/reviews/current`);
+        history.replace(`/reviews/current`);
       })
       .catch(async (res) => {
         const data = await res.json();
         setResErrors(data.errors);
       });
   };
-  console.log(rating);
+
   //only login user can edit
   if (isLoaded && !user) return <Redirect to="/" />;
   return (
@@ -98,6 +114,18 @@ const UpdateUserReview = ({ isLoaded }) => {
         </fieldset>
         <label>Comment</label>
         <textarea value={text} onChange={(e) => setText(e.target.value)} />
+        <p>{textNum}/255</p>
+        <ul>
+          {inputValidate.length > 0 &&
+            inputValidate.map((err) => (
+              <li key={err}>
+                <span style={{ color: "red", padding: "5px" }}>
+                  <i className="fa-solid fa-circle-exclamation"></i>
+                </span>
+                {err}
+              </li>
+            ))}
+        </ul>
         <div>
           <button type="submit">Submit</button>
         </div>

@@ -1,9 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
+
 import { useDispatch } from "react-redux";
 
 import { loginThunk } from "../../store/session";
 import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
+import { NavLink } from "react-router-dom";
+import SignupFormModal from "../SignupFormModal";
 
 const LoginFormModal = () => {
   const dispatch = useDispatch();
@@ -91,6 +94,7 @@ const LoginFormModal = () => {
             </li>
           ))}
         </ul>
+        {/* <p id="signup-direction">Not a member? Sign-up</p> */}
         <button id="login-submit" type="submit">
           Submit
         </button>

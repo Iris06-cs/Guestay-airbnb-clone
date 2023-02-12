@@ -1,0 +1,234 @@
+.spot-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 1120px;
+  height: 560;
+  margin: 0 auto;
+  padding: 0;
+}
+.top-title {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+}
+.top-left {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  column-gap: 10px;
+}
+.top-right {
+  display: flex;
+  align-items: center;
+  column-gap: 30px;
+}
+.spot-name-title {
+  color: black;
+  font-weight: bold;
+}
+.spot-bio {
+  color: black;
+}
+.photo-section-main {
+  box-sizing: border-box;
+  display: grid;
+  column-gap: 5px;
+  /* grid: repeat(4, 1fr); */
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-flow: dense;
+  grid-template-rows: 1fr 1fr;
+  border-radius: 20px;
+  width: 100%;
+  height: 560px;
+}
+.main-photo {
+  grid-column: 1 / span 2;
+  grid-row: 1 / span 2;
+}
+.spot-preview-img {
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+.other-img {
+  box-sizing: border-box;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  grid-column: 3 / span 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-wrap: wrap;
+  /* margin-left: 25px; */
+  justify-content: space-between;
+  align-content: space-between;
+  align-items: stretch;
+  overflow: hidden;
+}
+.detail-spot-img {
+  width: 276px;
+  height: 280px;
+}
+.middle-section {
+  width: 60%;
+}
+.booking-side-card {
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 20px;
+  position: absolute;
+  right: 20.6%;
+  top: 820px;
+  width: 22%;
+  font-size: 25px;
+  z-index: -1;
+}
+#host-info {
+  border-bottom: solid rgb(219, 216, 216) 1px;
+}
+#feature {
+  border-bottom: solid rgb(219, 216, 216) 1px;
+}
+
+.spot-description {
+  display: flex;
+  justify-content: center;
+  border-bottom: solid rgb(219, 216, 216) 1px;
+  flex-direction: column;
+  min-height: 100px;
+}
+.spot-reviews {
+  width: 1120px;
+  /* margin-left: 24%; */
+  /* margin-top: 150px; */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+#review-title {
+  font-weight: bold;
+  font-size: 20px;
+}
+.spot-reviews-list {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0;
+}
+.reviews-list {
+  word-break: break-all;
+  max-width: 50%;
+  flex-basis: 50%;
+}
+.add-review-link {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.star-option {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+.userRate {
+  align-self: flex-start;
+  margin: 0 auto 5px auto;
+  appearance: none;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  border: 3px solid #e4e3da;
+  transition: 0.2s all linear;
+  position: relative;
+  top: 3px;
+  visibility: visible;
+}
+.userRate:checked {
+  border: 5px solid #e4e3da;
+}
+.userRate.hidden {
+  visibility: hidden;
+}
+.starRate {
+  margin: 0 auto 5px auto;
+  appearance: none;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  border: 3px solid white;
+
+  position: relative;
+  top: 3px;
+}
+.edit-review-btn,
+.delete-review-btn,
+.cancel-delete-review {
+  background-color: white;
+  border: solid rgb(219, 216, 216) 1px;
+  border-radius: 20px;
+  width: 65px;
+  height: 25px;
+  margin: 5px;
+}
+
+.del-review-img-btn,
+.add-review-img-btn {
+  background-color: white;
+  border: solid rgb(219, 216, 216) 1px;
+  border-radius: 20px;
+  width: 100px;
+  height: 25px;
+  margin: 5px;
+}
+#imgUrl-review {
+  background-color: white;
+  border: solid rgb(219, 216, 216) 1px;
+  border-radius: 20px;
+  margin: 5px;
+}
+.edit-review-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* height: 150px; */
+  text-align: start;
+}
+.edit-textarea {
+  width: 50%;
+  max-height: 60px;
+  border: solid rgb(219, 216, 216) 1px;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 16px;
+  resize: none;
+}
+.edit-btns {
+  /* align-self: flex-end; */
+
+  display: flex;
+}
+.review-date {
+  color: grey;
+  font-size: 12px;
+  margin-top: 0;
+  padding-top: 0;
+}
+.review-username {
+  margin-bottom: 5px;
+}
+ul.validate-errs {
+  padding: 0;
+}
+.edit-err-msg {
+  text-align: left;
+}

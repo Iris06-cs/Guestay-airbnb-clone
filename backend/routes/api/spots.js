@@ -91,7 +91,7 @@ const validateReviewBody = [
     .exists({ checkFalsy: true })
     .withMessage("Please select a star")
     .isInt({ min: 1, max: 5 })
-    .withMessage("Please select start from 1 to 5"),
+    .withMessage("Please select star from 1 to 5"),
   handleValidationErrors,
 ];
 router.post(
