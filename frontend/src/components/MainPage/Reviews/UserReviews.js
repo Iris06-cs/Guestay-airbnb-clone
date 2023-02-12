@@ -64,7 +64,7 @@ const UserReviews = ({ isLoaded }) => {
   //   setReviewUrl("");
   // };
 
-  if (isLoaded && !user) return <LoginFormModal />;
+  // if (isLoaded && !user) return <LoginFormModal />;
 
   return (
     <div className="user-reviews">

@@ -28,12 +28,12 @@ const CurrentUserSpots = ({ isLoaded }) => {
   //   if (user) setReqLogin(false);
   // }, [user]);
   //if no user logged in ==>login page, if logout-->home
-  if (isLoaded && !user)
-    return (
-      <>
-        <LoginFormModal />
-      </>
-    );
+  // if (isLoaded && !user)
+  //   return (
+  //     <>
+  //       <LoginFormModal />
+  //     </>
+  //   );
 
   //if user does not have any spot
   if (isLoaded && typeof spots.userSpots === "string")

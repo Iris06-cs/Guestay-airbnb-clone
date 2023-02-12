@@ -84,9 +84,9 @@ const AddSpotPhoto = ({ isLoaded }) => {
     setIsPreview(false);
   };
 
-  if (isLoaded && !user) {
-    return <LoginFormModal />;
-  }
+  // if (isLoaded && !user) {
+  //   return <LoginFormModal />;
+  // }
   //stay on the page after login???
   // if (isLoaded && owner && owner !== userId) return <Redirect to="/" />;
   return (
