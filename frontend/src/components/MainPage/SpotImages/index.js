@@ -26,15 +26,15 @@ const AddSpotPhoto = ({ isLoaded }) => {
   // const [userId, setUserId] = useState("");
   // const [reqLogin, setReqLogin] = useState(true);
   //fetch spot image
-  console.log(imges, isChanged);
+  // console.log(imges, isChanged);
   useEffect(() => {
     dispatch(entitiesActions.loadOneSpotThunk(spotId)).then().catch();
-    console.log("loading");
+    // console.log("loading");
   }, [dispatch, spotId, user, isChanged]);
   //update
   useEffect(() => {
     if (spot && typeof spot.SpotImages !== "string") {
-      console.log("render", spot.SpotImages);
+      // console.log("render", spot.SpotImages);
       setImges(spot.SpotImages);
 
       const preview = spot.SpotImages.findLast((img) => img.preview === true);
@@ -54,11 +54,11 @@ const AddSpotPhoto = ({ isLoaded }) => {
   };
   const handleDelImg = (e, imgId) => {
     e.preventDefault();
-    console.log("submit");
+    // console.log("submit");
     dispatch(entitiesActions.deleteSpotImg(imgId))
       .then((res) => setIsChanged((prev) => prev + 1))
       .catch(async (res) => {
-        const data = await res.json();
+        // const data = await res.json();
         // console.log(data);
       });
   };

@@ -17,7 +17,7 @@
 .top-left {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: flex-start;
   column-gap: 10px;
 }
 .top-right {
@@ -201,7 +201,7 @@
   flex-direction: column;
   align-items: flex-start;
   /* height: 150px; */
-  text-align: start;
+  text-align: left;
 }
 .edit-textarea {
   width: 50%;
