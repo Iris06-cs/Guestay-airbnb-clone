@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useParams, Redirect } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as entitiesActions from "../../../store/entities";
@@ -31,7 +31,7 @@ const UserSpot = ({ isLoaded }) => {
   const [ownerId, setOwnerId] = useState("");
   const [userId, setIsUserId] = useState("");
   const [photoes, setPhotoes] = useState("");
-  const [redirect, setRedirect] = useState(false);
+  // const [redirect, setRedirect] = useState(false);
   //load spot data and reload update when edit submited
   useEffect(() => {
     dispatch(entitiesActions.loadOneSpotThunk(spotId));

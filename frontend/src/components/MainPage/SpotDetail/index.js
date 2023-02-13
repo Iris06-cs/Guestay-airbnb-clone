@@ -160,7 +160,7 @@ const SpotDetail = ({ isLoaded }) => {
                       )}
                     </div>
                   ) : (
-                    <div key={idx}>
+                    <div key={`img${idx}`}>
                       {defaultImg("", demoSpotImg, "detail-spot-img", "spot")}
                     </div>
                   )

@@ -85,10 +85,10 @@
   background-color: white;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.12);
   border-radius: 20px;
-  position: absolute;
-  right: 20.6%;
-  top: 820px;
-  width: 22%;
+  position: relative;
+  /* right: 20.6%;
+  top: 820px; */
+  width: 400px;
   font-size: 25px;
   z-index: -1;
 }

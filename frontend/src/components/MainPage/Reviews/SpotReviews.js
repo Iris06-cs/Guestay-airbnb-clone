@@ -176,11 +176,7 @@ const SpotReviews = (props) => {
                 >
                   <div>
                     {multipleGenerator(5).map((num) => (
-                      <span
-                        className="star-option"
-                        key={num}
-                        // style={{ display: "inline" }}
-                      >
+                      <span className="star-option" key={num}>
                         <label>
                           {user && user.id !== userId ? (
                             <span
@@ -189,11 +185,7 @@ const SpotReviews = (props) => {
                                 backgroundColor: "white",
                               }}
                             >
-                              <i
-                                // name={num + 1}
-                                // onClick={(e) => setRateStar(e.target.name)}
-                                className="fa-solid fa-star"
-                              ></i>
+                              <i className="fa-solid fa-star"></i>
                             </span>
                           ) : (
                             <span
@@ -205,26 +197,17 @@ const SpotReviews = (props) => {
                                 backgroundColor: "white",
                               }}
                             >
-                              <i
-                                // name={num + 1}
-                                // onClick={(e) => setRateStar(e.target.name)}
-                                className="fa-solid fa-star"
-                              ></i>
+                              <i className="fa-solid fa-star"></i>
                             </span>
                           )}
                         </label>
                         {user && user.id !== userId ? (
                           <input
                             className="starRate"
-                            // onChange={(e) => setRateStar(e.target.value)}
                             name="rating-star"
-                            // style={{
-                            //   appearance: user && user.id === userId ? "" : "none",
-                            // }}
                             type="radio"
-                            value={num + 1}
-                            // checked={rateStar === num + 1}
-                            // value={stars}
+                            defaultValue={num + 1}
+                            // value={num + 1}
                           ></input>
                         ) : (
                           <input
@@ -235,43 +218,25 @@ const SpotReviews = (props) => {
                             }
                             onChange={(e) => setRateStar(e.target.value)}
                             name="rating-star"
-                            // style={{
-                            //   appearance: user && user.id === userId ? "" : "none",
-                            // }}
                             type="radio"
                             value={num + 1}
-                            checked={rateStar === num + 1 || stars === num + 1}
+                            checked={
+                              Number(rateStar) === num + 1 ||
+                              (!rateStar && stars === num + 1)
+                            }
                           ></input>
                         )}
-                        {/* <input
-                        className={
-                          user && user.id === userId
-                            ? `${reviewName}`
-                            : "starRate"
-                        }
-                        onChange={(e) => setRateStar(e.target.value)}
-                        name="rating-star"
-                        // style={{
-                        //   appearance: user && user.id === userId ? "" : "none",
-                        // }}
-                        type="radio"
-                        value={num + 1}
-                        checked={rateStar === num + 1}
-                        // value={stars}
-                      ></input> */}
                       </span>
                     ))}
                   </div>
-                  {/* <p>{review}</p> */}
+
                   {clickEdit && user && user.id === userId ? (
                     <>
                       <textarea
-                        // ref={inputRef}
                         className="edit-textarea"
                         autoFocus
                         value={reviewText}
                         onChange={(e) => setReviewText(e.target.value)}
-                        // defaultValue={review}
                         onFocus={(e) => handleIsFocus(e, review)}
                       />
                       <ul className="validate-errs">
@@ -300,7 +265,7 @@ const SpotReviews = (props) => {
                   ) : (
                     <p>{review}</p>
                   )}
-                  {/* <textarea value={review} onChange={editReviewText} /> */}
+
                   {user && user.id === userId && (
                     <div className="edit-btns">
                       <button
@@ -329,7 +294,6 @@ const SpotReviews = (props) => {
                           onClick={(e) => {
                             setCancel(false);
                             setBtnText("Delete");
-                            // setIsDeleted(false);
                           }}
                           className="cancel-delete-review"
                         >
