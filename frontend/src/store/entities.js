@@ -298,7 +298,8 @@ const entitiesReducer = (state = initialSpots, action) => {
       newState = updateObject({}, state);
 
       delete newState.userSpots[action.id];
-      if (newState.spot && newState.spot.id == action.id) delete newState.spot;
+      if (newState.spot && Number(newState.spot.id) === Number(action.id))
+        delete newState.spot;
       return newState;
     case REMOVE_USERREVIEW: //delete spot review current user id
       newState = updateObject({}, state);

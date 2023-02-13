@@ -343,12 +343,6 @@ const SpotReviews = (props) => {
                   )}
                 </form>
 
-                {/* <EditReviewSpotPage
-                  userId={user.id}
-                  stars={stars}
-                  review={review}
-                  user={user}
-                /> */}
                 {/* no photo defaut img */}
                 {typeof ReviewImages === "string" ? (
                   <>
@@ -370,11 +364,13 @@ const SpotReviews = (props) => {
                         "review"
                         // img.id
                       )}
-                      <DeleteReviewImg
-                        id={id}
-                        imgId={img.id}
-                        setIsChanged={setIsChanged}
-                      />
+                      {user && user.id === userId && (
+                        <DeleteReviewImg
+                          id={id}
+                          imgId={img.id}
+                          setIsChanged={setIsChanged}
+                        />
+                      )}
                     </div>
                   ))
                 )}
