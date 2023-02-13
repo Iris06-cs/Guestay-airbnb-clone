@@ -31,8 +31,6 @@ const CreateSpotForm = ({ isLoaded }) => {
   }, [spotState]);
   useEffect(() => {
     if (spotId) dispatch(entitiesActions.loadOneSpotThunk(spotId));
-    // .then((res) => console.log("success all spots"))
-    // .catch(async (res) => console.log(res, "all spots"));
   }, [dispatch, spotId]);
   const handleOnChange = (e, callback) => {
     callback(e.target.value);
@@ -83,20 +81,22 @@ const CreateSpotForm = ({ isLoaded }) => {
     dispatch(entitiesActions.createSpotThunk(newSpot))
       .then((data) => {
         setSpotId(data.id);
-      })
+        resetForm();
+      }) //validation errors
       .catch(async (res) => {
         const data = await res.json();
         if (data && data.statusCode >= 400) setErrors(data.errors);
       });
     // setIsClicked(false);
     setIsSubmited(true);
-    resetForm();
+    // resetForm();
   };
 
   //hasn't click next or clicked next but having input validation err
   //render form
   // otherwise form successfully submitted will render add image page
   if (isLoaded && !user) return <Redirect to="/" />;
+
   if (!isSubmited || (isSubmited && errors.length > 0))
     return (
       <div id="create-new-container">

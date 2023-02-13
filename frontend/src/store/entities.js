@@ -244,7 +244,7 @@ export const deleteReviewImg = (imgId, reviewId) => async (dispatch) => {
 const initialSpots = {};
 const entitiesReducer = (state = initialSpots, action) => {
   let newState;
-  let spot;
+  // let spot;
   switch (action.type) {
     //get all spots,get all spots of current user,get all reviews of current user,get all reviews of spot by id
     // newState=updateObject({},state)
@@ -377,24 +377,24 @@ export default entitiesReducer;
 function updateObject(oldObject, newValues) {
   return Object.assign({}, oldObject, newValues);
 }
-function updateItemInArray(array, itemId, updateItemCallback) {
-  const updatedItems = array.map((item) => {
-    if (item.id !== itemId) {
-      // Since we only want to update one item, preserve all others as they are now
-      return item;
-    }
-    // Use the provided callback to create an updated item
-    const updatedItem = updateItemCallback(item);
-    return updatedItem;
-  });
+// function updateItemInArray(array, itemId, updateItemCallback) {
+//   const updatedItems = array.map((item) => {
+//     if (item.id !== itemId) {
+//       // Since we only want to update one item, preserve all others as they are now
+//       return item;
+//     }
+//     // Use the provided callback to create an updated item
+//     const updatedItem = updateItemCallback(item);
+//     return updatedItem;
+//   });
 
-  return updatedItems;
-}
+//   return updatedItems;
+// }
 function flattingArray(array) {
   let obj = {};
   if (typeof array !== "string") array.forEach((el) => (obj[el.id] = el));
   return obj;
 }
-function sliceKey(obj) {
-  return Object.keys(obj)[0];
-}
+// function sliceKey(obj) {
+//   return Object.keys(obj)[0];
+// }

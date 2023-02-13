@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
 import * as entitiesActions from "../../../store/entities";
@@ -8,7 +8,7 @@ import demoSpotImg from "../../../images/demoSpotImg.png";
 import AddReviewImg from "./AddReviewImg";
 import DeleteReviewImg from "./DeleteReviewImg";
 import converDate from "../../../utils/convertDate";
-// import EditReviewSpotPage from "./EditReviewSpotPage";
+
 const SpotReviews = (props) => {
   const dispatch = useDispatch();
   // let inputRef = useRef(null);
@@ -42,27 +42,7 @@ const SpotReviews = (props) => {
     if (reviewText.length > 255) err.push("You can only have 255 characters");
     setInputValidate(err);
   }, [reviewText.length]);
-  // const converData = (dateStr) => {
-  //   let year = dateStr.split("-")[0];
-  //   let month = dateStr.split("-")[1];
-  //   const months = {
-  //     "01": "January",
-  //     "02": "February",
-  //     "03": "March",
-  //     "04": "April",
-  //     "05": "May",
-  //     "06": "June",
-  //     "07": "July",
-  //     "08": "August",
-  //     "09": "September",
-  //     10: "October",
-  //     11: "November",
-  //     12: "December",
-  //   };
 
-  //   month = months[month];
-  //   return { year, month };
-  // };
   let reviewName = "userRate " + (clickEdit ? "" : "hidden");
   let reviewUsers;
   if (reviews) reviewUsers = reviews.map((review) => review.userId);
@@ -83,7 +63,7 @@ const SpotReviews = (props) => {
     if (editBtn === "Submit") {
       const reviewId = e.target.name.split("-")[0];
       const reviewStar = e.target.name.split("-")[1];
-      // console.log(inputRef.current.value);
+
       const newReview = {
         review: reviewText,
         stars: rateStar ? rateStar : reviewStar,
@@ -114,13 +94,6 @@ const SpotReviews = (props) => {
       setRateStar(0);
     }
   };
-  // const handleOnClick = (e, stars) => {
-  //   if (!isClicked) {
-  //     setRateStar(stars);
-  //     setIsClicked(true);
-  //   }
-  // };
-
   const handleDeleteReview = (e) => {
     e.preventDefault();
     setTargetReviewId(e.target.name);
@@ -177,20 +150,18 @@ const SpotReviews = (props) => {
         </div>
         <ul className="spot-reviews-list">
           {reviews.map(
-            (
-              {
-                id,
-                userId,
-                spotId,
-                review,
-                stars,
-                createdAt,
-                updatedAt,
-                User,
-                ReviewImages,
-              },
-              idx
-            ) => (
+            ({
+              id,
+              userId,
+              // spotId,
+              review,
+              stars,
+              // createdAt,
+              updatedAt,
+              User,
+              ReviewImages,
+            }) => (
+              // idx
               <li key={id} className="reviews-list">
                 <p className="review-username">{User.firstName}</p>
                 <p className="review-date">

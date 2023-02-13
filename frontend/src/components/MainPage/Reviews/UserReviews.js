@@ -16,7 +16,7 @@ const UserReviews = ({ isLoaded }) => {
   const userReviews = useSelector((state) => state.entities.userReviews); //{1:{},2:{}}
 
   const [reviewList, setReviewList] = useState([]);
-  const [isChanged, setIsChanged] = useState(0);
+  // const [isChanged, setIsChanged] = useState(0);
 
   // const [reviewUrl, setReviewUrl] = useState("");
   // const [errs, setErrs] = useState([]);
@@ -24,9 +24,9 @@ const UserReviews = ({ isLoaded }) => {
     dispatch(entitiesActions.loadUserReviewsThunk())
       .then()
       .catch(async (res) => {
-        const data = await res.json();
+        // const data = await res.json();
       });
-  }, [dispatch, isChanged]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (userReviews) setReviewList([...Object.values(userReviews)]);
@@ -64,7 +64,7 @@ const UserReviews = ({ isLoaded }) => {
   //   setReviewUrl("");
   // };
 
-  // if (isLoaded && !user) return <LoginFormModal />;
+  if (isLoaded && !user) return <LoginFormModal />;
 
   return (
     <div className="user-reviews">

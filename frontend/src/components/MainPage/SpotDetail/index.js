@@ -70,7 +70,7 @@ const SpotDetail = ({ isLoaded }) => {
         const data = await res.json();
         if (data.statusCode === 404) setResErrs([data.message]);
       });
-  }, [spotId, dispatch, isChanged]);
+  }, [spotId, dispatch, isChanged, user]);
   // console.log(isChanged, "delete state");
   useEffect(() => {
     if (spot) {

@@ -4,7 +4,7 @@ import * as entitiesActions from "../../../store/entities";
 
 const DeleteReviewImg = (props) => {
   const { id, imgId, setIsChanged } = props;
-  // console.log(props);
+
   const dispatch = useDispatch();
 
   const handleDeleteImg = (e) => {

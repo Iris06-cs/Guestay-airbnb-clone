@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Redirect, NavLink } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as entitiesActions from "../../../store/entities";
@@ -32,6 +31,7 @@ const UserSpot = ({ isLoaded }) => {
   const [ownerId, setOwnerId] = useState("");
   const [userId, setIsUserId] = useState("");
   const [photoes, setPhotoes] = useState("");
+  const [redirect, setRedirect] = useState(false);
   //load spot data and reload update when edit submited
   useEffect(() => {
     dispatch(entitiesActions.loadOneSpotThunk(spotId));
@@ -57,8 +57,8 @@ const UserSpot = ({ isLoaded }) => {
         name,
         description,
         price,
-        numReviews,
-        avgStarRating,
+        // numReviews,
+        // avgStarRating,
         SpotImages,
       } = spotDetail;
       setInputStreet(address);
@@ -123,16 +123,30 @@ const UserSpot = ({ isLoaded }) => {
         })
     );
   };
+  useEffect(() => {
+    if (ownerId && userId && userId !== ownerId) {
+      setTimeout(() => {
+        setRedirect(true);
+      }, 3000);
+    }
+    return;
+  }, [ownerId, userId]);
   //if no user logged in ==>login page
   if (isLoaded && !user)
     return (
       <>
-        <h1>Please Login</h1>
         <LoginFormModal />
       </>
     );
-  //if login user is not owner==>home
-  // if (ownerId && userId && userId !== ownerId) return <Redirect to="/" />;
+  if (redirect) return <Redirect to="/" />;
+  //if login user is not owner will show message below and redirect back to home in 3 sec
+  if (ownerId && userId && userId !== ownerId)
+    return (
+      <>
+        <h1>You do not have authorization to this page</h1>
+        <h2>Direct back to home page</h2>
+      </>
+    );
 
   return (
     <div className="user-spot-page">
