@@ -40,6 +40,7 @@ const SpotReviews = (props) => {
   useEffect(() => {
     let err = [];
     if (reviewText.length > 255) err.push("You can only have 255 characters");
+    if (reviewText.length === 0) err.push("You cannot leave comment empty");
     setInputValidate(err);
   }, [reviewText.length]);
 
@@ -48,6 +49,8 @@ const SpotReviews = (props) => {
   if (reviews) reviewUsers = reviews.map((review) => review.userId);
   const handleClickEdit = (e) => {
     e.preventDefault();
+    setResErrors([]);
+    setInputValidate([]);
     if (editBtn === "Edit") {
       setClickEdit(true);
       setEditBtn("Submit");
@@ -60,6 +63,7 @@ const SpotReviews = (props) => {
   const submitEdit = (e) => {
     e.preventDefault();
     setResErrors([]);
+    setInputValidate([]);
     if (editBtn === "Submit") {
       const reviewId = e.target.name.split("-")[0];
       const reviewStar = e.target.name.split("-")[1];
@@ -92,6 +96,7 @@ const SpotReviews = (props) => {
       setIsChanged((prev) => prev + 1);
       setReviewText("");
       setRateStar(0);
+      if (isFocus) setIsFocus(false);
     }
   };
   const handleDeleteReview = (e) => {
@@ -275,6 +280,17 @@ const SpotReviews = (props) => {
                       <ul className="validate-errs">
                         {inputValidate.length > 0 &&
                           inputValidate.map((err) => (
+                            <li key={err} className="edit-err-msg">
+                              <span style={{ color: "red", padding: "5px" }}>
+                                <i className="fa-solid fa-circle-exclamation"></i>
+                              </span>
+                              {err}
+                            </li>
+                          ))}
+                      </ul>
+                      <ul className="validate-errs">
+                        {resErr.length > 0 &&
+                          resErr.map((err) => (
                             <li key={err} className="edit-err-msg">
                               <span style={{ color: "red", padding: "5px" }}>
                                 <i className="fa-solid fa-circle-exclamation"></i>

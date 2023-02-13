@@ -138,7 +138,7 @@ const UserSpot = ({ isLoaded }) => {
         <LoginFormModal />
       </>
     );
-  if (redirect) return <Redirect to="/" />;
+  if (isLoaded && user && redirect) return <Redirect to="/" />;
   //if login user is not owner will show message below and redirect back to home in 3 sec
   if (ownerId && userId && userId !== ownerId)
     return (

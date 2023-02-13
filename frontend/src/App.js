@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import Footer from "./components/Footer";
 import Navigation from "./components/Navigation";
 import * as sessionActions from "./store/session";
-import * as entitiesActions from "./store/entities";
+// import * as entitiesActions from "./store/entities";
 // import Reviews from "./components/Reviews";
 import MainPage from "./components/MainPage";
 

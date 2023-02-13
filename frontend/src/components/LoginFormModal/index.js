@@ -5,8 +5,8 @@ import { useDispatch } from "react-redux";
 import { loginThunk } from "../../store/session";
 import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
-import { NavLink } from "react-router-dom";
-import SignupFormModal from "../SignupFormModal";
+// import { NavLink } from "react-router-dom";
+// import SignupFormModal from "../SignupFormModal";
 
 const LoginFormModal = () => {
   const dispatch = useDispatch();
