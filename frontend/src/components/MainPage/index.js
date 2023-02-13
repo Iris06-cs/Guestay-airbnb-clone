@@ -11,7 +11,7 @@ import SpotDetail from "./SpotDetail";
 import CreateSpotForm from "./NewSpot/CreateSpotForm";
 import PageNotFound from "./PageNotFound";
 import Reviews from "./Reviews";
-import UpdateUserReview from "./Reviews/UpdateUserReview";
+// import UpdateUserReview from "./Reviews/UpdateUserReview";
 import UserSpot from "./CurrentUserSpots/UserSpot";
 const MainPage = ({ isLoaded, updatedSpots }) => {
   return (
