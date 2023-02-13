@@ -38,16 +38,16 @@ const MainPage = ({ isLoaded, updatedSpots }) => {
         <Route exact path="/hosting/spots/:spotId/details">
           <UserSpot isLoaded={isLoaded} />
         </Route>
-        <Route exact path="/user/reviews/:reviewId/edit">
+        {/* <Route exact path="/user/reviews/:reviewId/edit">
           <UpdateUserReview isLoaded={isLoaded} />
-        </Route>
+        </Route> */}
         <Route exact path="/spots/:spotId/images">
           <AddSpotPhoto isLoaded={isLoaded} />
         </Route>
         <Route exact path="/spots/:spotId">
           <SpotDetail isLoaded={isLoaded} />
         </Route>
-        <Route exact path={["/reviews/current", "/spots/:spotId/reviews/new"]}>
+        <Route exact path={"/spots/:spotId/reviews/new"}>
           <Reviews isLoaded={isLoaded} />
         </Route>
         <Route>
