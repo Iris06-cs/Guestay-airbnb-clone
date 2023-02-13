@@ -33,6 +33,13 @@ Frontend:
 - View all reviews written by the current login user
 - Add/Edit/Delete a review for a spot by the current user
 - Add /Remove images for a review
+  ![log gin](./showcaseImg/login.png)
+
+![All spots](./showcaseImg/allspots.png)
+
+![Spot detail](./showcaseImg/spotdetail.png)
+
+![User spots](./showcaseImg/userspots.png)
 
 ## Run locally
 

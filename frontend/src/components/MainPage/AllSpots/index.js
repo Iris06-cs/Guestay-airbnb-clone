@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
+// import { useHistory } from "react-router-dom";
 import * as entitiesActions from "../../../store/entities";
 import demoSpotImg from "../../../images/demoSpotImg.png";
 import defaultImg from "../../../utils/handleImageError";
 import "./AllSpots.css";
 
 const AllSpots = () => {
+  // const history = useHistory();
   const entities = useSelector((state) => state.entities);
   const spots = entities.spots;
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const AllSpots = () => {
               className="spot-photo-card"
               //open each single spot on new tab
               onClick={(e) => window.open(`/spots/${spot.id}`)}
+              // onClick={(e) => history.push(`/spots/${spot.id}`)}
             >
               {defaultImg(
                 spot.previewImage,
