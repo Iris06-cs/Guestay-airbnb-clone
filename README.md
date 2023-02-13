@@ -76,9 +76,9 @@ To run the application locally, please follow the steps below:
 
 [Redux Store Tree](https://github.com/Iris06-cs/Airbnb-clone/blob/main/frontend/Redux-store-tree.png)
 
-[Feature list]
+[Feature list](https://github.com/Iris06-cs/Airbnb-clone/blob/main/frontend/feature-list.md)
 
-[Frontend Routes Documentation]
+[Frontend Routes Documentation](https://github.com/Iris06-cs/Airbnb-clone/blob/main/frontend/frontend-routes.md)
 
 ## To-dos
 
