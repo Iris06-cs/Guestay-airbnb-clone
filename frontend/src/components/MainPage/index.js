@@ -47,7 +47,7 @@ const MainPage = ({ isLoaded, updatedSpots }) => {
         <Route exact path="/spots/:spotId">
           <SpotDetail isLoaded={isLoaded} />
         </Route>
-        <Route exact path={"/spots/:spotId/reviews/new"}>
+        <Route exact path={["/reviews/current", "/spots/:spotId/reviews/new"]}>
           <Reviews isLoaded={isLoaded} />
         </Route>
         <Route>
