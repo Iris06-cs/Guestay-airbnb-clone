@@ -138,16 +138,16 @@ const UserSpot = ({ isLoaded }) => {
         <LoginFormModal />
       </>
     );
-  if (isLoaded && user && redirect) return <Redirect to="/" />;
+
   //if login user is not owner will show message below and redirect back to home in 3 sec
-  if (ownerId && userId && userId !== ownerId)
+  if (isLoaded && ownerId && userId && userId !== ownerId)
     return (
       <>
         <h1>You do not have authorization to this page</h1>
         <h2>Direct back to home page</h2>
       </>
     );
-
+  if (isLoaded && user && redirect) return <Redirect to="/" />;
   return (
     <div className="user-spot-page">
       <div className="user-spot-title">
