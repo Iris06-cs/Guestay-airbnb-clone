@@ -57,7 +57,7 @@ To run the application locally, please follow the steps below:
     npm install
     ```
 
-    Create a **.env** file to setup environment variables refer to the example.env file and execute the following shell script to migrate and seed the database:
+    Create a **.env** file to setup environment variables refer to the .env.example file and execute the following shell script to migrate and seed the database:
 
     ```bash
      sh db-commands.sh
