@@ -123,14 +123,14 @@ const UserSpot = ({ isLoaded }) => {
         })
     );
   };
-  useEffect(() => {
-    if (ownerId && userId && userId !== ownerId) {
-      setTimeout(() => {
-        setRedirect(true);
-      }, 3000);
-    }
-    return;
-  }, [ownerId, userId]);
+  // useEffect(() => {
+  //   if (ownerId && userId && userId !== ownerId) {
+  //     setTimeout(() => {
+  //       setRedirect(true);
+  //     }, 3000);
+  //   }
+  //   return;
+  // }, [ownerId, userId]);
   //if no user logged in ==>login page
   if (isLoaded && !user)
     return (
@@ -140,14 +140,14 @@ const UserSpot = ({ isLoaded }) => {
     );
 
   //if login user is not owner will show message below and redirect back to home in 3 sec
-  if (isLoaded && ownerId && userId && userId !== ownerId)
-    return (
-      <>
-        <h1>You do not have authorization to this page</h1>
-        <h2>Direct back to home page</h2>
-      </>
-    );
-  if (isLoaded && user && redirect) return <Redirect to="/" />;
+  // if (isLoaded && ownerId && userId && userId !== ownerId)
+  //   return (
+  //     <>
+  //       <h1>You do not have authorization to this page</h1>
+  //       <h2>Direct back to home page</h2>
+  //     </>
+  //   );
+  // if (isLoaded && user && redirect) return <Redirect to="/" />;
   return (
     <div className="user-spot-page">
       <div className="user-spot-title">

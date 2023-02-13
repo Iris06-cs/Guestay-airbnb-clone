@@ -136,10 +136,7 @@ const SpotReviews = (props) => {
                     <i className="fa-solid fa-star"></i>
                   </span>
                 </label>
-                <input
-                  style={{ WebkitAppearance: "none" }}
-                  type="radio"
-                ></input>
+                <input style={{ appearance: "none" }} type="radio"></input>
               </li>
             ))}
           </ul>
