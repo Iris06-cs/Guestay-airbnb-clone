@@ -15,11 +15,11 @@ const SpotDetail = ({ isLoaded }) => {
   const user = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.entities.spot);
   const reviews = useSelector((state) => state.entities.spotReviews);
-  // console.log(reviews, "not change");
+
   const [spotInfo, setSpotInfo] = useState("");
   const [reviewInfo, setReviewInfo] = useState("");
   const [resErrs, setResErrs] = useState([]);
-  // const [isDeleted, setIsDeleted] = useState(false);
+
   const [isChanged, setIsChanged] = useState(0);
   const {
     // id,
@@ -79,7 +79,7 @@ const SpotDetail = ({ isLoaded }) => {
     if (reviews) {
       setReviewInfo({ ...reviews });
     }
-  }, [spot, reviews]);
+  }, [spot, reviews, spotId]);
 
   if (resErrs.length > 0) return <PageNotFound />;
   return (

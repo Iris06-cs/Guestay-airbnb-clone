@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import * as entitiesActions from "../../../store/entities";
 import demoSpotImg from "../../../images/demoSpotImg.png";
 import defaultImg from "../../../utils/handleImageError";
 import "./AllSpots.css";
 
 const AllSpots = () => {
-  // const history = useHistory();
+  const history = useHistory();
   const entities = useSelector((state) => state.entities);
   const spots = entities.spots;
   const dispatch = useDispatch();
@@ -15,7 +15,14 @@ const AllSpots = () => {
   useEffect(() => {
     dispatch(entitiesActions.loadSpotsThunk());
   }, [dispatch]);
-
+  // const handleClickSpot = (e, spotId) => {
+  //   dispatch(entitiesActions.loadOneSpotThunk(spotId))
+  //     .then((res) => history.replace(`/spots/${spotId}`))
+  //     .catch(async (res) => {
+  //       // const data = await res.json();
+  //       // if (data.statusCode === 404) setResErrs([data.message]);
+  //     });
+  // };
   return (
     <>
       <ul className="spots-cards">
@@ -25,8 +32,9 @@ const AllSpots = () => {
               key={spot.id}
               className="spot-photo-card"
               //open each single spot on new tab
-              onClick={(e) => window.open(`/spots/${spot.id}`)}
-              // onClick={(e) => history.push(`/spots/${spot.id}`)}
+              // onClick={(e) => window.open(`/spots/${spot.id}`)}
+              onClick={(e) => history.replace(`/spots/${spot.id}`)}
+              // onClick={(e) => handleClickSpot(e, spot.id)}
             >
               {defaultImg(
                 spot.previewImage,

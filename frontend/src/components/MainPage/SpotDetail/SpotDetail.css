@@ -122,12 +122,15 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  column-gap: 2px;
   padding: 0;
 }
 .reviews-list {
+  box-sizing: border-box;
+
   word-break: break-all;
-  max-width: 50%;
-  flex-basis: 50%;
+  max-width: 49%;
+  flex-basis: 49%;
 }
 .add-review-link {
   display: flex;
